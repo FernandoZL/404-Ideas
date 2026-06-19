@@ -7,21 +7,23 @@
 
 <style>
 :root{
-  --bg:#fff7f9;
+  --bg:#fff7fa;
   --card:#ffffff;
-  --text:#2b1b22;
-  --muted:#7c6670;
+  --text:#2d1b24;
+  --muted:#7d6872;
   --accent:#e75480;
-  --soft:#ffe3ec;
+  --soft:#ffe5ee;
+  --line:rgba(0,0,0,.08);
 }
 
 body.dark{
-  --bg:#111015;
-  --card:#1d1a22;
+  --bg:#0f0f14;
+  --card:#1c1922;
   --text:#fff7fb;
   --muted:#b9aab2;
   --accent:#ff8fb3;
-  --soft:#2b2029;
+  --soft:#2c2029;
+  --line:rgba(255,255,255,.1);
 }
 
 *{
@@ -33,13 +35,16 @@ body.dark{
 
 body{
   min-height:100vh;
-  background:radial-gradient(circle at top,var(--soft),var(--bg));
+  background:
+    radial-gradient(circle at top left,var(--soft),transparent 35%),
+    radial-gradient(circle at bottom right,var(--soft),transparent 35%),
+    var(--bg);
   color:var(--text);
   transition:.3s;
 }
 
 .app{
-  max-width:520px;
+  max-width:540px;
   margin:auto;
   padding:22px;
 }
@@ -48,12 +53,20 @@ body{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-bottom:22px;
+  margin-bottom:20px;
+  opacity:0;
+  transform:translateY(-10px);
+  transition:.6s;
+}
+
+body.ready .top{
+  opacity:1;
+  transform:translateY(0);
 }
 
 .logo{
+  font-size:19px;
   font-weight:800;
-  font-size:20px;
 }
 
 .actions button{
@@ -63,15 +76,16 @@ body{
   border-radius:999px;
   padding:10px 13px;
   margin-left:6px;
-  box-shadow:0 8px 20px rgba(0,0,0,.12);
+  box-shadow:0 8px 22px rgba(0,0,0,.14);
 }
 
 .card{
   background:var(--card);
-  border-radius:28px;
+  border:1px solid var(--line);
+  border-radius:30px;
   padding:28px;
-  box-shadow:0 18px 45px rgba(0,0,0,.16);
-  animation:fade .5s ease;
+  box-shadow:0 18px 50px rgba(0,0,0,.16);
+  animation:fade .45s ease;
 }
 
 .badge{
@@ -81,8 +95,8 @@ body{
   padding:8px 14px;
   border-radius:999px;
   font-size:13px;
+  font-weight:800;
   margin-bottom:18px;
-  font-weight:700;
 }
 
 h1,h2{
@@ -99,18 +113,22 @@ p{
 .menu{
   display:grid;
   gap:12px;
-  margin-top:18px;
+  margin-top:20px;
 }
 
-.menu button, .mainbtn{
+button{
+  cursor:pointer;
+}
+
+.menu button,.mainbtn{
   border:none;
   background:var(--accent);
   color:white;
   border-radius:18px;
   padding:15px;
   font-size:16px;
-  font-weight:700;
-  box-shadow:0 10px 25px rgba(231,84,128,.3);
+  font-weight:800;
+  box-shadow:0 10px 25px rgba(231,84,128,.28);
 }
 
 .secondary{
@@ -132,6 +150,16 @@ p{
   padding:15px;
   margin:10px 0;
   color:var(--text);
+  line-height:1.5;
+}
+
+.quote{
+  border-left:4px solid var(--accent);
+  padding:12px 0 12px 15px;
+  margin:18px 0;
+  color:var(--text);
+  font-weight:800;
+  font-size:18px;
 }
 
 .heart{
@@ -140,26 +168,126 @@ p{
   animation:pulse 1.3s infinite;
 }
 
+.counter{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  margin:18px 0;
+}
+
+.counter div{
+  background:var(--soft);
+  border-radius:18px;
+  padding:16px;
+  text-align:center;
+}
+
+.counter strong{
+  display:block;
+  font-size:26px;
+  color:var(--accent);
+}
+
+.time-block{
+  margin-bottom:26px;
+}
+
+.time-block h3{
+  font-size:20px;
+  margin-bottom:10px;
+}
+
 .footer{
   text-align:center;
   color:var(--muted);
   margin-top:18px;
   font-size:13px;
+  opacity:0;
+  transition:.6s;
+}
+
+body.ready .footer{
+  opacity:1;
+}
+
+.loader{
+  font-family:monospace;
+  min-height:430px;
+}
+
+.loader h1,
+.loader p,
+.loader span{
+  font-family:monospace;
+}
+
+.terminal{
+  background:rgba(0,0,0,.04);
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:18px;
+  margin-top:12px;
+}
+
+body.dark .terminal{
+  background:rgba(255,255,255,.04);
+}
+
+.terminal-line{
+  min-height:25px;
+  color:var(--muted);
+  font-size:15px;
+  line-height:1.6;
+}
+
+.cursor::after{
+  content:"_";
+  animation:blink .8s infinite;
+  color:var(--accent);
+}
+
+.progress-wrap{
+  background:var(--soft);
+  border-radius:999px;
+  margin-top:22px;
+  overflow:hidden;
+}
+
+.progress{
+  height:13px;
+  width:0%;
+  background:var(--accent);
+  border-radius:999px;
+  transition:.35s;
+}
+
+.percent{
+  text-align:right;
+  margin-top:8px;
+  color:var(--accent);
+  font-weight:800;
+  font-family:monospace;
 }
 
 @keyframes fade{
-  from{opacity:0;transform:translateY(15px)}
+  from{opacity:0;transform:translateY(16px)}
   to{opacity:1;transform:translateY(0)}
 }
 
 @keyframes pulse{
   0%,100%{transform:scale(1)}
-  50%{transform:scale(1.15)}
+  50%{transform:scale(1.13)}
+}
+
+@keyframes blink{
+  0%,50%{opacity:1}
+  51%,100%{opacity:0}
 }
 </style>
 </head>
 
 <body>
+
 <audio id="music" loop>
   <source src="dembow.mp3" type="audio/mpeg">
 </audio>
@@ -174,21 +302,49 @@ p{
     </div>
   </div>
 
-  <section id="inicio" class="section active">
+  <section id="loading" class="section active">
+    <div class="card loader">
+      <span class="badge">Sistema privado</span>
+      <h1>Abriendo expediente...</h1>
+
+      <div class="terminal">
+        <div class="terminal-line" id="l1"></div>
+        <div class="terminal-line" id="l2"></div>
+        <div class="terminal-line" id="l3"></div>
+        <div class="terminal-line" id="l4"></div>
+        <div class="terminal-line" id="l5"></div>
+        <div class="terminal-line" id="l6"></div>
+        <div class="terminal-line" id="l7"></div>
+        <div class="terminal-line cursor" id="l8"></div>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress" id="bar"></div>
+      </div>
+
+      <div class="percent" id="percent">0%</div>
+    </div>
+  </section>
+
+  <section id="inicio" class="section">
     <div class="card">
       <div class="heart">🤍</div>
       <span class="badge">Caso especial #0606</span>
       <h1>Hola, Rocío</h1>
       <p>
-        Esta no es una página cualquiera.
-        Es un pequeño expediente hecho con cariño, bromas internas
-        y varias pruebas de que me gustas más de lo normal.
+        Esta página guarda algunos detalles que recuerdo de ti,
+        momentos que fueron pasando sin planearse
+        y una verdad muy simple:
       </p>
+      <p><strong>me gustas muchísimo.</strong></p>
+
       <div class="menu">
-        <button onclick="show('historia')">Abrir historia</button>
-        <button onclick="show('perfil')" class="secondary">Ver perfil psicológico</button>
-        <button onclick="show('datos')" class="secondary">Datos importantes</button>
-        <button onclick="show('junio')" class="secondary">6 de junio</button>
+        <button onclick="show('historia')">Cómo empezó todo</button>
+        <button onclick="show('frases')" class="secondary">Frases nuestras</button>
+        <button onclick="show('perfil')" class="secondary">Perfil de Rocío</button>
+        <button onclick="show('datos')" class="secondary">Cosas que recuerdo</button>
+        <button onclick="show('contador')" class="secondary">Nuestros tiempos</button>
+        <button onclick="show('junio')">6 de junio</button>
         <button onclick="show('final')">Mensaje final</button>
       </div>
     </div>
@@ -196,37 +352,60 @@ p{
 
   <section id="historia" class="section">
     <div class="card">
-      <span class="badge">Cómo empezó</span>
+      <span class="badge">Origen del caso</span>
       <h2>Todo empezó en el trabajo</h2>
       <p>
-        Técnicamente empezamos hablando por cosas normales.
-        Trabajo, reuniones, bromas, comida, stickers y esas conversaciones
-        que empiezan simples pero terminan durando más de lo esperado.
+        Al inicio eran cosas normales: mensajes, pendientes, bromas,
+        trabajo, stickers y conversaciones que parecían casuales.
       </p>
       <p>
-        Y sin hacer mucho ruido, entre risas y confianza,
-        empezaste a volverte alguien muy especial para mí.
+        Pero poco a poco algo cambió.
+        Empecé a notar tu forma de ser, tu humor, tu paz,
+        tu inteligencia y esa manera tan tuya de hacer que una conversación simple
+        se sintiera diferente.
       </p>
+      <p>
+        Y sin darme tanta cuenta, hablar contigo empezó a gustarme más de lo normal.
+      </p>
+      <button class="mainbtn" onclick="show('inicio')">Volver</button>
+    </div>
+  </section>
+
+  <section id="frases" class="section">
+    <div class="card">
+      <span class="badge">Pequeñas pruebas</span>
+      <h2>Frases nuestras</h2>
+
+      <div class="quote">“Te ves muy tierna para tener ese carácter 👀”</div>
+      <div class="quote">“No hay internet...”</div>
+      <div class="quote">“Mmmmmmmm mire”</div>
+
+      <p>
+        Hay frases que parecen simples,
+        pero cuando son de nosotros se vuelven recuerdo.
+      </p>
+
       <button class="mainbtn" onclick="show('inicio')">Volver</button>
     </div>
   </section>
 
   <section id="perfil" class="section">
     <div class="card">
-      <span class="badge">Análisis aprobado</span>
-      <h2>Perfil psicológico de Rocío</h2>
+      <span class="badge">Rocío siendo Rocío</span>
+      <h2>Perfil de Rocío</h2>
 
-      <div class="item">📚 Lee bastante. Si un libro le gusta, lo termina rápido.</div>
+      <div class="item">📚 Lee bastante. Si un libro le gusta, puede terminarlo rapidísimo.</div>
       <div class="item">🌙 A veces lee de madrugada.</div>
       <div class="item">🎬 Le gustan las pelis de acción, romance y thriller psicológico.</div>
-      <div class="item">🧠 Le intriga entender cómo piensan las personas.</div>
-      <div class="item">🤍 Prefiere paz antes que drama.</div>
-      <div class="item">😌 Es diplomática, pero si le hablan feo, pone límites.</div>
-      <div class="item">💉 Le tiene miedo a las agujas. Mucho.</div>
+      <div class="item">🧠 Le interesa entender cómo piensan las personas.</div>
+      <div class="item">🕵️‍♀️ Mindhunter entra en categoría de “serie importante”.</div>
+      <div class="item">🤍 Es tranquila y prefiere paz antes que drama.</div>
+      <div class="item">😌 Es diplomática, pero también sabe poner límites.</div>
+      <div class="item">💉 Le tiene miedo a las agujas. Nivel: no negociable.</div>
 
       <p>
         Conclusión: tranquila, inteligente, graciosa,
-        tierna con carácter y peligrosamente encantadora.
+        analítica, tierna con carácter y peligrosamente encantadora.
       </p>
 
       <button class="mainbtn" onclick="show('inicio')">Volver</button>
@@ -235,7 +414,7 @@ p{
 
   <section id="datos" class="section">
     <div class="card">
-      <span class="badge">Datos clasificados</span>
+      <span class="badge">Detalles guardados</span>
       <h2>Cosas que he aprendido de ti</h2>
 
       <div class="item">🍰 Te gusta el pastel de zanahoria.</div>
@@ -244,10 +423,58 @@ p{
       <div class="item">🍽️ No eres complicada con la comida.</div>
       <div class="item">🚗 Manejas bastante para ir al trabajo.</div>
       <div class="item">✨ Tienes gestos bonitos y considerados.</div>
+      <div class="item">📖 Te gustan las cosas con historia o que te hagan pensar.</div>
 
       <p>
         Y sí, he puesto atención.
         Más de la que probablemente imaginabas.
+      </p>
+
+      <button class="mainbtn" onclick="show('inicio')">Volver</button>
+    </div>
+  </section>
+
+  <section id="contador" class="section">
+    <div class="card">
+      <span class="badge">Nuestros tiempos</span>
+      <h2>Lo que ha pasado desde entonces</h2>
+
+      <div class="time-block">
+        <h3>Desde que empezamos a hablar por chat</h3>
+        <p>17/02/2026</p>
+        <div class="counter">
+          <div><strong id="chatDays">0</strong>días</div>
+          <div><strong id="chatHours">0</strong>horas</div>
+          <div><strong id="chatMinutes">0</strong>minutos</div>
+          <div><strong id="chatSeconds">0</strong>segundos</div>
+        </div>
+      </div>
+
+      <div class="time-block">
+        <h3>Desde nuestro primer beso</h3>
+        <p>27/03/2026</p>
+        <div class="counter">
+          <div><strong id="kissDays">0</strong>días</div>
+          <div><strong id="kissHours">0</strong>horas</div>
+          <div><strong id="kissMinutes">0</strong>minutos</div>
+          <div><strong id="kissSeconds">0</strong>segundos</div>
+        </div>
+      </div>
+
+      <div class="time-block">
+        <h3>Desde que te pregunté si querías ser mi novia</h3>
+        <p>06/06/2026</p>
+        <div class="counter">
+          <div><strong id="gfDays">0</strong>días</div>
+          <div><strong id="gfHours">0</strong>horas</div>
+          <div><strong id="gfMinutes">0</strong>minutos</div>
+          <div><strong id="gfSeconds">0</strong>segundos</div>
+        </div>
+      </div>
+
+      <p>
+        Tres momentos distintos, pero todos terminaron llevándome a lo mismo:
+        tú.
       </p>
 
       <button class="mainbtn" onclick="show('inicio')">Volver</button>
@@ -263,12 +490,11 @@ p{
         si querías ser mi novia.
       </p>
       <p>
-        Tal vez sonó casual.
         Tal vez no fue una escena de película.
-        Pero para mí significaba muchísimo.
+        Tal vez no hubo música de fondo ni discurso perfecto.
       </p>
       <p>
-        Porque detrás de esa pregunta había cariño, confianza,
+        Pero detrás de esa pregunta había cariño, confianza,
         admiración y muchas ganas de elegirte.
       </p>
       <p>
@@ -298,6 +524,7 @@ p{
         Y aunque esto empezó de forma sencilla,
         para mí se volvió algo muy especial.
       </p>
+
       <h2>Con amor,<br>Fernando 🤍</h2>
 
       <button class="mainbtn" onclick="show('inicio')">Volver al inicio</button>
@@ -314,6 +541,11 @@ p{
 function show(id){
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+
+  if(id !== "loading"){
+    document.body.classList.add("ready");
+  }
+
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
@@ -332,6 +564,91 @@ function toggleMusic(){
     playing = false;
   }
 }
+
+function fillCounter(prefix, dateText){
+  const start = new Date(dateText);
+  const now = new Date();
+  let diff = now - start;
+
+  if(diff < 0) diff = 0;
+
+  const seconds = Math.floor(diff / 1000);
+  const days = Math.floor(seconds / 86400);
+  const hours = Math.floor((seconds % 86400) / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const secs = seconds % 60;
+
+  document.getElementById(prefix + "Days").textContent = days;
+  document.getElementById(prefix + "Hours").textContent = hours;
+  document.getElementById(prefix + "Minutes").textContent = minutes;
+  document.getElementById(prefix + "Seconds").textContent = secs;
+}
+
+function updateCounters(){
+  fillCounter("chat", "2026-02-17T00:00:00");
+  fillCounter("kiss", "2026-03-27T00:00:00");
+  fillCounter("gf", "2026-06-06T00:00:00");
+}
+
+setInterval(updateCounters,1000);
+updateCounters();
+
+const loadingSteps = [
+  "› Abriendo expediente privado...",
+  "› Verificando acceso...",
+  "› Revisando primeras conversaciones...",
+  "› Recuperando detalles importantes...",
+  "› Ordenando recuerdos...",
+  "› Preparando mensaje...",
+  "› Acceso concedido 🤍",
+  "› Abriendo..."
+];
+
+function typeLine(element, text, speed, callback){
+  let i = 0;
+  element.textContent = "";
+
+  const typing = setInterval(() => {
+    element.textContent += text.charAt(i);
+    i++;
+
+    if(i >= text.length){
+      clearInterval(typing);
+      if(callback) callback();
+    }
+  }, speed);
+}
+
+function startLoading(){
+  let index = 0;
+  let percent = 0;
+
+  const bar = document.getElementById("bar");
+  const percentText = document.getElementById("percent");
+
+  function nextStep(){
+    if(index >= loadingSteps.length){
+      setTimeout(() => {
+        show("inicio");
+      }, 900);
+      return;
+    }
+
+    const line = document.getElementById("l" + (index + 1));
+    percent = Math.round(((index + 1) / loadingSteps.length) * 100);
+
+    typeLine(line, loadingSteps[index], 22, () => {
+      bar.style.width = percent + "%";
+      percentText.textContent = percent + "%";
+      index++;
+      setTimeout(nextStep, 450);
+    });
+  }
+
+  setTimeout(nextStep, 600);
+}
+
+window.addEventListener("load", startLoading);
 </script>
 
 </body>
