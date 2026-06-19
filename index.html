@@ -3,150 +3,334 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Para Mi Amor ❤️</title>
+<title>Expediente Rocío 🤍</title>
 
 <style>
+:root{
+  --bg:#fff7f9;
+  --card:#ffffff;
+  --text:#2b1b22;
+  --muted:#7c6670;
+  --accent:#e75480;
+  --soft:#ffe3ec;
+}
+
+body.dark{
+  --bg:#111015;
+  --card:#1d1a22;
+  --text:#fff7fb;
+  --muted:#b9aab2;
+  --accent:#ff8fb3;
+  --soft:#2b2029;
+}
+
 *{
+  box-sizing:border-box;
   margin:0;
   padding:0;
-  box-sizing:border-box;
-  font-family:Arial, sans-serif;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
 }
 
 body{
-  background:linear-gradient(135deg,#ffdde1,#ee9ca7);
   min-height:100vh;
+  background:radial-gradient(circle at top,var(--soft),var(--bg));
+  color:var(--text);
+  transition:.3s;
 }
 
-header{
-  background:rgba(255,255,255,0.2);
-  backdrop-filter: blur(10px);
-  padding:20px;
-  text-align:center;
-  color:white;
+.app{
+  max-width:520px;
+  margin:auto;
+  padding:22px;
 }
 
-header h1{
-  font-size:28px;
-}
-
-nav{
+.top{
   display:flex;
-  justify-content:center;
-  gap:10px;
-  flex-wrap:wrap;
-  padding:20px;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:22px;
 }
 
-nav button{
+.logo{
+  font-weight:800;
+  font-size:20px;
+}
+
+.actions button{
   border:none;
-  padding:12px 18px;
-  border-radius:20px;
-  background:white;
-  cursor:pointer;
-  font-size:15px;
+  background:var(--card);
+  color:var(--text);
+  border-radius:999px;
+  padding:10px 13px;
+  margin-left:6px;
+  box-shadow:0 8px 20px rgba(0,0,0,.12);
 }
 
-nav button:hover{
-  transform:scale(1.05);
+.card{
+  background:var(--card);
+  border-radius:28px;
+  padding:28px;
+  box-shadow:0 18px 45px rgba(0,0,0,.16);
+  animation:fade .5s ease;
+}
+
+.badge{
+  display:inline-block;
+  background:var(--soft);
+  color:var(--accent);
+  padding:8px 14px;
+  border-radius:999px;
+  font-size:13px;
+  margin-bottom:18px;
+  font-weight:700;
+}
+
+h1,h2{
+  margin-bottom:16px;
+}
+
+p{
+  color:var(--muted);
+  font-size:17px;
+  line-height:1.7;
+  margin-bottom:14px;
+}
+
+.menu{
+  display:grid;
+  gap:12px;
+  margin-top:18px;
+}
+
+.menu button, .mainbtn{
+  border:none;
+  background:var(--accent);
+  color:white;
+  border-radius:18px;
+  padding:15px;
+  font-size:16px;
+  font-weight:700;
+  box-shadow:0 10px 25px rgba(231,84,128,.3);
+}
+
+.secondary{
+  background:var(--soft)!important;
+  color:var(--accent)!important;
 }
 
 .section{
   display:none;
-  padding:20px;
 }
 
-.active{
+.section.active{
   display:block;
 }
 
-.card{
-  background:rgba(255,255,255,0.9);
-  max-width:700px;
-  margin:auto;
-  padding:30px;
-  border-radius:25px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.2);
+.item{
+  background:var(--soft);
+  border-radius:18px;
+  padding:15px;
+  margin:10px 0;
+  color:var(--text);
+}
+
+.heart{
+  font-size:58px;
   text-align:center;
+  animation:pulse 1.3s infinite;
 }
 
-h2{
-  margin-bottom:20px;
+.footer{
+  text-align:center;
+  color:var(--muted);
+  margin-top:18px;
+  font-size:13px;
 }
 
-p{
-  line-height:1.7;
-  font-size:18px;
+@keyframes fade{
+  from{opacity:0;transform:translateY(15px)}
+  to{opacity:1;transform:translateY(0)}
 }
 
-img{
-  width:100%;
-  border-radius:20px;
+@keyframes pulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.15)}
 }
 </style>
 </head>
+
 <body>
+<audio id="music" loop>
+  <source src="dembow.mp3" type="audio/mpeg">
+</audio>
 
-<header>
-  <h1>❤️ Para Mi Amor ❤️</h1>
-</header>
+<div class="app">
 
-<nav>
-  <button onclick="showSection('inicio')">🏠 Inicio</button>
-  <button onclick="showSection('carta')">💌 Carta</button>
-  <button onclick="showSection('fotos')">📸 Fotos</button>
-  <button onclick="showSection('final')">💖 Final</button>
-</nav>
-
-<section id="inicio" class="section active">
-  <div class="card">
-    <h2>Bienvenida mi amor ❤️</h2>
-    <p>
-      Hice esta página especialmente para ti.
-      Quiero que explores cada sección y veas cuánto te amo.
-    </p>
+  <div class="top">
+    <div class="logo">Expediente Rocío 🤍</div>
+    <div class="actions">
+      <button onclick="toggleTheme()">🌓</button>
+      <button onclick="toggleMusic()">🎵</button>
+    </div>
   </div>
-</section>
 
-<section id="carta" class="section">
-  <div class="card">
-    <h2>Una carta para ti 💌</h2>
-    <p>
-      Solo quería hacerte algo diferente para recordarte lo mucho que significas para mí.
-      Gracias por estar en mi vida, por tus detalles, por tu forma de quererme
-      y por hacer que mis días sean más bonitos.
-    </p>
-  </div>
-</section>
+  <section id="inicio" class="section active">
+    <div class="card">
+      <div class="heart">🤍</div>
+      <span class="badge">Caso especial #0606</span>
+      <h1>Hola, Rocío</h1>
+      <p>
+        Esta no es una página cualquiera.
+        Es un pequeño expediente hecho con cariño, bromas internas
+        y varias pruebas de que me gustas más de lo normal.
+      </p>
+      <div class="menu">
+        <button onclick="show('historia')">Abrir historia</button>
+        <button onclick="show('perfil')" class="secondary">Ver perfil psicológico</button>
+        <button onclick="show('datos')" class="secondary">Datos importantes</button>
+        <button onclick="show('junio')" class="secondary">6 de junio</button>
+        <button onclick="show('final')">Mensaje final</button>
+      </div>
+    </div>
+  </section>
 
-<section id="fotos" class="section">
-  <div class="card">
-    <h2>Nuestra foto 📸</h2>
-    <p>Aquí luego podemos poner fotos nuestras.</p>
-  </div>
-</section>
+  <section id="historia" class="section">
+    <div class="card">
+      <span class="badge">Cómo empezó</span>
+      <h2>Todo empezó en el trabajo</h2>
+      <p>
+        Técnicamente empezamos hablando por cosas normales.
+        Trabajo, reuniones, bromas, comida, stickers y esas conversaciones
+        que empiezan simples pero terminan durando más de lo esperado.
+      </p>
+      <p>
+        Y sin hacer mucho ruido, entre risas y confianza,
+        empezaste a volverte alguien muy especial para mí.
+      </p>
+      <button class="mainbtn" onclick="show('inicio')">Volver</button>
+    </div>
+  </section>
 
-<section id="final" class="section">
-  <div class="card">
-    <h2>Mensaje Final 💖</h2>
-    <p>
-      Eres una de las personas más especiales de mi vida.
-      No importa el día, el lugar o el momento,
-      siempre voy a elegirte a ti.
-    </p>
-    <br>
-    <h3>Con amor, Fernando ❤️</h3>
+  <section id="perfil" class="section">
+    <div class="card">
+      <span class="badge">Análisis aprobado</span>
+      <h2>Perfil psicológico de Rocío</h2>
+
+      <div class="item">📚 Lee bastante. Si un libro le gusta, lo termina rápido.</div>
+      <div class="item">🌙 A veces lee de madrugada.</div>
+      <div class="item">🎬 Le gustan las pelis de acción, romance y thriller psicológico.</div>
+      <div class="item">🧠 Le intriga entender cómo piensan las personas.</div>
+      <div class="item">🤍 Prefiere paz antes que drama.</div>
+      <div class="item">😌 Es diplomática, pero si le hablan feo, pone límites.</div>
+      <div class="item">💉 Le tiene miedo a las agujas. Mucho.</div>
+
+      <p>
+        Conclusión: tranquila, inteligente, graciosa,
+        tierna con carácter y peligrosamente encantadora.
+      </p>
+
+      <button class="mainbtn" onclick="show('inicio')">Volver</button>
+    </div>
+  </section>
+
+  <section id="datos" class="section">
+    <div class="card">
+      <span class="badge">Datos clasificados</span>
+      <h2>Cosas que he aprendido de ti</h2>
+
+      <div class="item">🍰 Te gusta el pastel de zanahoria.</div>
+      <div class="item">🎂 Te gusta el fondant.</div>
+      <div class="item">🍮 Te gusta la torta chilena.</div>
+      <div class="item">🍽️ No eres complicada con la comida.</div>
+      <div class="item">🚗 Manejas bastante para ir al trabajo.</div>
+      <div class="item">✨ Tienes gestos bonitos y considerados.</div>
+
+      <p>
+        Y sí, he puesto atención.
+        Más de la que probablemente imaginabas.
+      </p>
+
+      <button class="mainbtn" onclick="show('inicio')">Volver</button>
+    </div>
+  </section>
+
+  <section id="junio" class="section">
+    <div class="card">
+      <span class="badge">06 de junio</span>
+      <h2>El día que te lo pregunté</h2>
+      <p>
+        El 6 de junio te pregunté, de una forma bastante informal,
+        si querías ser mi novia.
+      </p>
+      <p>
+        Tal vez sonó casual.
+        Tal vez no fue una escena de película.
+        Pero para mí significaba muchísimo.
+      </p>
+      <p>
+        Porque detrás de esa pregunta había cariño, confianza,
+        admiración y muchas ganas de elegirte.
+      </p>
+      <p>
+        Y desde ese día, oficialmente,
+        eres mi persona favorita.
+      </p>
+
+      <button class="mainbtn" onclick="show('inicio')">Volver</button>
+    </div>
+  </section>
+
+  <section id="final" class="section">
+    <div class="card">
+      <div class="heart">❤️</div>
+      <span class="badge">Mensaje final</span>
+      <h2>Para ti</h2>
+      <p>
+        Me gustas por tu forma de ser.
+        Por tu paz, por tu inteligencia,
+        por tu humor y por esa manera tan tuya de hacer que todo se sienta más bonito.
+      </p>
+      <p>
+        Gracias por llegar a mi vida de una forma tan inesperada.
+        Me encanta lo que estamos construyendo.
+      </p>
+      <p>
+        Y aunque esto empezó de forma sencilla,
+        para mí se volvió algo muy especial.
+      </p>
+      <h2>Con amor,<br>Fernando 🤍</h2>
+
+      <button class="mainbtn" onclick="show('inicio')">Volver al inicio</button>
+    </div>
+  </section>
+
+  <div class="footer">
+    Hecho especialmente para Rocío.
   </div>
-</section>
+
+</div>
 
 <script>
-function showSection(sectionId){
-  let sections = document.querySelectorAll('.section');
-  sections.forEach(section => {
-    section.classList.remove('active');
-  });
+function show(id){
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
 
-  document.getElementById(sectionId).classList.add('active');
+function toggleTheme(){
+  document.body.classList.toggle('dark');
+}
+
+let playing = false;
+function toggleMusic(){
+  const music = document.getElementById('music');
+  if(!playing){
+    music.play();
+    playing = true;
+  }else{
+    music.pause();
+    playing = false;
+  }
 }
 </script>
 
