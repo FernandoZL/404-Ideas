@@ -1,0 +1,46 @@
+{
+  "siteName": "Nuestro lugar",
+  "subtitle": "Un lugar para guardar todo eso que no quiero olvidar.",
+  "person1": "Fernando",
+  "person2": "Rocío",
+  "legacy": {
+    "title": "Para ti Rocío 🤍",
+    "case": "Caso especial #0606",
+    "enabled": true
+  },
+  "dates": {
+    "startedTalking": "2026-02-17",
+    "firstKiss": "2026-03-27",
+    "official": "2026-06-06"
+  },
+  "content": {
+    "defaultSort": "desc",
+    "autoDetectImages": true,
+    "supportedImages": [
+      ".jpg",
+      ".jpeg",
+      ".png",
+      ".webp",
+      ".heic",
+      ".heif"
+    ],
+    "supportedVideos": [
+      ".mp4",
+      ".mov",
+      ".m4v"
+    ],
+    "supportedAudio": [
+      ".mp3",
+      ".m4a",
+      ".aac",
+      ".wav"
+    ]
+  },
+  "publishing": {
+    "exclude": [
+      "contenido/inbox",
+      "assets/originals"
+    ],
+    "generatedData": "data/generated"
+  }
+}

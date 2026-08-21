@@ -1,0 +1,394 @@
+:root{
+  --bg:#fff7fa;
+  --card:#ffffff;
+  --text:#2d1b24;
+  --muted:#7d6872;
+  --accent:#e75480;
+  --soft:#ffe5ee;
+  --line:rgba(0,0,0,.08);
+}
+
+body.dark{
+  --bg:#0f0f14;
+  --card:#1c1922;
+  --text:#fff7fb;
+  --muted:#b9aab2;
+  --accent:#ff8fb3;
+  --soft:#2c2029;
+  --line:rgba(255,255,255,.1);
+}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(circle at top left,var(--soft),transparent 35%),
+    radial-gradient(circle at bottom right,var(--soft),transparent 35%),
+    var(--bg);
+  color:var(--text);
+  transition:.3s;
+  overflow-x:hidden;
+}
+
+.app{
+  max-width:540px;
+  margin:auto;
+  padding:22px;
+}
+
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+  opacity:0;
+  transform:translateY(-10px);
+  transition:.6s;
+}
+
+body.ready .top{
+  opacity:1;
+  transform:translateY(0);
+}
+
+.logo{
+  font-size:19px;
+  font-weight:800;
+}
+
+.actions button{
+  border:none;
+  background:var(--card);
+  color:var(--text);
+  border-radius:999px;
+  padding:10px 13px;
+  margin-left:6px;
+  box-shadow:0 8px 22px rgba(0,0,0,.14);
+}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:30px;
+  padding:28px;
+  box-shadow:0 18px 50px rgba(0,0,0,.16);
+  animation:fade .45s ease;
+}
+
+.badge{
+  display:inline-block;
+  background:var(--soft);
+  color:var(--accent);
+  padding:8px 14px;
+  border-radius:999px;
+  font-size:13px;
+  font-weight:800;
+  margin-bottom:18px;
+}
+
+h1,h2{
+  margin-bottom:16px;
+}
+
+p{
+  color:var(--muted);
+  font-size:17px;
+  line-height:1.7;
+  margin-bottom:14px;
+}
+
+.menu{
+  display:grid;
+  gap:12px;
+  margin-top:20px;
+}
+
+button{
+  cursor:pointer;
+}
+
+.menu button,
+.mainbtn{
+  border:none;
+  background:var(--accent);
+  color:white;
+  border-radius:18px;
+  padding:15px;
+  font-size:16px;
+  font-weight:800;
+  box-shadow:0 10px 25px rgba(231,84,128,.28);
+}
+
+.secondary{
+  background:var(--soft)!important;
+  color:var(--accent)!important;
+}
+
+.section{
+  display:none;
+}
+
+.section.active{
+  display:block;
+}
+
+.item{
+  background:var(--soft);
+  border-radius:18px;
+  padding:15px;
+  margin:10px 0;
+  color:var(--text);
+  line-height:1.5;
+}
+
+.quote{
+  border-left:4px solid var(--accent);
+  padding:12px 0 12px 15px;
+  margin:18px 0;
+  color:var(--text);
+  font-weight:800;
+  font-size:18px;
+}
+
+.heart{
+  font-size:58px;
+  text-align:center;
+  animation:pulse 1.3s infinite;
+}
+
+.counter{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  margin:18px 0;
+}
+
+.counter div{
+  background:var(--soft);
+  border-radius:18px;
+  padding:16px;
+  text-align:center;
+}
+
+.counter strong{
+  display:block;
+  font-size:26px;
+  color:var(--accent);
+}
+
+.time-block{
+  margin-bottom:26px;
+}
+
+.time-block h3{
+  font-size:20px;
+  margin-bottom:10px;
+}
+
+.loader{
+  font-family:monospace;
+  min-height:430px;
+}
+
+.loader h1,
+.loader p,
+.loader span{
+  font-family:monospace;
+}
+
+.terminal{
+  background:rgba(0,0,0,.04);
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:18px;
+  margin-top:12px;
+}
+
+body.dark .terminal{
+  background:rgba(255,255,255,.04);
+}
+
+.terminal-line{
+  min-height:25px;
+  color:var(--muted);
+  font-size:15px;
+  line-height:1.6;
+}
+
+.cursor::after{
+  content:"_";
+  animation:blink .8s infinite;
+  color:var(--accent);
+}
+
+.progress-wrap{
+  background:var(--soft);
+  border-radius:999px;
+  margin-top:22px;
+  overflow:hidden;
+}
+
+.progress{
+  height:13px;
+  width:0%;
+  background:var(--accent);
+  border-radius:999px;
+  transition:.35s;
+}
+
+.percent{
+  text-align:right;
+  margin-top:8px;
+  color:var(--accent);
+  font-weight:800;
+  font-family:monospace;
+}
+
+/* ======================================
+   TE AMO X1000
+====================================== */
+
+.love-code{
+  background:#1c1720;
+  color:#f8eef3;
+  border-radius:22px;
+  padding:18px;
+  overflow:auto;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:15px;
+  line-height:1.7;
+  margin:18px 0;
+}
+
+.love-code *{
+  font-family:inherit;
+}
+
+.code-key{
+  color:#ff7fa8;
+  font-weight:800;
+}
+
+.code-num{
+  color:#ffd36b;
+}
+
+.code-text{
+  color:#9ee8a1;
+}
+
+.code-fn{
+  color:#88ccff;
+}
+
+.love-output{
+  background:var(--soft);
+  border:1px dashed var(--accent);
+  border-radius:22px;
+  padding:20px;
+  margin:18px 0;
+  text-align:center;
+  min-height:150px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+}
+
+.love-status{
+  color:var(--muted);
+  font-size:14px;
+  margin-bottom:10px;
+  font-weight:700;
+}
+
+.love-message{
+  color:var(--accent);
+  font-size:34px;
+  line-height:1.2;
+  font-weight:900;
+}
+
+.love-final{
+  margin-top:12px;
+  display:none;
+  color:var(--text);
+  font-size:16px;
+  line-height:1.6;
+}
+
+.love-final.show{
+  display:block;
+  animation:fade .5s ease;
+}
+
+.love-actions{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:10px;
+}
+
+.love-actions button:last-child{
+  background:var(--soft)!important;
+  color:var(--accent)!important;
+}
+
+.burst-heart{
+  position:fixed;
+  z-index:9999;
+  pointer-events:none;
+  font-size:22px;
+  animation:heartBurst 1.25s ease-out forwards;
+}
+
+@keyframes heartBurst{
+  from{
+    transform:translate(0,0) scale(.7);
+    opacity:1;
+  }
+  to{
+    transform:translate(var(--x),var(--y)) scale(1.5);
+    opacity:0;
+  }
+}
+
+@keyframes fade{
+  from{
+    opacity:0;
+    transform:translateY(16px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+@keyframes pulse{
+  0%,100%{
+    transform:scale(1);
+  }
+  50%{
+    transform:scale(1.13);
+  }
+}
+
+@keyframes blink{
+  0%,50%{
+    opacity:1;
+  }
+  51%,100%{
+    opacity:0;
+  }
+}
+
+@media(max-width:520px){
+  .love-actions{
+    grid-template-columns:1fr;
+  }
+}

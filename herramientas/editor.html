@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Editor · Nuestro lugar 🤍</title>
+<style>
+:root{--bg:#fff7fa;--card:#fff;--text:#2d1b24;--muted:#7d6872;--accent:#e75480;--soft:#ffe5ee;--line:rgba(0,0,0,.08)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:calc(20px + env(safe-area-inset-top)) 18px calc(24px + env(safe-area-inset-bottom))}
+main{max-width:620px;margin:auto}
+.card{background:var(--card);border:1px solid var(--line);border-radius:28px;padding:22px;box-shadow:0 16px 44px rgba(0,0,0,.10)}
+h1{margin:0 0 8px}
+p{color:var(--muted);line-height:1.6}
+label{display:block;font-weight:750;margin:16px 0 7px}
+input,textarea,select{width:100%;border:1px solid var(--line);border-radius:16px;padding:14px;font:inherit;background:#fff;color:var(--text)}
+textarea{min-height:180px;resize:vertical}
+button{width:100%;border:0;border-radius:18px;padding:15px;margin-top:18px;font-size:16px;font-weight:800;background:var(--accent);color:white}
+.output{margin-top:18px;background:var(--soft);border-radius:18px;padding:14px;white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px}
+.small{font-size:13px}
+</style>
+</head>
+<body>
+<main>
+  <div class="card">
+    <h1>Guardar un recuerdo 🤍</h1>
+    <p>Esto prepara la carpeta y el <strong>recuerdo.md</strong>. Todavía no guarda credenciales ni escribe directamente en GitHub.</p>
+
+    <label for="date">Fecha</label>
+    <input id="date" type="date">
+
+    <label for="title">Título</label>
+    <input id="title" type="text" placeholder="Nuestra noche">
+
+    <label for="category">Categoría</label>
+    <select id="category">
+      <option value="momento">Momento</option>
+      <option value="cita">Cita</option>
+      <option value="viaje">Viaje</option>
+      <option value="regalo">Regalo</option>
+      <option value="aniversario">Aniversario</option>
+      <option value="cotidiano">Cotidiano</option>
+      <option value="especial">Especial</option>
+    </select>
+
+    <label for="story">¿Qué pasó?</label>
+    <textarea id="story" placeholder="Hoy pasó algo que no quiero olvidar..."></textarea>
+
+    <label for="tags">Etiquetas</label>
+    <input id="tags" type="text" placeholder="nosotros, noche, cena">
+
+    <label for="place">Lugar</label>
+    <input id="place" type="text" placeholder="Opcional">
+
+    <button id="generate">Preparar recuerdo</button>
+
+    <div id="result" class="output" hidden></div>
+    <button id="copy" type="button" hidden>Copiar recuerdo.md</button>
+    <p class="small">Después solo tendrás que crear esa carpeta en <code>contenido/recuerdos/AÑO/</code>, subir tus fotos y pegar el archivo.</p>
+  </div>
+</main>
+
+<script>
+const $ = id => document.getElementById(id);
+
+function slugify(text){
+  return text
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g,"-")
+    .replace(/^-+|-+$/g,"")
+    .slice(0,70);
+}
+
+function yamlEscape(value){
+  if(!value) return "";
+  return '"' + value.replace(/\\/g,"\\\\").replace(/"/g,'\\"') + '"';
+}
+
+function buildMarkdown(){
+  const date = $("date").value;
+  const title = $("title").value.trim();
+  const category = $("category").value;
+  const story = $("story").value.trim();
+  const place = $("place").value.trim();
+  const tags = $("tags").value
+    .split(",")
+    .map(v => v.trim())
+    .filter(Boolean);
+
+  if(!date || !title){
+    alert("Fecha y título son obligatorios.");
+    return null;
+  }
+
+  const folder = `${date}-${slugify(title)}`;
+  const tagLines = tags.length
+    ? "tags:\n" + tags.map(t => `  - ${t}`).join("\n")
+    : "tags: []";
+
+  const md = `---
+tipo: recuerdo
+fecha: ${date}
+titulo: ${yamlEscape(title)}
+categoria: ${category}
+favorito: false
+portada:
+${tagLines}
+musica:
+lugar: ${yamlEscape(place)}
+---
+
+# ${title}
+
+${story || "Hoy pasó algo que no quiero olvidar..."}
+`;
+
+  return {folder, md, year: date.slice(0,4)};
+}
+
+$("generate").addEventListener("click", () => {
+  const built = buildMarkdown();
+  if(!built) return;
+
+  $("result").hidden = false;
+  $("copy").hidden = false;
+  $("result").textContent =
+    `CARPETA:\ncontenido/recuerdos/${built.year}/${built.folder}/\n\nARCHIVO recuerdo.md:\n\n${built.md}`;
+
+  $("copy").dataset.md = built.md;
+});
+
+$("copy").addEventListener("click", async () => {
+  await navigator.clipboard.writeText($("copy").dataset.md || "");
+  $("copy").textContent = "✓ Copiado";
+  setTimeout(() => $("copy").textContent = "Copiar recuerdo.md", 1400);
+});
+
+const today = new Date();
+$("date").value = [
+  today.getFullYear(),
+  String(today.getMonth()+1).padStart(2,"0"),
+  String(today.getDate()).padStart(2,"0")
+].join("-");
+</script>
+</body>
+</html>
