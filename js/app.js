@@ -39,7 +39,7 @@ function random(){
   document.querySelectorAll("[data-close]").forEach(x=>x.onclick=()=>{modal.hidden=true;document.body.style.overflow=""});
 }
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-async function opening(){
+async function runOpening(){
   const lines=["› Abriendo nuestro archivo...","› Recuperando momentos...","› Ordenando nuestra historia...","› Todo listo 🤍"];
   if(matchMedia("(prefers-reduced-motion:reduce)").matches){opening.remove();app.hidden=false;return}
   for(let i=0;i<lines.length;i++){
@@ -53,6 +53,6 @@ async function init(){
   initTheme();
   [S.config,S.memories,S.stats]=await Promise.all([J("data/configuracion.json",null),J("data/generated/recuerdos.json",[]),J("data/generated/estadisticas.json",null)]);
   if(S.config?.subtitle)subtitle.textContent=S.config.subtitle;
-  stats();memories();today();random();await opening();
+  stats();memories();today();random();await runOpening();
 }
 addEventListener("DOMContentLoaded",init);
