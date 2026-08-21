@@ -24,3 +24,16 @@ Usa:
 Ese directorio no se copia al artefacto de GitHub Pages.
 
 **Importante:** si el repositorio es público, los archivos del inbox siguen siendo visibles en GitHub aunque no aparezcan en la web.
+
+
+## Guardar un lugar
+
+En `Guardar algo` ahora puedes:
+
+1. Escribir el nombre del lugar.
+2. Tocar **Buscar en mapa** para verificarlo.
+3. Si estás físicamente allí, tocar **Usar mi ubicación**.
+4. También puedes escribir latitud/longitud o guardar un enlace de Google Maps.
+5. Al publicar el recuerdo, el lugar aparecerá en **Nuestros lugares**.
+
+No es obligatorio guardar coordenadas. Un recuerdo puede tener solo el nombre del lugar.

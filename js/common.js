@@ -139,8 +139,9 @@
           <a href="historia.html"><span>02</span><strong>Nuestra historia</strong><small>Todo en orden, desde el comienzo</small></a>
           <a href="recuerdos.html"><span>03</span><strong>Recuerdos</strong><small>Buscar, filtrar y volver a un momento</small></a>
           <a href="fotos.html"><span>04</span><strong>Nosotros en fotos</strong><small>La galería completa</small></a>
-          <a href="archivo.html"><span>05</span><strong>Todo el archivo</strong><small>Cartas, frases, canciones y más</small></a>
-          <a href="expediente-0606.html"><span>06</span><strong>Expediente #0606</strong><small>La página con la que empezó todo</small></a>
+          <a href="lugares.html"><span>05</span><strong>Nuestros lugares</strong><small>Los sitios que también se volvieron recuerdo</small></a>
+          <a href="archivo.html"><span>06</span><strong>Todo el archivo</strong><small>Cartas, frases, canciones y más</small></a>
+          <a href="expediente-0606.html"><span>07</span><strong>Expediente #0606</strong><small>La página con la que empezó todo</small></a>
         </nav>
         <a class="menu-add" href="herramientas/editor.html">＋ Guardar algo nuevo</a>
       </div>`;

@@ -80,3 +80,15 @@ Es deliberado: primero congelamos y estabilizamos la base actual.
 - `archivo.html`: mapa de secciones presentes y futuras.
 - `expediente-0606.html` incorpora un regreso visible a Nuestro lugar.
 - El build genera también `data/generated/galeria.json`.
+
+
+## v2.3 — Lugares
+
+- Editor con navegación de regreso visible.
+- Búsqueda/preview de lugar mediante Google Maps sin API key.
+- Geolocalización opcional del navegador.
+- Soporte para `direccion`, `latitud`, `longitud` y `maps`.
+- Vista de mapa dentro de cada recuerdo.
+- `data/generated/lugares.json`.
+- Nueva sección `lugares.html`.
+- El buscador de recuerdos también encuentra lugares y direcciones.

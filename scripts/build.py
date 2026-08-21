@@ -157,6 +157,10 @@ def discover_memories():
             "tags": meta.get("tags") if isinstance(meta.get("tags"), list) else [],
             "musica": meta.get("musica") or "",
             "lugar": meta.get("lugar") or "",
+            "direccion": meta.get("direccion") or "",
+            "latitud": meta.get("latitud") or "",
+            "longitud": meta.get("longitud") or "",
+            "maps": meta.get("maps") or "",
             "texto": body.strip(),
             "carpeta": rel_folder,
             "imagenes": images,
@@ -194,6 +198,53 @@ def write_generated(memories):
         encoding="utf-8",
     )
 
+    places_by_key = {}
+    for memory in memories:
+        place_name = str(memory.get("lugar") or "").strip()
+        address = str(memory.get("direccion") or "").strip()
+        latitude = str(memory.get("latitud") or "").strip()
+        longitude = str(memory.get("longitud") or "").strip()
+        maps_url = str(memory.get("maps") or "").strip()
+
+        if not any([place_name, address, latitude, longitude, maps_url]):
+            continue
+
+        key = (
+            f"{latitude},{longitude}"
+            if latitude and longitude
+            else (place_name + "|" + address).lower()
+        )
+
+        if key not in places_by_key:
+            places_by_key[key] = {
+                "id": re.sub(r"[^a-z0-9]+", "-", key.lower()).strip("-")[:90],
+                "nombre": place_name,
+                "direccion": address,
+                "latitud": latitude,
+                "longitud": longitude,
+                "maps": maps_url,
+                "recuerdos": [],
+                "primeraFecha": memory["fecha"],
+                "ultimaFecha": memory["fecha"],
+            }
+
+        place = places_by_key[key]
+        place["recuerdos"].append({
+            "id": memory["id"],
+            "titulo": memory["titulo"],
+            "fecha": memory["fecha"],
+        })
+        place["primeraFecha"] = min(place["primeraFecha"], memory["fecha"])
+        place["ultimaFecha"] = max(place["ultimaFecha"], memory["fecha"])
+
+    places = list(places_by_key.values())
+    places.sort(key=lambda item: (item["ultimaFecha"], item["nombre"]), reverse=True)
+
+    (GENERATED / "lugares.json").write_text(
+        json.dumps(places, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
     stats = {
         "recuerdos": len(memories),
         "fotografias": len(gallery),
@@ -223,7 +274,7 @@ def build_site(memories):
     # relative paths continue to work on GitHub Pages project sites.
     public_pages = [
         "index.html", "historia.html", "recuerdos.html", "fotos.html",
-        "recuerdo.html", "archivo.html", "expediente-0606.html",
+        "recuerdo.html", "archivo.html", "lugares.html", "expediente-0606.html",
     ]
     for page in public_pages:
         copy_if_exists(ROOT / page, SITE / page)

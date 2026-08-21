@@ -9,6 +9,10 @@ tags:
   - nosotros
 musica:
 lugar:
+direccion:
+latitud:
+longitud:
+maps:
 ---
 
 # Una noche bonita

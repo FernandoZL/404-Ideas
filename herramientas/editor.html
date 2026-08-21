@@ -1,5 +1,376 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Guardar algo · Nuestro lugar</title><link rel="stylesheet" href="../css/style.css"><style>.editor-wrap{max-width:720px;margin:auto;padding:25px 0 80px}.editor-card{background:var(--surface);border:1px solid var(--line);border-radius:28px;padding:24px;box-shadow:var(--shadow)}.editor-card label{display:block;font-weight:780;margin:16px 0 7px}.editor-card input,.editor-card textarea,.editor-card select{width:100%;border:1px solid var(--line);border-radius:16px;padding:14px;background:var(--bg);color:var(--text)}.editor-card textarea{min-height:180px;resize:vertical}.editor-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}.output{margin-top:18px;background:var(--soft);border-radius:18px;padding:14px;white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}.quick-ways{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}.quick-way{padding:15px;border:1px solid var(--line);border-radius:18px;background:var(--bg)}.quick-way strong{display:block}.quick-way span{display:block;color:var(--muted);font-size:12px;margin-top:4px}@media(max-width:600px){.editor-actions,.quick-ways{grid-template-columns:1fr}}</style></head><body data-page="editor"><div class="page-shell"><header class="topbar"><div class="chrome-left"><button class="nav-back" id="editorBack" type="button">←</button><a class="brand" href="../index.html">Nuestro lugar 🤍</a></div><div class="chrome-actions"><a class="quick-add" href="../archivo.html">Archivo</a></div></header><main class="editor-wrap"><section class="page-title" style="padding-top:35px"><span class="kicker">Desde el celular</span><h1>Guardar algo.</h1><p>Lo importante es que escribir un recuerdo no se sienta como programar.</p></section><div class="quick-ways"><div class="quick-way"><strong>Recuerdo completo</strong><span>Historia + fotos + etiquetas + lugar.</span></div><div class="quick-way"><strong>¿Tienes prisa?</strong><span>Puedes subir fotos y una nota corta; después lo ordenamos.</span></div></div><div class="editor-card"><label for="date">Fecha</label><input id="date" type="date"><label for="title">Título</label><input id="title" placeholder="Nuestra noche"><label for="category">Categoría</label><select id="category"><option value="momento">Momento</option><option value="cita">Cita</option><option value="viaje">Viaje</option><option value="regalo">Regalo</option><option value="aniversario">Aniversario</option><option value="cotidiano">Cotidiano</option><option value="especial">Especial</option></select><label for="story">¿Qué pasó?</label><textarea id="story" placeholder="Hoy pasó algo que no quiero olvidar..."></textarea><label for="tags">Etiquetas</label><input id="tags" placeholder="nosotros, noche, cena"><label for="place">Lugar</label><input id="place" placeholder="Opcional"><label style="display:flex;align-items:center;gap:10px"><input id="favorite" type="checkbox" style="width:auto"> Marcar como favorito</label><div class="editor-actions"><button id="generate" class="button-primary" type="button">Preparar recuerdo</button><button id="copy" class="button-primary" type="button" hidden>Copiar recuerdo.md</button></div><div id="result" class="output" hidden></div></div><div class="notice" style="margin-top:18px"><strong>Después:</strong> en GitHub crea la carpeta indicada, sube las fotos con sus nombres originales de iPhone, crea <code>recuerdo.md</code>, pega lo generado y haz Commit.</div></main></div><script>
-const $=id=>document.getElementById(id);const slug=t=>t.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,70);const y=v=>'"'+String(v||"").replace(/\\/g,"\\\\").replace(/"/g,'\\"')+'"';
-$("editorBack").onclick=()=>{if(document.referrer&&history.length>1)history.back();else location.href="../index.html"};const now=new Date();$("date").value=[now.getFullYear(),String(now.getMonth()+1).padStart(2,"0"),String(now.getDate()).padStart(2,"0")].join("-");
-$("generate").onclick=()=>{const d=$("date").value,t=$("title").value.trim(),story=$("story").value.trim(),tags=$("tags").value.split(",").map(x=>x.trim()).filter(Boolean),place=$("place").value.trim(),fav=$("favorite").checked;if(!d||!t){alert("Fecha y título son obligatorios.");return}const folder=`${d}-${slug(t)}`,tagLines=tags.length?"tags:\n"+tags.map(x=>`  - ${x}`).join("\n"):"tags: []";const md=`---\ntipo: recuerdo\nfecha: ${d}\ntitulo: ${y(t)}\ncategoria: ${$("category").value}\nfavorito: ${fav}\nportada:\n${tagLines}\nmusica:\nlugar: ${y(place)}\n---\n\n# ${t}\n\n${story||"Hoy pasó algo que no quiero olvidar..."}\n`;$("result").textContent=`CARPETA:\ncontenido/recuerdos/${d.slice(0,4)}/${folder}/\n\nARCHIVO recuerdo.md:\n\n${md}`;$("result").hidden=false;$("copy").hidden=false;$("copy").dataset.md=md};$("copy").onclick=async()=>{await navigator.clipboard.writeText($("copy").dataset.md||"");$("copy").textContent="✓ Copiado";setTimeout(()=>$("copy").textContent="Copiar recuerdo.md",1300)};
-</script></body></html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Guardar algo · Nuestro lugar</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.editor-wrap{max-width:760px;margin:auto;padding:25px 0 90px}
+.editor-card{background:var(--surface);border:1px solid var(--line);border-radius:28px;padding:24px;box-shadow:var(--shadow)}
+.editor-card label{display:block;font-weight:780;margin:16px 0 7px}
+.editor-card input,.editor-card textarea,.editor-card select{width:100%;border:1px solid var(--line);border-radius:16px;padding:14px;background:var(--bg);color:var(--text);outline:none}
+.editor-card input:focus,.editor-card textarea:focus,.editor-card select:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-2)}
+.editor-card textarea{min-height:180px;resize:vertical}
+.editor-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+.output{margin-top:18px;background:var(--soft);border-radius:18px;padding:14px;white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
+.quick-ways{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.quick-way{padding:15px;border:1px solid var(--line);border-radius:18px;background:var(--bg)}
+.quick-way strong{display:block}.quick-way span{display:block;color:var(--muted);font-size:12px;margin-top:4px}
+.editor-back{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:850}
+.location-box{margin-top:18px;padding:18px;border:1px solid var(--line);border-radius:22px;background:var(--soft)}
+.location-box h3{margin:0 0 4px;font-size:18px}
+.location-box>p{margin:0 0 14px;color:var(--muted);font-size:13px;line-height:1.5}
+.location-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.map-button{min-height:46px;border:1px solid var(--line);border-radius:16px;background:var(--surface);color:var(--text);font-weight:800;cursor:pointer}
+.map-preview{margin-top:14px;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--surface);min-height:210px}
+.map-preview iframe{display:block;width:100%;height:260px;border:0}
+.map-empty{min-height:210px;display:grid;place-items:center;padding:22px;text-align:center;color:var(--muted);font-size:13px}
+.location-advanced{margin-top:12px}
+.location-advanced summary{cursor:pointer;font-weight:750;color:var(--muted)}
+.coord-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.helper{margin-top:7px;color:var(--muted);font-size:12px;line-height:1.45}
+.mobile-editor-nav{display:none}
+@media(max-width:600px){
+  .editor-actions,.quick-ways,.location-actions,.coord-grid{grid-template-columns:1fr}
+  .editor-card{padding:18px}
+  .mobile-editor-nav{
+    position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:80;
+    display:grid;grid-template-columns:repeat(4,1fr);padding:7px;background:rgba(255,255,255,.88);
+    border:1px solid rgba(0,0,0,.08);border-radius:22px;backdrop-filter:blur(22px);box-shadow:0 18px 50px rgba(0,0,0,.14)
+  }
+  body.dark .mobile-editor-nav{background:rgba(25,25,31,.92);border-color:rgba(255,255,255,.08)}
+  .mobile-editor-nav a{min-height:47px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-decoration:none;color:var(--muted);font-size:10px;font-weight:800;border-radius:15px}
+  .mobile-editor-nav a span{font-size:18px;line-height:1}.mobile-editor-nav a.active{background:var(--soft);color:var(--accent)}
+}
+</style>
+</head>
+
+<body data-page="editor">
+<div class="page-shell">
+
+<header class="topbar">
+  <div class="chrome-left">
+    <button class="nav-back" id="editorBack" type="button" aria-label="Volver">←</button>
+    <a class="brand" href="../index.html">Nuestro lugar <span>🤍</span></a>
+  </div>
+  <div class="chrome-actions">
+    <a class="quick-add" href="../archivo.html">Archivo</a>
+  </div>
+</header>
+
+<main class="editor-wrap">
+
+<section class="page-title" style="padding-top:35px">
+  <span class="kicker">Desde el celular</span>
+  <h1>Guardar algo.</h1>
+  <p>Escribe lo que quieras recordar. El sistema se encarga de la estructura.</p>
+</section>
+
+<div class="quick-ways">
+  <div class="quick-way">
+    <strong>Recuerdo completo</strong>
+    <span>Historia + fotos + etiquetas + ubicación.</span>
+  </div>
+  <div class="quick-way">
+    <strong>¿Tienes prisa?</strong>
+    <span>Escribe poco. Después puedes ampliar el recuerdo sin cambiar su URL.</span>
+  </div>
+</div>
+
+<div class="editor-card">
+
+<label for="date">Fecha</label>
+<input id="date" type="date">
+
+<label for="title">Título</label>
+<input id="title" placeholder="Nuestra noche">
+
+<label for="category">Categoría</label>
+<select id="category">
+  <option value="momento">Momento</option>
+  <option value="cita">Cita</option>
+  <option value="viaje">Viaje</option>
+  <option value="regalo">Regalo</option>
+  <option value="aniversario">Aniversario</option>
+  <option value="cotidiano">Cotidiano</option>
+  <option value="especial">Especial</option>
+</select>
+
+<label for="story">¿Qué pasó?</label>
+<textarea id="story" placeholder="Hoy pasó algo que no quiero olvidar..."></textarea>
+
+<label for="tags">Etiquetas</label>
+<input id="tags" placeholder="nosotros, café, cita">
+
+<div class="location-box">
+  <span class="kicker">Lugar</span>
+  <h3>¿Dónde pasó?</h3>
+  <p>Puedes escribir solamente el nombre, buscarlo en el mapa o guardar coordenadas exactas.</p>
+
+  <label for="place">Nombre del lugar</label>
+  <input id="place" placeholder="Ej. Café Cartel">
+
+  <label for="address">Dirección o referencia</label>
+  <input id="address" placeholder="Opcional">
+
+  <div class="location-actions">
+    <button id="searchMap" class="map-button" type="button">⌖ Buscar en mapa</button>
+    <button id="useLocation" class="map-button" type="button">📍 Usar mi ubicación</button>
+  </div>
+
+  <div class="map-preview" id="mapPreview">
+    <div class="map-empty">
+      Escribe un lugar y toca <strong>Buscar en mapa</strong>.<br>
+      Si tienes las coordenadas exactas, también puedes pegarlas abajo.
+    </div>
+  </div>
+
+  <details class="location-advanced">
+    <summary>Ubicación exacta / opciones avanzadas</summary>
+
+    <div class="coord-grid">
+      <div>
+        <label for="latitude">Latitud</label>
+        <input id="latitude" inputmode="decimal" placeholder="14.000000">
+      </div>
+      <div>
+        <label for="longitude">Longitud</label>
+        <input id="longitude" inputmode="decimal" placeholder="-90.000000">
+      </div>
+    </div>
+
+    <label for="mapsUrl">Enlace de Google Maps</label>
+    <input id="mapsUrl" type="url" placeholder="https://maps.app.goo.gl/...">
+
+    <div class="helper">
+      Si pegas coordenadas, la vista del recuerdo mostrará el punto exacto.
+      Si solo guardas el nombre, el sistema buscará ese lugar cuando abras el mapa.
+    </div>
+  </details>
+</div>
+
+<label style="display:flex;align-items:center;gap:10px">
+  <input id="favorite" type="checkbox" style="width:auto">
+  Marcar como favorito
+</label>
+
+<div class="editor-actions">
+  <button id="generate" class="button-primary" type="button">Preparar recuerdo</button>
+  <button id="copy" class="button-primary" type="button" hidden>Copiar recuerdo.md</button>
+</div>
+
+<div id="result" class="output" hidden></div>
+
+</div>
+
+<div class="notice" style="margin-top:18px">
+  <strong>Después:</strong> crea la carpeta indicada en GitHub, sube las fotos con sus nombres originales,
+  crea <code>recuerdo.md</code>, pega lo generado y haz Commit.
+</div>
+
+</main>
+</div>
+
+<nav class="mobile-editor-nav">
+  <a href="../index.html"><span>⌂</span>Inicio</a>
+  <a href="../historia.html"><span>⌁</span>Historia</a>
+  <a href="./editor.html" class="active"><span>＋</span>Guardar</a>
+  <a href="../archivo.html"><span>◫</span>Archivo</a>
+</nav>
+
+<script>
+const $ = id => document.getElementById(id);
+
+const slug = text => text
+  .normalize("NFD")
+  .replace(/[\u0300-\u036f]/g,"")
+  .toLowerCase()
+  .replace(/[^a-z0-9]+/g,"-")
+  .replace(/^-+|-+$/g,"")
+  .slice(0,70);
+
+const yaml = value =>
+  '"' + String(value || "")
+    .replace(/\\/g,"\\\\")
+    .replace(/"/g,'\\"') + '"';
+
+$("editorBack").onclick = () => {
+  if(document.referrer && history.length > 1){
+    history.back();
+  }else{
+    location.href = "../index.html";
+  }
+};
+
+const now = new Date();
+$("date").value = [
+  now.getFullYear(),
+  String(now.getMonth()+1).padStart(2,"0"),
+  String(now.getDate()).padStart(2,"0")
+].join("-");
+
+function validCoordinates(){
+  const lat = parseFloat($("latitude").value);
+  const lng = parseFloat($("longitude").value);
+
+  return (
+    Number.isFinite(lat) &&
+    Number.isFinite(lng) &&
+    lat >= -90 && lat <= 90 &&
+    lng >= -180 && lng <= 180
+  ) ? {lat,lng} : null;
+}
+
+function mapQuery(){
+  const coords = validCoordinates();
+
+  if(coords){
+    return `${coords.lat},${coords.lng}`;
+  }
+
+  return [
+    $("place").value.trim(),
+    $("address").value.trim()
+  ].filter(Boolean).join(", ");
+}
+
+function updateMapPreview(){
+  const query = mapQuery();
+
+  if(!query){
+    alert("Escribe el nombre del lugar o agrega coordenadas.");
+    return;
+  }
+
+  const embed =
+    `https://www.google.com/maps?q=${encodeURIComponent(query)}&z=16&output=embed`;
+
+  $("mapPreview").innerHTML =
+    `<iframe loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="${embed}" title="Vista previa del lugar"></iframe>`;
+}
+
+$("searchMap").onclick = updateMapPreview;
+
+$("useLocation").onclick = () => {
+  if(!navigator.geolocation){
+    alert("Este navegador no permite obtener la ubicación.");
+    return;
+  }
+
+  $("useLocation").textContent = "Buscando ubicación...";
+
+  navigator.geolocation.getCurrentPosition(
+    position => {
+      $("latitude").value = position.coords.latitude.toFixed(7);
+      $("longitude").value = position.coords.longitude.toFixed(7);
+
+      if(!$("mapsUrl").value){
+        $("mapsUrl").value =
+          `https://www.google.com/maps/search/?api=1&query=${position.coords.latitude},${position.coords.longitude}`;
+      }
+
+      $("useLocation").textContent = "✓ Ubicación guardada";
+      updateMapPreview();
+
+      setTimeout(() => {
+        $("useLocation").textContent = "📍 Usar mi ubicación";
+      },1800);
+    },
+    error => {
+      console.warn(error);
+      $("useLocation").textContent = "📍 Usar mi ubicación";
+      alert("No pude obtener la ubicación. Puedes pegar las coordenadas manualmente.");
+    },
+    {
+      enableHighAccuracy:true,
+      timeout:12000,
+      maximumAge:0
+    }
+  );
+};
+
+["latitude","longitude"].forEach(id => {
+  $(id).addEventListener("change", () => {
+    if(validCoordinates()) updateMapPreview();
+  });
+});
+
+$("generate").onclick = () => {
+  const date = $("date").value;
+  const title = $("title").value.trim();
+  const story = $("story").value.trim();
+  const tags = $("tags").value
+    .split(",")
+    .map(value => value.trim())
+    .filter(Boolean);
+
+  const place = $("place").value.trim();
+  const address = $("address").value.trim();
+  const favorite = $("favorite").checked;
+  const coords = validCoordinates();
+
+  const latitude = coords ? String(coords.lat) : "";
+  const longitude = coords ? String(coords.lng) : "";
+  const mapsUrl = $("mapsUrl").value.trim();
+
+  if(!date || !title){
+    alert("Fecha y título son obligatorios.");
+    return;
+  }
+
+  const folder = `${date}-${slug(title)}`;
+
+  const tagLines = tags.length
+    ? "tags:\n" + tags.map(tag => `  - ${tag}`).join("\n")
+    : "tags: []";
+
+  const md =
+`---
+tipo: recuerdo
+fecha: ${date}
+titulo: ${yaml(title)}
+categoria: ${$("category").value}
+favorito: ${favorite}
+portada:
+${tagLines}
+musica:
+lugar: ${yaml(place)}
+direccion: ${yaml(address)}
+latitud: ${yaml(latitude)}
+longitud: ${yaml(longitude)}
+maps: ${yaml(mapsUrl)}
+---
+
+# ${title}
+
+${story || "Hoy pasó algo que no quiero olvidar..."}
+`;
+
+  $("result").textContent =
+`CARPETA:
+contenido/recuerdos/${date.slice(0,4)}/${folder}/
+
+ARCHIVO recuerdo.md:
+
+${md}`;
+
+  $("result").hidden = false;
+  $("copy").hidden = false;
+  $("copy").dataset.md = md;
+};
+
+$("copy").onclick = async () => {
+  await navigator.clipboard.writeText(
+    $("copy").dataset.md || ""
+  );
+
+  $("copy").textContent = "✓ Copiado";
+
+  setTimeout(() => {
+    $("copy").textContent = "Copiar recuerdo.md";
+  },1300);
+};
+</script>
+</body>
+</html>
