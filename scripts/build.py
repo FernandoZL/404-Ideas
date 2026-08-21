@@ -175,9 +175,28 @@ def write_generated(memories):
         encoding="utf-8",
     )
 
+    gallery = []
+    for memory in memories:
+        for filename in memory["imagenes"]:
+            gallery.append({
+                "id": f"{memory['id']}::{filename}",
+                "recuerdoId": memory["id"],
+                "titulo": memory["titulo"],
+                "fecha": memory["fecha"],
+                "favorito": memory["favorito"],
+                "tags": memory["tags"],
+                "src": f"{memory['carpeta']}/{filename}",
+            })
+
+    gallery.sort(key=lambda item: (item["fecha"], item["id"]), reverse=True)
+    (GENERATED / "galeria.json").write_text(
+        json.dumps(gallery, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
     stats = {
         "recuerdos": len(memories),
-        "fotografias": sum(len(m["imagenes"]) for m in memories),
+        "fotografias": len(gallery),
         "videos": sum(len(m["videos"]) for m in memories),
         "audios": sum(len(m["audio"]) for m in memories),
         "favoritos": sum(1 for m in memories if m["favorito"]),
@@ -200,9 +219,14 @@ def build_site(memories):
 
     SITE.mkdir(parents=True)
 
-    # Current site: preserved exactly in the first migration.
-    copy_if_exists(ROOT / "index.html", SITE / "index.html")
-    copy_if_exists(ROOT / "expediente-0606.html", SITE / "expediente-0606.html")
+    # Public root pages. Keep all navigation pages at the project root so
+    # relative paths continue to work on GitHub Pages project sites.
+    public_pages = [
+        "index.html", "historia.html", "recuerdos.html", "fotos.html",
+        "recuerdo.html", "archivo.html", "expediente-0606.html",
+    ]
+    for page in public_pages:
+        copy_if_exists(ROOT / page, SITE / page)
     shutil.copytree(ROOT / "css", SITE / "css")
     shutil.copytree(ROOT / "js", SITE / "js")
     shutil.copytree(ROOT / "data", SITE / "data")

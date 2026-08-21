@@ -66,3 +66,17 @@ Se generarán:
 - No escribe directamente a GitHub desde el editor.
 
 Es deliberado: primero congelamos y estabilizamos la base actual.
+
+
+## v2.2 — Navegación y exploración
+
+- Navegación global reutilizable con menú lateral.
+- Barra inferior optimizada para iPhone: Inicio / Historia / Guardar / Archivo.
+- El loader completo se muestra una sola vez por sesión.
+- `recuerdos.html`: buscador y filtros.
+- `historia.html`: línea del tiempo ordenable.
+- `fotos.html`: galería automática y lightbox con swipe.
+- `recuerdo.html?id=...`: URL individual para cada recuerdo.
+- `archivo.html`: mapa de secciones presentes y futuras.
+- `expediente-0606.html` incorpora un regreso visible a Nuestro lugar.
+- El build genera también `data/generated/galeria.json`.
