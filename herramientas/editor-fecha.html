@@ -32,7 +32,7 @@
 <label for="title">Título</label><input id="title" placeholder="Una fecha importante">
 <label for="text">Por qué importa</label><textarea id="text" placeholder="Escribe aquí lo que quieres recordar de esta fecha..."></textarea>
 <label class="check"><input id="counter" type="checkbox" checked> Mostrar cuánto tiempo ha pasado</label>
-<label class="check"><input id="anniversary" type="checkbox"> Recordarla cada año</label>
+<label class="check"><input id="anniversary" type="checkbox"> Recordarla cada año</label><label class="check"><input id="publishNow" type="checkbox"> Publicar inmediatamente</label>
 <div class="actions">
 <button class="primary-tool" id="prepare">Preparar fecha</button>
 <button class="secondary-tool" id="download" hidden>Descargar fecha.md</button>
@@ -49,7 +49,7 @@ let prepared="";
 function build(){
  const date=$("date").value,title=$("title").value.trim(),text=$("text").value.trim();
  if(!date||!title){alert("Fecha y título son obligatorios.");return null}
- const md=`---\ntipo: fecha\nclave:\nfecha: ${date}\ntitulo: ${yaml(title)}\ncontador: ${$("counter").checked}\naniversario: ${$("anniversary").checked}\ndestacada: false\nenlace:\nmensaje_aniversario:\n---\n\n${text||"Aquí puedes escribir por qué esta fecha importa."}\n`;
+ const md=`---\ntipo: fecha\npublicado: ${{$("publishNow").checked}}\nclave:\nfecha: ${date}\ntitulo: ${yaml(title)}\ncontador: ${$("counter").checked}\naniversario: ${$("anniversary").checked}\ndestacada: false\nenlace:\nmensaje_aniversario:\n---\n\n${text||"Aquí puedes escribir por qué esta fecha importa."}\n`;
  return {md,path:`contenido/fechas/${date}-${slug(title)}.md`};
 }
 $("prepare").onclick=()=>{const b=build();if(!b)return;prepared=b.md;$("result").hidden=false;$("result").textContent=`RUTA:\n${b.path}\n\n${b.md}`;$("download").hidden=false};

@@ -1,5 +1,6 @@
 ---
 tipo: fecha
+publicado: true
 clave: firstKiss
 fecha: 2026-03-27
 titulo: "Nuestro primer beso"

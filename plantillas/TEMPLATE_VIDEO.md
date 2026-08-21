@@ -1,5 +1,6 @@
 ---
 tipo: video
+publicado: false
 fecha: 2026-08-20
 titulo: Un momento en video
 archivo:

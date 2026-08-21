@@ -37,7 +37,7 @@
 <div class="tool-card">
 <label for="date">Fecha (opcional)</label><input id="date" type="date">
 <label for="phrase">Frase</label><textarea id="phrase" placeholder="Escribe aquí una frase que quieras guardar..."></textarea>
-<label for="context">Contexto (opcional)</label><input id="context" placeholder="Una conversación, un momento...">
+<label for="context">Contexto (opcional)</label><input id="context" placeholder="Una conversación, un momento..."><label style="display:flex;gap:9px;align-items:center"><input id="publishNow" type="checkbox" style="width:auto"> Publicar inmediatamente</label>
 <div class="actions">
 <button class="primary-tool" id="prepare">Preparar frase</button>
 <button class="secondary-tool" id="download" hidden>Descargar frase.md</button>
@@ -56,7 +56,7 @@ function build(){
  const clean=phrase.replace(/^["“”']+|["“”']+$/g,"").trim();
  const folder=(date?date+"-":"")+slug(clean.slice(0,45));
  const year=date?date.slice(0,4):"sin-fecha";
- const md=`---\ntipo: frase\nfecha: ${date}\nfavorito: false\ncontexto: ${yaml(context)}\n---\n\n${phrase}\n`;
+ const md=`---\ntipo: frase\npublicado: ${{$("publishNow").checked}}\nfecha: ${date}\nfavorito: false\ncontexto: ${yaml(context)}\n---\n\n${phrase}\n`;
  return {md,path:`contenido/frases/${year}/${folder||"frase"}/frase.md`};
 }
 $("prepare").onclick=()=>{const b=build();if(!b)return;prepared=b.md;$("result").hidden=false;$("result").textContent=`RUTA:\n${b.path}\n\n${b.md}`;$("download").hidden=false};

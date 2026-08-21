@@ -1,5 +1,6 @@
 ---
 tipo: recuerdo
+publicado: true
 fecha: 2026-08-20
 titulo: "Una tarde en Café Cartel"
 categoria: momento

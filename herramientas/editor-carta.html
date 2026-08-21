@@ -38,7 +38,7 @@
 <label for="date">Fecha</label><input id="date" type="date">
 <label for="title">Título</label><input id="title" placeholder="Para ti">
 <label for="text">Carta</label><textarea id="text" placeholder="Hoy quería escribirte algo..."></textarea>
-<label for="music">Canción (opcional)</label><input id="music" placeholder="archivo.mp3">
+<label for="music">Canción (opcional)</label><input id="music" placeholder="archivo.mp3"><label style="display:flex;gap:9px;align-items:center"><input id="publishNow" type="checkbox" style="width:auto"> Publicar inmediatamente</label>
 <div class="actions">
 <button class="primary-tool" id="prepare">Preparar carta</button>
 <button class="secondary-tool" id="download" hidden>Descargar carta.md</button>
@@ -56,7 +56,7 @@ function build(){
  const date=$("date").value,title=$("title").value.trim(),text=$("text").value.trim();
  if(!date||!title||!text){alert("Fecha, título y texto son obligatorios.");return null}
  const folder=`${date}-${slug(title)}`;
- const md=`---\ntipo: carta\nfecha: ${date}\ntitulo: ${yaml(title)}\nportada:\nmusica: ${yaml($("music").value.trim())}\n---\n\n${text}\n`;
+ const md=`---\ntipo: carta\npublicado: ${{$("publishNow").checked}}\nfecha: ${date}\ntitulo: ${yaml(title)}\nportada:\nmusica: ${yaml($("music").value.trim())}\n---\n\n${text}\n`;
  return {md,path:`contenido/cartas/${date.slice(0,4)}/${folder}/carta.md`};
 }
 $("prepare").onclick=()=>{const b=build();if(!b)return;prepared=b.md;$("result").hidden=false;$("result").textContent=`RUTA:\n${b.path}\n\n${b.md}`;$("download").hidden=false};

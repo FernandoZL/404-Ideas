@@ -108,3 +108,16 @@ Guarda como favorito o añade a la pantalla de inicio:
 `https://fernandozl.github.io/404-Ideas/herramientas/`
 
 Desde ahí puedes elegir Recuerdo, Carta, Frase o Fecha sin entrar a la navegación pública.
+
+
+## Flujo privado
+
+Las herramientas de edición ya no se publican junto con la web.
+
+Para contenido desde el celular:
+
+- usa `publicado: false` si quieres preparar algo sin mostrarlo;
+- usa `contenido/inbox/` si solo quieres guardar fotos/notas y ordenar después;
+- cambia a `publicado: true` únicamente cuando quieras que aparezca en Nuestro lugar.
+
+Consulta `ADMIN_PRIVADO.md` para el flujo completo.

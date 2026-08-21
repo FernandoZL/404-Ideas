@@ -1,5 +1,6 @@
 ---
 tipo: fecha
+publicado: true
 clave: startedTalking
 fecha: 2026-02-17
 titulo: "Empezamos a hablar"

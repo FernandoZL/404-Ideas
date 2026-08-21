@@ -1,5 +1,6 @@
 ---
 tipo: frase
+publicado: true
 fecha:
 favorito: false
 contexto:

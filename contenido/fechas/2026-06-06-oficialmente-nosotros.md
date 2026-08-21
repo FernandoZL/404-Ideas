@@ -1,5 +1,6 @@
 ---
 tipo: fecha
+publicado: true
 clave: official
 fecha: 2026-06-06
 titulo: "Oficialmente nosotros"

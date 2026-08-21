@@ -1,5 +1,6 @@
 ---
 tipo: recuerdo
+publicado: false
 fecha: 2026-08-20
 titulo: Una noche bonita
 categoria: momento

@@ -71,6 +71,28 @@ def parse_front_matter(text: str):
 
     return data, body
 
+
+def content_is_public(meta: dict) -> bool:
+    """Return False for drafts/hidden content, True otherwise.
+
+    Missing `publicado` intentionally means public for backward compatibility.
+    Supported hidden aliases:
+      publicado: false
+      estado: borrador | privado | oculto
+    """
+    estado = str(meta.get("estado", "")).strip().lower()
+    if estado in {"borrador", "privado", "oculto", "draft"}:
+        return False
+
+    value = meta.get("publicado", True)
+
+    if isinstance(value, bool):
+        return value
+
+    return str(value).strip().lower() not in {
+        "false", "0", "no", "off", "borrador", "privado", "oculto"
+    }
+
 def find_media(folder: Path):
     images, audio, videos = [], [], []
 
@@ -106,6 +128,9 @@ def discover_memories():
         folder = md.parent
         text = md.read_text(encoding="utf-8")
         meta, body = parse_front_matter(text)
+
+        if not content_is_public(meta):
+            continue
 
         date = str(meta.get("fecha", "")).strip()
         title = str(meta.get("titulo", "")).strip()
@@ -188,6 +213,9 @@ def discover_phrases():
         text = md.read_text(encoding="utf-8")
         meta, body = parse_front_matter(text)
 
+        if not content_is_public(meta):
+            continue
+
         phrase_text = body.strip()
         if not phrase_text:
             warnings.append(f"{md.relative_to(ROOT)}: frase vacía; se omitirá.")
@@ -238,6 +266,9 @@ def discover_letters():
 
         text = md.read_text(encoding="utf-8")
         meta, body = parse_front_matter(text)
+
+        if not content_is_public(meta):
+            continue
 
         if (meta.get("tipo") or "").strip() not in ("", "carta"):
             continue
@@ -316,6 +347,9 @@ def discover_dates():
 
         text = md.read_text(encoding="utf-8")
         meta, body = parse_front_matter(text)
+
+        if not content_is_public(meta):
+            continue
 
         if (meta.get("tipo") or "fecha") != "fecha":
             continue
@@ -470,6 +504,45 @@ def write_generated(memories, phrases, letters, dates):
         encoding="utf-8",
     )
 
+
+def validate_public_site():
+    forbidden_path = SITE / "herramientas"
+    if forbidden_path.exists():
+        raise RuntimeError(
+            "SEGURIDAD: _site/herramientas no debe existir en la publicación."
+        )
+
+    forbidden_tokens = (
+        "herramientas/editor",
+        "/herramientas/",
+        "Guardar algo nuevo",
+        "Preparar para publicar",
+    )
+
+    leaks = []
+    for path in SITE.rglob("*"):
+        if not path.is_file():
+            continue
+        if path.suffix.lower() not in {".html", ".js", ".json"}:
+            continue
+
+        text = path.read_text(encoding="utf-8", errors="ignore")
+        for token in forbidden_tokens:
+            if token in text:
+                leaks.append(f"{path.relative_to(SITE)} -> {token}")
+
+    if leaks:
+        raise RuntimeError(
+            "SEGURIDAD: se encontraron referencias administrativas en el sitio público:\n"
+            + "\n".join(leaks)
+        )
+
+    if (SITE / "contenido" / "inbox").exists():
+        raise RuntimeError(
+            "SEGURIDAD: contenido/inbox nunca debe copiarse al sitio público."
+        )
+
+
 def copy_if_exists(source: Path, destination: Path):
     if source.exists():
         destination.parent.mkdir(parents=True, exist_ok=True)
@@ -494,7 +567,6 @@ def build_site(memories, letters):
     shutil.copytree(ROOT / "css", SITE / "css")
     shutil.copytree(ROOT / "js", SITE / "js")
     shutil.copytree(ROOT / "data", SITE / "data")
-    shutil.copytree(ROOT / "herramientas", SITE / "herramientas")
 
     # Keep the existing song if the repository already contains it.
     copy_if_exists(ROOT / "dembow.mp3", SITE / "dembow.mp3")
@@ -539,6 +611,7 @@ def main():
 
     write_generated(memories, phrases, letters, dates)
     build_site(memories, letters)
+    validate_public_site()
 
     print("=" * 62)
     print("NUESTRO LUGAR - BUILD CORRECTO")
@@ -550,6 +623,8 @@ def main():
     print(f"Fechas:      {len(dates)}")
     print(f"Salida:       {SITE}")
     print("Inbox:        excluido de publicación")
+    print("Herramientas: excluidas de publicación")
+    print("Borradores:   publicado:false no se indexa")
     print("=" * 62)
 
 if __name__ == "__main__":

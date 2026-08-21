@@ -151,3 +151,14 @@ Es deliberado: primero congelamos y estabilizamos la base actual.
 - Hub privado `/herramientas/` para añadir contenido desde móvil.
 - El hub muestra solo tipos que ya funcionan: recuerdo, carta, frase y fecha.
 - Se realizó prueba de interacción real en navegador además del build estático.
+
+
+## v2.7.2 — Publicación privada
+
+- `/herramientas` ya no forma parte del artefacto de GitHub Pages.
+- `publicado: false` excluye recuerdos, cartas, frases y fechas del sitio.
+- Las plantillas nuevas nacen como borrador.
+- Los editores privados permiten decidir cuándo publicar.
+- `contenido/inbox` continúa totalmente excluido del build público.
+- El build falla si detecta referencias administrativas dentro de `_site`.
+- Se incluye un editor local para Windows.

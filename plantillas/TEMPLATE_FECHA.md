@@ -1,5 +1,6 @@
 ---
 tipo: fecha
+publicado: false
 clave:
 fecha: 2026-08-21
 titulo: "Una fecha importante"

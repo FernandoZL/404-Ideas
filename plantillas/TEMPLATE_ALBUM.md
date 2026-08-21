@@ -1,5 +1,6 @@
 ---
 tipo: album
+publicado: false
 fecha: 2026-08-20
 titulo: Fotos de esta noche
 portada:

@@ -1,5 +1,6 @@
 ---
 tipo: carta
+publicado: false
 fecha: 2026-08-21
 titulo: Para ti
 portada:

@@ -694,6 +694,14 @@
   Marcar como favorito
 </label>
 
+<label class="favorite-row">
+  <input id="publishNow" type="checkbox">
+  Publicar inmediatamente en la web
+</label>
+<p class="helper" style="margin-top:-8px">
+  Si lo dejas apagado, el archivo queda como borrador y GitHub Actions no lo mostrará.
+</p>
+
 <div class="editor-actions">
   <button id="saveDraft" class="secondary-button" type="button">Guardar borrador</button>
   <button id="prepare" class="button-primary button-accent" type="button">Preparar para publicar</button>
@@ -790,7 +798,8 @@ const fields = [
   "latitude",
   "longitude",
   "mapsUrl",
-  "favorite"
+  "favorite",
+  "publishNow"
 ];
 
 function slugify(text){
@@ -1183,6 +1192,7 @@ function buildMarkdown(){
   const md =
 `---
 tipo: recuerdo
+publicado: ${$("publishNow").checked}
 fecha: ${date}
 titulo: ${yaml(title)}
 categoria: ${$("category").value}

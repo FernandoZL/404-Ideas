@@ -1,5 +1,6 @@
 ---
 tipo: recuerdo
+publicado: false
 fecha: 2026-08-21
 titulo: "Un momento bonito"
 categoria: momento
