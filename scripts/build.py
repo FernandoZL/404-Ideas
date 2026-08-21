@@ -202,6 +202,7 @@ def build_site(memories):
 
     # Current site: preserved exactly in the first migration.
     copy_if_exists(ROOT / "index.html", SITE / "index.html")
+    copy_if_exists(ROOT / "expediente-0606.html", SITE / "expediente-0606.html")
     shutil.copytree(ROOT / "css", SITE / "css")
     shutil.copytree(ROOT / "js", SITE / "js")
     shutil.copytree(ROOT / "data", SITE / "data")

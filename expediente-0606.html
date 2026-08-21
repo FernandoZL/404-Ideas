@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para ti Rocío 🤍</title>
+<link rel="stylesheet" href="css/legacy.css">
+</head>
+
+<body>
+
+<audio id="music" loop>
+  <source src="dembow.mp3" type="audio/mpeg">
+</audio>
+
+<div class="app">
+
+  <div class="top">
+
+    <div class="logo"></div>
+
+    <div class="actions">
+      <button onclick="toggleTheme()">🌓</button>
+      <button onclick="toggleMusic()">Tu canción 🎵</button>
+    </div>
+
+  </div>
+
+  <!-- CARGA INICIAL -->
+  <section id="loading" class="section active">
+    <div class="card loader">
+      <span class="badge">Sistema privado</span>
+      <h1>Abriendo expediente...</h1>
+
+      <div class="terminal">
+        <div class="terminal-line" id="l1"></div>
+        <div class="terminal-line" id="l2"></div>
+        <div class="terminal-line" id="l3"></div>
+        <div class="terminal-line" id="l4"></div>
+        <div class="terminal-line" id="l5"></div>
+        <div class="terminal-line" id="l6"></div>
+        <div class="terminal-line" id="l7"></div>
+        <div class="terminal-line cursor" id="l8"></div>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress" id="bar"></div>
+      </div>
+
+      <div class="percent" id="percent">0%</div>
+    </div>
+  </section>
+
+  <!-- INICIO -->
+  <section id="inicio" class="section">
+    <div class="card">
+      <div class="heart"></div>
+
+      <span class="badge">
+        Caso especial #0606
+      </span>
+
+      <h1>
+        Hola mi amor 👸🏻🤍
+      </h1>
+
+      <p>
+        Esta página guarda algunos detalles que recuerdo de ti,
+        momentos que fueron pasando sin planearse
+        y una verdad muy simple:
+      </p>
+
+      <p>
+        <strong>me gustas muchísimo.</strong>
+      </p>
+
+      <div class="menu">
+        <button onclick="show('historia')">
+          Cómo empezó todo
+        </button>
+
+        <button onclick="show('frases')" class="secondary">
+          Frases nuestras
+        </button>
+
+        <button onclick="show('perfil')" class="secondary">
+          Tu forma de ser
+        </button>
+
+        <button onclick="show('datos')" class="secondary">
+          Cosas que recuerdo
+        </button>
+
+        <button onclick="show('contador')" class="secondary">
+          Nuestros tiempos
+        </button>
+
+        <button onclick="show('junio')">
+          6 de junio
+        </button>
+
+        <button onclick="show('milveces')">
+          Te amo x1000 ❤️
+        </button>
+
+        <button onclick="show('final')">
+          Un último detalle
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- HISTORIA -->
+  <section id="historia" class="section">
+    <div class="card">
+      <span class="badge">Origen del caso</span>
+
+      <h2>Todo empezó en el trabajo</h2>
+
+      <p>
+        Al inicio eran cosas normales: mensajes, pendientes, bromas,
+        trabajo, stickers y conversaciones que parecían casuales.
+      </p>
+
+      <p>
+        Pero poco a poco algo cambió.
+        Empecé a notar tu forma de ser, tu humor, tu paz,
+        tu inteligencia y esa manera tan tuya de hacer que una conversación simple
+        se sintiera diferente.
+      </p>
+
+      <p>
+        Y sin darme tanta cuenta,
+        hablar contigo empezó a gustarme más de lo normal.
+      </p>
+
+      <button class="mainbtn" onclick="show('inicio')">
+        Volver
+      </button>
+    </div>
+  </section>
+
+  <!-- FRASES -->
+  <section id="frases" class="section">
+    <div class="card">
+      <span class="badge">Pequeñas pruebas</span>
+
+      <h2>Frases nuestras</h2>
+
+      <div class="quote">
+        “Te ves muy tierna para tener ese carácter 👀”
+      </div>
+
+      <div class="quote">
+        “No hay internet...”
+      </div>
+
+      <div class="quote">
+        “Mmmmmmmm mire”
+      </div>
+
+      <p>
+        Hay frases que parecen simples,
+        pero cuando son de nosotros se vuelven recuerdo.
+      </p>
+
+      <button class="mainbtn" onclick="show('inicio')">
+        Volver
+      </button>
+    </div>
+  </section>
+
+  <!-- PERFIL -->
+  <section id="perfil" class="section">
+    <div class="card">
+      <span class="badge">Cosas tuyas</span>
+
+      <h2>Tu forma de ser</h2>
+
+      <div class="item">
+        📚 Lees bastante. Si un libro te gusta, puedes terminarlo rapidísimo.
+      </div>
+
+      <div class="item">
+        🌙 A veces lees de madrugada.
+      </div>
+
+      <div class="item">
+        🎬 Te gustan las pelis de acción, romance y thriller psicológico.
+      </div>
+
+      <div class="item">
+        🧠 Te interesa entender cómo piensan las personas.
+      </div>
+
+      <div class="item">
+        🕵️‍♀️ Mindhunter entra en categoría de “serie importante”.
+      </div>
+
+      <div class="item">
+        🤍 Eres tranquila y prefieres paz antes que drama.
+      </div>
+
+      <div class="item">
+        😌 Eres diplomática, pero también sabes poner límites.
+      </div>
+
+      <div class="item">
+        💉 Le tienes miedo a las agujas. Nivel: no negociable.
+      </div>
+
+      <p>
+        Conclusión: tranquila, inteligente, graciosa,
+        analítica, tierna con carácter y peligrosamente encantadora.
+      </p>
+
+      <button class="mainbtn" onclick="show('inicio')">
+        Volver
+      </button>
+    </div>
+  </section>
+
+  <!-- DATOS -->
+  <section id="datos" class="section">
+    <div class="card">
+      <span class="badge">Detalles guardados</span>
+
+      <h2>Cosas que he aprendido de ti</h2>
+
+      <div class="item">🍰 Te gusta el pastel de zanahoria.</div>
+      <div class="item">🎂 Te gusta el fondant.</div>
+      <div class="item">🍮 Te gusta la torta chilena.</div>
+      <div class="item">🍽️ No eres complicada con la comida.</div>
+      <div class="item">🚗 Manejas bastante para ir al trabajo.</div>
+      <div class="item">✨ Tienes gestos bonitos y considerados.</div>
+      <div class="item">📖 Te gustan las cosas con historia o que te hagan pensar.</div>
+
+      <p>
+        Y sí, he puesto atención.
+        Más de la que probablemente imaginabas.
+      </p>
+
+      <button class="mainbtn" onclick="show('inicio')">
+        Volver
+      </button>
+    </div>
+  </section>
+
+  <!-- CONTADORES -->
+  <section id="contador" class="section">
+    <div class="card">
+      <span class="badge">Nuestros tiempos</span>
+
+      <h2>Lo que ha pasado desde entonces</h2>
+
+      <div class="time-block">
+        <h3>Desde que empezamos a hablar por chat</h3>
+        <p>17/02/2026</p>
+
+        <div class="counter">
+          <div><strong id="chatDays">0</strong>días</div>
+          <div><strong id="chatHours">0</strong>horas</div>
+          <div><strong id="chatMinutes">0</strong>minutos</div>
+          <div><strong id="chatSeconds">0</strong>segundos</div>
+        </div>
+      </div>
+
+      <div class="time-block">
+        <h3>Desde nuestro primer beso</h3>
+        <p>27/03/2026</p>
+
+        <div class="counter">
+          <div><strong id="kissDays">0</strong>días</div>
+          <div><strong id="kissHours">0</strong>horas</div>
+          <div><strong id="kissMinutes">0</strong>minutos</div>
+          <div><strong id="kissSeconds">0</strong>segundos</div>
+        </div>
+      </div>
+
+      <div class="time-block">
+        <h3>Desde que te pregunté si querías ser mi novia</h3>
+        <p>06/06/2026</p>
+
+        <div class="counter">
+          <div><strong id="gfDays">0</strong>días</div>
+          <div><strong id="gfHours">0</strong>horas</div>
+          <div><strong id="gfMinutes">0</strong>minutos</div>
+          <div><strong id="gfSeconds">0</strong>segundos</div>
+        </div>
+      </div>
+
+      <p>
+        Tres momentos distintos,
+        pero todos terminaron llevándome a lo mismo:
+        tú.
+      </p>
+
+      <button class="mainbtn" onclick="show('inicio')">
+        Volver
+      </button>
+    </div>
+  </section>
+
+  <!-- 6 DE JUNIO -->
+  <section id="junio" class="section">
+    <div class="card">
+      <span class="badge">06 de junio</span>
+
+      <h2>El día que te lo pregunté</h2>
+
+      <p>
+        El 6 de junio te pregunté,
+        de una forma bastante informal,
+        si querías ser mi novia.
+      </p>
+
+      <p>
+        Tal vez no fue una escena de película.
+        Tal vez no hubo música de fondo ni discurso perfecto.
+      </p>
+
+      <p>
+        Pero detrás de esa pregunta había cariño,
+        confianza,
+        admiración
+        y muchas ganas de elegirte.
+      </p>
+
+      <p>
+        Y desde ese día,
+        oficialmente,
+        eres mi persona favorita.
+      </p>
+
+      <button class="mainbtn" onclick="show('inicio')">
+        Volver
+      </button>
+    </div>
+  </section>
+
+  <!-- TE AMO X1000 -->
+  <section id="milveces" class="section">
+    <div class="card">
+      <span class="badge">Compilando sentimientos...</span>
+
+      <h2>Te voy a decir que te amo 1,000 veces ❤️</h2>
+
+      <p>
+        Como una vez no alcanza,
+        hice un pequeño programa para repetirlo.
+      </p>
+
+      <div class="love-code">
+        <span class="code-key">for</span>
+        (
+        <span class="code-key">let</span>
+        i =
+        <span class="code-num">1</span>;
+        i &lt;=
+        <span class="code-num">1000</span>;
+        i++
+        ) {
+        <br>
+        &nbsp;&nbsp;
+        <span class="code-fn">decir</span>
+        (
+        <span class="code-text">"Te amo ❤️"</span>
+        );
+        <br>
+        }
+      </div>
+
+      <div class="love-output">
+        <div class="love-status" id="loveStatus">
+          Esperando ejecución...
+        </div>
+
+        <div class="love-message" id="loveMessage">
+          ♡
+        </div>
+
+        <div class="love-final" id="loveFinal">
+          Y aunque el programa termine en 1,000...
+          <br>
+          <strong>
+            yo no pienso dejar de amarte ahí. ❤️
+          </strong>
+        </div>
+      </div>
+
+      <div class="love-actions">
+        <button class="mainbtn" id="loveRun" onclick="runLove()">
+          ▶ Ejecutar programa
+        </button>
+
+        <button class="mainbtn" onclick="resetLove()">
+          ↻ Reiniciar
+        </button>
+      </div>
+
+      <div style="margin-top:12px">
+        <button class="mainbtn secondary" onclick="show('inicio')" style="width:100%">
+          Volver
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL -->
+  <section id="final" class="section">
+    <div class="card">
+      <div class="heart"></div>
+
+      <span class="badge">
+        Un último detalle
+      </span>
+
+      <h2></h2>
+
+      <p>
+        Me gustas por tu forma de ser.
+        Por tu paz,
+        por tu inteligencia,
+        por tu humor
+        y por esa manera tan tuya de hacer que todo se sienta más bonito.
+      </p>
+
+      <p>
+        Gracias por llegar a mi vida de una forma tan inesperada.
+        Me encanta lo que estamos construyendo.
+      </p>
+
+      <p>
+        Y aunque esto empezó de forma sencilla,
+        para mí se volvió algo muy especial.
+      </p>
+
+      <h2>
+        Con amor,
+        <br>
+        Fernando 🤍
+      </h2>
+
+      <button class="mainbtn" onclick="show('inicio')">
+        Volver al inicio
+      </button>
+    </div>
+  </section>
+
+</div>
+
+<script src="js/legacy.js"></script>
+</body>
+</html>
