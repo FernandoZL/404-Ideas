@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>Nuevo video · Nuestro lugar</title>
+<link rel="stylesheet" href="../css/style.css?v=20260821-0400">
+
+<style>
+.tool{max-width:760px;margin:auto;padding:35px 20px 110px}
+.tool-card{background:var(--surface);border:1px solid var(--line);border-radius:28px;padding:22px;box-shadow:var(--shadow)}
+.tool label{display:block;font-weight:800;margin:16px 0 7px}
+.tool input,.tool textarea{width:100%;border:1px solid var(--line);border-radius:16px;padding:14px;background:var(--bg);color:var(--text);font:inherit}
+.tool textarea{min-height:170px;resize:vertical}
+.check{display:flex!important;align-items:center;gap:9px}.check input{width:auto!important}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+.actions button{min-height:48px;border:0;border-radius:16px;font-weight:900;cursor:pointer}
+.primary-tool{background:var(--text);color:var(--bg)}.secondary-tool{background:var(--soft);color:var(--text)}
+.result{margin-top:16px;padding:14px;border-radius:16px;background:var(--soft);font-family:ui-monospace,monospace;font-size:12px;white-space:pre-wrap;word-break:break-word}
+.preview{margin-top:12px;padding:14px;border:1px solid var(--line);border-radius:18px;background:var(--soft)}
+.preview audio,.preview video{width:100%;max-height:420px}
+.helper{font-size:12px;color:var(--muted);line-height:1.5}
+@media(max-width:600px){.actions{grid-template-columns:1fr}}
+</style>
+
+</head>
+<body>
+<main class="tool">
+<a href="index.html" style="text-decoration:none">← Añadir algo</a>
+<section class="page-title" style="padding:35px 0 10px">
+<span class="kicker">Zona de trabajo</span><h1>Nuevo video.</h1>
+<p>Puedes guardar un MP4 local o enlazar un video de YouTube.</p>
+</section>
+<div class="tool-card">
+<label for="date">Fecha</label><input id="date" type="date">
+<label for="title">Título</label><input id="title" placeholder="Un video especial">
+<label for="file">Archivo de video (opcional)</label><input id="file" type="file" accept=".mp4,.mov,.m4v,video/*">
+<p class="helper">MP4 (H.264/AAC) es la opción recomendada para máxima compatibilidad.</p>
+<div id="preview" class="preview" hidden><video id="videoPreview" controls></video></div>
+<label for="youtube">YouTube (opcional)</label><input id="youtube" type="url" placeholder="https://youtube.com/...">
+<label for="text">¿Qué quieres recordar?</label><textarea id="text" placeholder="Aquí puedes escribir qué pasó..."></textarea>
+<label class="check"><input id="favorite" type="checkbox"> Marcar como favorito</label>
+<label class="check"><input id="publishNow" type="checkbox"> Publicar inmediatamente</label>
+<p class="helper">Déjalo apagado para guardar primero como borrador.</p>
+<div class="actions">
+<button class="primary-tool" id="prepare">Preparar video</button>
+<button class="secondary-tool" id="download" hidden>Descargar video.md</button>
+</div>
+<pre id="result" class="result" hidden></pre>
+</div>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const now=new Date();$("date").value=[now.getFullYear(),String(now.getMonth()+1).padStart(2,"0"),String(now.getDate()).padStart(2,"0")].join("-");
+const slug=s=>String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,70);
+const yaml=v=>'"'+String(v||"").replace(/\\/g,"\\\\").replace(/"/g,'\\"')+'"';
+let prepared="", videoName="";
+$("file").onchange=e=>{
+ const file=e.target.files[0];videoName=file?file.name:"";
+ if(file){
+   const url=URL.createObjectURL(file);
+   $("videoPreview").src=url;$("preview").hidden=false;
+ }else{$("preview").hidden=true}
+};
+function build(){
+ const date=$("date").value,title=$("title").value.trim();
+ if(!date||!title){alert("Fecha y título son obligatorios.");return null}
+ const folder=`${date}-${slug(title)}`;
+ const md=`---\ntipo: video\npublicado: ${$("publishNow").checked}\nfecha: ${date}\ntitulo: ${yaml(title)}\narchivo: ${yaml(videoName)}\nyoutube: ${yaml($("youtube").value.trim())}\nportada:\nfavorito: ${$("favorite").checked}\n---\n\n${$("text").value.trim()||"Aquí puedes escribir qué quieres recordar de este video."}\n`;
+ return {md,path:`contenido/videos/${date.slice(0,4)}/${folder}/`,file:videoName};
+}
+$("prepare").onclick=()=>{
+ const b=build();if(!b)return;prepared=b.md;
+ $("result").hidden=false;
+ $("result").textContent=`CARPETA:\n${b.path}\n\nARCHIVOS:\n- video.md${b.file?`\n- ${b.file}`:""}\n\n${b.md}`;
+ $("download").hidden=false;
+};
+$("download").onclick=()=>{
+ if(!prepared)return;
+ const blob=new Blob([prepared],{type:"text/markdown;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download="video.md";a.click();setTimeout(()=>URL.revokeObjectURL(url),500)
+};
+</script>
+</body>
+</html>

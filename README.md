@@ -162,3 +162,20 @@ Es deliberado: primero congelamos y estabilizamos la base actual.
 - `contenido/inbox` continúa totalmente excluido del build público.
 - El build falla si detecta referencias administrativas dentro de `_site`.
 - Se incluye un editor local para Windows.
+
+
+## v2.8 — Canciones + Videos
+
+- `contenido/canciones/` como fuente.
+- `contenido/videos/` como fuente.
+- `canciones.json` y `videos.json` automáticos.
+- `canciones.html` + detalle individual.
+- `videos.html` + detalle individual.
+- Audio local con interacción manual, sin autoplay.
+- Spotify, YouTube y Apple Music opcionales.
+- Video local con carga diferida (`preload=metadata`).
+- YouTube con `youtube-nocookie.com`.
+- `dembow.mp3` se conserva en raíz para no romper el Expediente #0606 y además entra al catálogo como “Tu canción”.
+- Editores privados de canción y video.
+- Manual completo: `MANUAL_CONTENIDO.md`.
+- Ejemplos copiables: `/ejemplos`.

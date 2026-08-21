@@ -1,10 +1,10 @@
 ---
 tipo: cancion
 publicado: false
-fecha:
+fecha: 2026-08-21
 titulo: "Una canción especial"
-artista:
-archivo:
+artista: "Artista"
+archivo: "cancion.mp3"
 archivo_raiz: false
 spotify:
 youtube:
@@ -13,4 +13,4 @@ portada:
 favorito: false
 ---
 
-Aquí puedes escribir por qué esta canción importa o qué te recuerda.
+Esta canción me recuerda a un momento bonito.

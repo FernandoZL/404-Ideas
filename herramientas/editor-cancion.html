@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>Nueva canción · Nuestro lugar</title>
+<link rel="stylesheet" href="../css/style.css?v=20260821-0400">
+
+<style>
+.tool{max-width:760px;margin:auto;padding:35px 20px 110px}
+.tool-card{background:var(--surface);border:1px solid var(--line);border-radius:28px;padding:22px;box-shadow:var(--shadow)}
+.tool label{display:block;font-weight:800;margin:16px 0 7px}
+.tool input,.tool textarea{width:100%;border:1px solid var(--line);border-radius:16px;padding:14px;background:var(--bg);color:var(--text);font:inherit}
+.tool textarea{min-height:170px;resize:vertical}
+.check{display:flex!important;align-items:center;gap:9px}.check input{width:auto!important}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+.actions button{min-height:48px;border:0;border-radius:16px;font-weight:900;cursor:pointer}
+.primary-tool{background:var(--text);color:var(--bg)}.secondary-tool{background:var(--soft);color:var(--text)}
+.result{margin-top:16px;padding:14px;border-radius:16px;background:var(--soft);font-family:ui-monospace,monospace;font-size:12px;white-space:pre-wrap;word-break:break-word}
+.preview{margin-top:12px;padding:14px;border:1px solid var(--line);border-radius:18px;background:var(--soft)}
+.preview audio,.preview video{width:100%;max-height:420px}
+.helper{font-size:12px;color:var(--muted);line-height:1.5}
+@media(max-width:600px){.actions{grid-template-columns:1fr}}
+</style>
+
+</head>
+<body>
+<main class="tool">
+<a href="index.html" style="text-decoration:none">← Añadir algo</a>
+<section class="page-title" style="padding:35px 0 10px">
+<span class="kicker">Zona de trabajo</span><h1>Nueva canción.</h1>
+<p>Guarda un archivo local o solamente los enlaces donde se puede escuchar.</p>
+</section>
+<div class="tool-card">
+<label for="date">Fecha (opcional)</label><input id="date" type="date">
+<label for="title">Título</label><input id="title" placeholder="Una canción especial">
+<label for="artist">Artista (opcional)</label><input id="artist" placeholder="Artista">
+<label for="file">Archivo de audio (opcional)</label><input id="file" type="file" accept=".mp3,.m4a,.aac,.wav,audio/*">
+<p class="helper">Para máxima compatibilidad web recomendamos MP3 o M4A.</p>
+<div id="preview" class="preview" hidden><audio id="audioPreview" controls></audio></div>
+<label for="spotify">Spotify (opcional)</label><input id="spotify" type="url" placeholder="https://open.spotify.com/...">
+<label for="youtube">YouTube (opcional)</label><input id="youtube" type="url" placeholder="https://youtube.com/...">
+<label for="apple">Apple Music (opcional)</label><input id="apple" type="url" placeholder="https://music.apple.com/...">
+<label for="text">¿Por qué importa?</label><textarea id="text" placeholder="Esta canción me recuerda a..."></textarea>
+<label class="check"><input id="favorite" type="checkbox"> Marcar como favorita</label>
+<label class="check"><input id="publishNow" type="checkbox"> Publicar inmediatamente</label>
+<p class="helper">Déjalo apagado si primero quieres guardarla como borrador.</p>
+<div class="actions">
+<button class="primary-tool" id="prepare">Preparar canción</button>
+<button class="secondary-tool" id="download" hidden>Descargar cancion.md</button>
+</div>
+<pre id="result" class="result" hidden></pre>
+</div>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const slug=s=>String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,70);
+const yaml=v=>'"'+String(v||"").replace(/\\/g,"\\\\").replace(/"/g,'\\"')+'"';
+let prepared="", audioName="";
+$("file").onchange=e=>{
+ const file=e.target.files[0]; audioName=file?file.name:"";
+ if(file){
+   const url=URL.createObjectURL(file);
+   $("audioPreview").src=url;$("preview").hidden=false;
+ }else{$("preview").hidden=true}
+};
+function build(){
+ const date=$("date").value,title=$("title").value.trim();
+ if(!title){alert("El título es obligatorio.");return null}
+ const folder=(date?date+"-":"")+slug(title);
+ const year=date?date.slice(0,4):"sin-fecha";
+ const md=`---\ntipo: cancion\npublicado: ${$("publishNow").checked}\nfecha: ${date}\ntitulo: ${yaml(title)}\nartista: ${yaml($("artist").value.trim())}\narchivo: ${yaml(audioName)}\narchivo_raiz: false\nspotify: ${yaml($("spotify").value.trim())}\nyoutube: ${yaml($("youtube").value.trim())}\napple_music: ${yaml($("apple").value.trim())}\nportada:\nfavorito: ${$("favorite").checked}\n---\n\n${$("text").value.trim()||"Aquí puedes escribir por qué esta canción importa."}\n`;
+ return {md,path:`contenido/canciones/${year}/${folder||"cancion"}/`,file:audioName};
+}
+$("prepare").onclick=()=>{
+ const b=build();if(!b)return;prepared=b.md;
+ $("result").hidden=false;
+ $("result").textContent=`CARPETA:\n${b.path}\n\nARCHIVOS:\n- cancion.md${b.file?`\n- ${b.file}`:""}\n\n${b.md}`;
+ $("download").hidden=false;
+};
+$("download").onclick=()=>{
+ if(!prepared)return;
+ const blob=new Blob([prepared],{type:"text/markdown;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download="cancion.md";a.click();setTimeout(()=>URL.revokeObjectURL(url),500)
+};
+</script>
+</body>
+</html>

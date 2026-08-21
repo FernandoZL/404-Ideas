@@ -187,8 +187,10 @@
           <a href="lugares.html"><span>06</span><strong>Nuestros lugares</strong><small>Los sitios que también se volvieron recuerdo</small></a>
           <a href="frases.html"><span>07</span><strong>Frases nuestras</strong><small>Esas cosas que solo nosotros entendemos</small></a>
           <a href="cartas.html"><span>08</span><strong>Cartas</strong><small>Palabras que merecían quedarse</small></a>
-          <a href="archivo.html"><span>09</span><strong>Todo el archivo</strong><small>Distintas formas de volver</small></a>
-          <a href="expediente-0606.html"><span>10</span><strong>Expediente #0606</strong><small>La página con la que empezó todo</small></a>
+          <a href="canciones.html"><span>09</span><strong>Canciones</strong><small>La música que guarda algo nuestro</small></a>
+          <a href="videos.html"><span>10</span><strong>Videos</strong><small>Momentos para volver a ver</small></a>
+          <a href="archivo.html"><span>11</span><strong>Todo el archivo</strong><small>Distintas formas de volver</small></a>
+          <a href="expediente-0606.html"><span>12</span><strong>Expediente #0606</strong><small>La página con la que empezó todo</small></a>
         </nav>
       </div>`;
     document.body.appendChild(overlay);

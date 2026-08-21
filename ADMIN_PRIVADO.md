@@ -121,3 +121,17 @@ y desaparece cuando cierras la ventana del servidor.
 `publicado: false` e `inbox` los ocultan del **sitio web**, pero si el repositorio de GitHub es público, alguien que visite deliberadamente el repositorio podría ver esos archivos fuente.
 
 Para sorpresas que deban ser realmente secretas antes de publicarlas, la siguiente evolución recomendada es separar el contenido pendiente en un repositorio privado y sincronizarlo solo al publicar.
+
+
+## Canciones y videos
+
+Los editores locales ahora incluyen:
+
+```text
+herramientas/editor-cancion.html
+herramientas/editor-video.html
+```
+
+Ambos generan contenido con `publicado: false` por defecto.
+
+Ninguna herramienta se copia al sitio público.

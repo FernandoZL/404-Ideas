@@ -398,7 +398,232 @@ def discover_dates():
     dates.sort(key=lambda item: (item["fecha"], item["id"]))
     return dates, warnings, errors
 
-def write_generated(memories, phrases, letters, dates):
+
+def discover_songs():
+    base = CONTENT / "canciones"
+    songs = []
+    warnings = []
+    errors = []
+
+    if not base.exists():
+        return songs, warnings, errors
+
+    for md in sorted(base.rglob("*.md")):
+        if md.name.startswith("."):
+            continue
+
+        text = md.read_text(encoding="utf-8")
+        meta, body = parse_front_matter(text)
+
+        if not content_is_public(meta):
+            continue
+
+        if (meta.get("tipo") or "cancion") != "cancion":
+            continue
+
+        date = str(meta.get("fecha", "")).strip()
+        title = str(meta.get("titulo", "")).strip()
+        artist = str(meta.get("artista", "")).strip()
+        filename = str(meta.get("archivo", "")).strip()
+        root_file = bool(meta.get("archivo_raiz", False))
+        spotify = str(meta.get("spotify", "")).strip()
+        youtube = str(meta.get("youtube", "")).strip()
+        apple_music = str(meta.get("apple_music", "")).strip()
+        cover = str(meta.get("portada", "")).strip()
+
+        if date:
+            try:
+                datetime.strptime(date, "%Y-%m-%d")
+            except ValueError:
+                errors.append(
+                    f"{md.relative_to(ROOT)}: fecha inválida '{date}'. Usa AAAA-MM-DD o déjala vacía."
+                )
+                continue
+
+        if not title:
+            title = md.parent.name if md.name == "cancion.md" else md.stem
+            title = title.replace("-", " ").strip().title() or "Canción"
+            warnings.append(
+                f"{md.relative_to(ROOT)}: no tiene título; se usará '{title}'."
+            )
+
+        folder = md.parent
+        images, audio, _ = find_media(folder)
+
+        audio_src = ""
+
+        if filename:
+            if root_file:
+                if not (ROOT / filename).exists():
+                    errors.append(
+                        f"{md.relative_to(ROOT)}: archivo raíz '{filename}' no existe."
+                    )
+                    continue
+                audio_src = filename
+            else:
+                if not (folder / filename).exists():
+                    errors.append(
+                        f"{md.relative_to(ROOT)}: archivo de audio '{filename}' no existe en la carpeta."
+                    )
+                    continue
+                audio_src = f"{folder.relative_to(ROOT).as_posix()}/{filename}"
+        elif audio:
+            filename = audio[0]
+            audio_src = f"{folder.relative_to(ROOT).as_posix()}/{filename}"
+
+        if cover:
+            if not (folder / cover).exists():
+                errors.append(
+                    f"{md.relative_to(ROOT)}: portada '{cover}' no existe."
+                )
+                continue
+        elif images:
+            cover = images[0]
+
+        if not audio_src and not any([spotify, youtube, apple_music]):
+            warnings.append(
+                f"{md.relative_to(ROOT)}: no tiene archivo local ni enlace externo."
+            )
+
+        rel_folder = folder.relative_to(ROOT).as_posix()
+        song_id = (
+            folder.name
+            if md.name == "cancion.md"
+            else md.relative_to(base).with_suffix("").as_posix().replace("/", "--")
+        )
+
+        songs.append({
+            "id": song_id,
+            "tipo": "cancion",
+            "fecha": date,
+            "titulo": title,
+            "artista": artist,
+            "archivo": filename,
+            "src": audio_src,
+            "archivoRaiz": root_file,
+            "spotify": spotify,
+            "youtube": youtube,
+            "appleMusic": apple_music,
+            "portada": cover,
+            "favorito": bool(meta.get("favorito", False)),
+            "texto": body.strip(),
+            "carpeta": rel_folder,
+            "imagenes": images,
+            "audio": audio,
+        })
+
+    songs.sort(
+        key=lambda item: (item["fecha"] or "0000-00-00", item["id"]),
+        reverse=True,
+    )
+    return songs, warnings, errors
+
+
+def discover_video_entries():
+    base = CONTENT / "videos"
+    items = []
+    warnings = []
+    errors = []
+
+    if not base.exists():
+        return items, warnings, errors
+
+    for md in sorted(base.rglob("*.md")):
+        if md.name.startswith("."):
+            continue
+
+        text = md.read_text(encoding="utf-8")
+        meta, body = parse_front_matter(text)
+
+        if not content_is_public(meta):
+            continue
+
+        if (meta.get("tipo") or "video") != "video":
+            continue
+
+        date = str(meta.get("fecha", "")).strip()
+        title = str(meta.get("titulo", "")).strip()
+        filename = str(meta.get("archivo", "")).strip()
+        youtube = str(meta.get("youtube", "")).strip()
+        cover = str(meta.get("portada", "")).strip()
+
+        if not date:
+            errors.append(f"{md.relative_to(ROOT)}: falta 'fecha'.")
+            continue
+
+        try:
+            datetime.strptime(date, "%Y-%m-%d")
+        except ValueError:
+            errors.append(
+                f"{md.relative_to(ROOT)}: fecha inválida '{date}'. Usa AAAA-MM-DD."
+            )
+            continue
+
+        if not title:
+            title = md.parent.name if md.name == "video.md" else md.stem
+            title = title.replace("-", " ").strip().title() or "Video"
+            warnings.append(
+                f"{md.relative_to(ROOT)}: no tiene título; se usará '{title}'."
+            )
+
+        folder = md.parent
+        images, _, videos = find_media(folder)
+
+        video_src = ""
+
+        if filename:
+            if not (folder / filename).exists():
+                errors.append(
+                    f"{md.relative_to(ROOT)}: archivo de video '{filename}' no existe."
+                )
+                continue
+            video_src = f"{folder.relative_to(ROOT).as_posix()}/{filename}"
+        elif videos:
+            filename = videos[0]
+            video_src = f"{folder.relative_to(ROOT).as_posix()}/{filename}"
+
+        if cover:
+            if not (folder / cover).exists():
+                errors.append(
+                    f"{md.relative_to(ROOT)}: portada '{cover}' no existe."
+                )
+                continue
+        elif images:
+            cover = images[0]
+
+        if not video_src and not youtube:
+            warnings.append(
+                f"{md.relative_to(ROOT)}: no tiene video local ni enlace de YouTube."
+            )
+
+        rel_folder = folder.relative_to(ROOT).as_posix()
+        video_id = (
+            folder.name
+            if md.name == "video.md"
+            else md.relative_to(base).with_suffix("").as_posix().replace("/", "--")
+        )
+
+        items.append({
+            "id": video_id,
+            "tipo": "video",
+            "fecha": date,
+            "titulo": title,
+            "archivo": filename,
+            "src": video_src,
+            "youtube": youtube,
+            "portada": cover,
+            "favorito": bool(meta.get("favorito", False)),
+            "texto": body.strip(),
+            "carpeta": rel_folder,
+            "imagenes": images,
+            "videos": videos,
+        })
+
+    items.sort(key=lambda item: (item["fecha"], item["id"]), reverse=True)
+    return items, warnings, errors
+
+
+def write_generated(memories, phrases, letters, dates, songs, video_entries):
     GENERATED.mkdir(parents=True, exist_ok=True)
 
     (GENERATED / "recuerdos.json").write_text(
@@ -418,6 +643,16 @@ def write_generated(memories, phrases, letters, dates):
 
     (GENERATED / "fechas.json").write_text(
         json.dumps(dates, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+    (GENERATED / "canciones.json").write_text(
+        json.dumps(songs, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+    (GENERATED / "videos.json").write_text(
+        json.dumps(video_entries, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
 
@@ -496,6 +731,8 @@ def write_generated(memories, phrases, letters, dates):
         "frases": len(phrases),
         "cartas": len(letters),
         "fechas": len(dates),
+        "canciones": len(songs),
+        "videosArchivo": len(video_entries),
         "ultimaActualizacion": datetime.now().astimezone().isoformat(timespec="seconds"),
     }
 
@@ -548,7 +785,7 @@ def copy_if_exists(source: Path, destination: Path):
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source, destination)
 
-def build_site(memories, letters):
+def build_site(memories, letters, songs, video_entries):
     if SITE.exists():
         shutil.rmtree(SITE)
 
@@ -560,6 +797,7 @@ def build_site(memories, letters):
         "index.html", "historia.html", "recuerdos.html", "fotos.html",
         "recuerdo.html", "archivo.html", "lugares.html",
         "frases.html", "cartas.html", "carta.html", "fechas.html",
+        "canciones.html", "cancion.html", "videos.html", "video.html",
         "expediente-0606.html",
     ]
     for page in public_pages:
@@ -590,6 +828,25 @@ def build_site(memories, letters):
         for filename in letter["imagenes"] + letter["audio"] + letter["videos"]:
             copy_if_exists(source_folder / filename, target_folder / filename)
 
+
+    # Publish media that belongs to songs.
+    for song in songs:
+        source_folder = ROOT / song["carpeta"]
+        target_folder = SITE / song["carpeta"]
+        target_folder.mkdir(parents=True, exist_ok=True)
+
+        for filename in song["imagenes"] + song["audio"]:
+            copy_if_exists(source_folder / filename, target_folder / filename)
+
+    # Publish media that belongs to standalone videos.
+    for item in video_entries:
+        source_folder = ROOT / item["carpeta"]
+        target_folder = SITE / item["carpeta"]
+        target_folder.mkdir(parents=True, exist_ok=True)
+
+        for filename in item["imagenes"] + item["videos"]:
+            copy_if_exists(source_folder / filename, target_folder / filename)
+
     # Explicitly do NOT copy contenido/inbox.
 
 def main():
@@ -597,9 +854,17 @@ def main():
     phrases, phrase_warnings, phrase_errors = discover_phrases()
     letters, letter_warnings, letter_errors = discover_letters()
     dates, date_warnings, date_errors = discover_dates()
+    songs, song_warnings, song_errors = discover_songs()
+    video_entries, video_warnings, video_errors = discover_video_entries()
 
-    warnings = memory_warnings + phrase_warnings + letter_warnings + date_warnings
-    errors = memory_errors + phrase_errors + letter_errors + date_errors
+    warnings = (
+        memory_warnings + phrase_warnings + letter_warnings + date_warnings +
+        song_warnings + video_warnings
+    )
+    errors = (
+        memory_errors + phrase_errors + letter_errors + date_errors +
+        song_errors + video_errors
+    )
 
     for warning in warnings:
         print(f"WARNING: {warning}")
@@ -609,8 +874,8 @@ def main():
             print(f"ERROR: {error}")
         raise SystemExit(1)
 
-    write_generated(memories, phrases, letters, dates)
-    build_site(memories, letters)
+    write_generated(memories, phrases, letters, dates, songs, video_entries)
+    build_site(memories, letters, songs, video_entries)
     validate_public_site()
 
     print("=" * 62)
@@ -621,6 +886,8 @@ def main():
     print(f"Frases:      {len(phrases)}")
     print(f"Cartas:      {len(letters)}")
     print(f"Fechas:      {len(dates)}")
+    print(f"Canciones:   {len(songs)}")
+    print(f"Videos:      {len(video_entries)}")
     print(f"Salida:       {SITE}")
     print("Inbox:        excluido de publicación")
     print("Herramientas: excluidas de publicación")

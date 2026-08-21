@@ -83,6 +83,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
+  if((stats?.canciones || 0) > 0){
+    numberItems.push({
+      value: stats.canciones,
+      label: stats.canciones === 1 ? "canción" : "canciones"
+    });
+  }
+
+  if((stats?.videosArchivo || 0) > 0){
+    numberItems.push({
+      value: stats.videosArchivo,
+      label: stats.videosArchivo === 1 ? "video" : "videos"
+    });
+  }
+
   $("numberGrid").innerHTML = numberItems.map(item => `
     <div>
       <strong>${Number(item.value).toLocaleString("es-GT")}</strong>

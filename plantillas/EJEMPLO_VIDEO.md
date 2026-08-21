@@ -3,10 +3,10 @@ tipo: video
 publicado: false
 fecha: 2026-08-21
 titulo: "Un video especial"
-archivo:
+archivo: "video.mp4"
 youtube:
 portada:
 favorito: false
 ---
 
-Aquí puedes escribir qué pasó o por qué quieres conservar este video.
+Un video que quiero conservar porque guarda algo que vale la pena volver a ver.
