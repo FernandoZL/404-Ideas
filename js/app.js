@@ -132,17 +132,54 @@ document.addEventListener("DOMContentLoaded", async () => {
     $("todayCard").hidden = false;
   }
 
-  const modal = $("modal");
-  $("randomBtn").addEventListener("click", () => {
-    const memory = memories.length ? memories[Math.floor(Math.random() * memories.length)] : null;
+  const modal = $("randomModal");
+  const randomButton = $("randomBtn");
+  let randomPreviousFocus = null;
+
+  const closeRandomModal = () => {
+    if(!modal || modal.hidden) return;
+    modal.classList.remove("open");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("menu-open");
+    setTimeout(() => {
+      modal.hidden = true;
+      if(randomPreviousFocus) randomPreviousFocus.focus();
+    }, 220);
+  };
+
+  const openRandomModal = () => {
+    const memory = memories.length
+      ? memories[Math.floor(Math.random() * memories.length)]
+      : null;
+
     $("randomDate").textContent = memory ? NL.shortDate(memory.fecha) : "Nuestro archivo";
     $("randomTitle").textContent = memory ? memory.titulo : "Volvamos al comienzo.";
-    $("randomText").textContent = memory ? NL.excerpt(memory.texto, 300) : "A veces el mejor lugar para volver es donde empezó todo.";
+    $("randomText").textContent = memory
+      ? NL.excerpt(memory.texto, 300)
+      : "A veces el mejor lugar para volver es donde empezó todo.";
     $("randomOpen").href = memory ? NL.memoryUrl(memory) : "historia.html";
     $("randomOpen").textContent = memory ? "Abrir recuerdo" : "Ir a nuestra historia";
-    modal.hidden = false; requestAnimationFrame(() => modal.classList.add("open")); document.body.classList.add("menu-open");
-  });
-  document.querySelectorAll("[data-random-close]").forEach(el => el.addEventListener("click", () => { modal.classList.remove("open"); modal.hidden = true; document.body.classList.remove("menu-open"); }));
+
+    randomPreviousFocus = document.activeElement;
+    modal.hidden = false;
+    modal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("menu-open");
+    requestAnimationFrame(() => {
+      modal.classList.add("open");
+      const close = modal.querySelector(".random-close");
+      if(close) close.focus();
+    });
+  };
+
+  if(randomButton && modal){
+    randomButton.addEventListener("click", openRandomModal);
+    modal.querySelectorAll("[data-random-close]").forEach(el =>
+      el.addEventListener("click", closeRandomModal)
+    );
+    document.addEventListener("keydown", event => {
+      if(event.key === "Escape" && !modal.hidden) closeRandomModal();
+    });
+  }
 
   async function runOpening() {
     const screen = $("opening"), app = $("app");

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>Añadir · Nuestro lugar</title>
+<link rel="stylesheet" href="../css/style.css?v=20260821-0330">
+<style>
+.add-shell{max-width:820px;margin:auto;padding:calc(24px + env(safe-area-inset-top)) 20px calc(80px + env(safe-area-inset-bottom))}
+.add-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.add-top a{text-decoration:none;font-weight:850}
+.add-title{padding:58px 0 28px}
+.add-title h1{margin:0;font-family:Georgia,"Times New Roman",serif;font-size:clamp(54px,11vw,90px);font-weight:500;letter-spacing:-.05em}
+.add-title p{max-width:620px;color:var(--muted);line-height:1.7}
+.add-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.add-card{min-height:230px;padding:22px;background:var(--surface);border:1px solid var(--line);border-radius:25px;text-decoration:none;display:flex;flex-direction:column;box-shadow:var(--shadow)}
+.add-card>span{color:var(--accent);font-size:11px;font-weight:900;letter-spacing:.1em}
+.add-card h2{margin:auto 0 8px;font-family:Georgia,"Times New Roman",serif;font-size:34px;font-weight:500}
+.add-card p{margin:0;color:var(--muted);font-size:13px;line-height:1.5}
+.add-note{margin-top:18px;padding:16px;border-radius:18px;background:var(--soft);color:var(--muted);font-size:13px;line-height:1.55}
+@media(max-width:620px){.add-grid{grid-template-columns:1fr}.add-card{min-height:180px}}
+</style>
+</head>
+<body>
+<main class="add-shell">
+  <div class="add-top"><a href="../index.html">← Nuestro lugar</a><span class="kicker" style="margin:0">Herramientas</span></div>
+  <section class="add-title"><span class="kicker">Desde el celular</span><h1>Añadir algo.</h1><p>Elige qué quieres guardar. Estas herramientas no aparecen en la navegación pública.</p></section>
+  <section class="add-grid">
+    <a class="add-card" href="editor.html"><span>01</span><h2>Recuerdo</h2><p>Historia, fotos, etiquetas y lugar.</p></a>
+    <a class="add-card" href="editor-carta.html"><span>02</span><h2>Carta</h2><p>Un texto más largo e íntimo.</p></a>
+    <a class="add-card" href="editor-frase.html"><span>03</span><h2>Frase</h2><p>Una frase corta con contexto opcional.</p></a>
+    <a class="add-card" href="editor-fecha.html"><span>04</span><h2>Fecha</h2><p>Un día importante con contador o aniversario.</p></a>
+  </section>
+  <div class="add-note">Los borradores de recuerdos se guardan automáticamente en este dispositivo. Publicar y guardar localmente siguen siendo acciones distintas.</div>
+</main>
+</body>
+</html>

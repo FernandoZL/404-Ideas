@@ -99,3 +99,12 @@ Abre directamente:
 `https://fernandozl.github.io/404-Ideas/herramientas/editor-fecha.html`
 
 Puedes decidir si la fecha debe tener contador y si quieres recordarla cada año.
+
+
+## Acceso recomendado desde el teléfono
+
+Guarda como favorito o añade a la pantalla de inicio:
+
+`https://fernandozl.github.io/404-Ideas/herramientas/`
+
+Desde ahí puedes elegir Recuerdo, Carta, Frase o Fecha sin entrar a la navegación pública.

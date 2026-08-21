@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="es"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#fff8fa">
-<title>Nuestro lugar 🤍</title><link rel="stylesheet" href="css/style.css?v=20260821-0245"></head>
+<title>Nuestro lugar 🤍</title><link rel="stylesheet" href="css/style.css?v=20260821-0330"></head>
 <body data-page="home">
 <section id="opening" class="opening" aria-live="polite"><div class="opening-inner"><span class="kicker">Nuestro archivo</span><h1>Abriendo nuestro lugar...</h1><div class="terminal"><div id="o1"></div><div id="o2"></div><div id="o3"></div><div id="o4"></div></div><div class="progress"><span id="openingBar"></span></div><small id="openingPercent">0%</small></div></section>
 <div id="app" class="page-shell" hidden><header class="topbar" data-site-header></header><main>
@@ -19,5 +19,14 @@
 <section class="section"><span class="kicker">Nosotros en números</span><div id="numberGrid" class="number-grid"></div></section>
 <section class="closing"><p>No quiero guardar solo los días importantes. También quiero guardar los días normales que terminaron importando.</p><span>— Nuestro lugar 🤍</span></section>
 </main><nav class="mobile-nav" data-mobile-nav></nav></div>
-<div id="modal" class="site-menu" hidden><button class="menu-scrim" type="button" data-random-close aria-label="Cerrar"></button><article class="modal-card" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(90vw,520px);z-index:2"><button class="close circle-btn" style="float:right" type="button" data-random-close aria-label="Cerrar">×</button><span class="kicker" id="randomDate"></span><h2 id="randomTitle" style="font-family:Georgia,serif;font-size:38px;font-weight:500"></h2><p id="randomText" style="color:var(--muted);line-height:1.7"></p><a id="randomOpen" class="primary" href="recuerdos.html">Abrir recuerdo</a></article></div>
-<script src="js/common.js?v=20260821-0245"></script><script src="js/app.js?v=20260821-0245"></script></body></html>
+<div id="randomModal" class="random-modal" hidden aria-hidden="true">
+  <button class="random-scrim" type="button" data-random-close aria-label="Cerrar recuerdo aleatorio"></button>
+  <article class="random-dialog" role="dialog" aria-modal="true" aria-labelledby="randomTitle">
+    <button class="random-close" type="button" data-random-close aria-label="Cerrar">×</button>
+    <span class="kicker" id="randomDate"></span>
+    <h2 id="randomTitle"></h2>
+    <p id="randomText"></p>
+    <a id="randomOpen" class="primary" href="recuerdos.html">Abrir recuerdo</a>
+  </article>
+</div>
+<script src="js/common.js?v=20260821-0330"></script><script src="js/app.js?v=20260821-0330"></script></body></html>

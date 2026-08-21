@@ -143,3 +143,11 @@ Es deliberado: primero congelamos y estabilizamos la base actual.
 - “Nosotros en números” se genera desde fechas + estadísticas.
 - Los aniversarios pueden aparecer automáticamente en “Un día como hoy”.
 - El ejemplo técnico de Café Cartel fue sustituido por un ejemplo genérico.
+
+## v2.7.1 — Estabilización de interacción
+
+- Corregido el modal de “Recuérdame algo bonito”.
+- Modal con fondo propio, cierre, Escape y foco accesible.
+- Hub privado `/herramientas/` para añadir contenido desde móvil.
+- El hub muestra solo tipos que ya funcionan: recuerdo, carta, frase y fecha.
+- Se realizó prueba de interacción real en navegador además del build estático.
