@@ -1,0 +1,21 @@
+[
+  {
+    "id": "original--tu-cancion",
+    "tipo": "cancion",
+    "fecha": "",
+    "titulo": "Tu canción",
+    "artista": "",
+    "archivo": "dembow.mp3",
+    "src": "dembow.mp3",
+    "archivoRaiz": true,
+    "spotify": "",
+    "youtube": "",
+    "appleMusic": "",
+    "portada": "",
+    "favorito": true,
+    "texto": "Una canción que ya formaba parte de este lugar desde el principio.",
+    "carpeta": "contenido/canciones/original",
+    "imagenes": [],
+    "audio": []
+  }
+]

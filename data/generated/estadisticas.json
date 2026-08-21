@@ -1,8 +1,14 @@
 {
-  "recuerdos": 0,
+  "recuerdos": 1,
   "fotografias": 0,
   "videos": 0,
   "audios": 0,
   "favoritos": 0,
-  "ultimaActualizacion": "2026-08-21T06:18:25+00:00"
+  "frases": 3,
+  "cartas": 0,
+  "fechas": 3,
+  "canciones": 1,
+  "videosArchivo": 0,
+  "especiales": 1,
+  "ultimaActualizacion": "2026-08-21T09:19:09+00:00"
 }

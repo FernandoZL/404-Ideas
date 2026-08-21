@@ -9,31 +9,50 @@
 <meta http-equiv="Content-Security-Policy"
       content="default-src 'self'; connect-src https://api.github.com; img-src 'self' data: blob:; media-src 'self' blob:; script-src 'self'; style-src 'self'; base-uri 'none'; object-src 'none'">
 <title>Gestión · Nuestro lugar</title>
-<link rel="stylesheet" href="admin.css?v=20260821-0515">
+<link rel="stylesheet" href="admin.css?v=20260821-0630">
 </head>
 
 <body>
 <div class="admin-shell">
 
 <header class="admin-header">
-  <div>
-    <span class="eyebrow">Nuestro lugar · Gestión</span>
-    <h1>Tu lado del archivo.</h1>
+  <div class="admin-identity">
+    <span class="eyebrow">Nuestro lugar · Panel privado</span>
+    <h1>Gestión del archivo.</h1>
+    <p>Agrega, organiza y publica sin entrar manualmente al repositorio.</p>
   </div>
 
   <div class="header-actions">
-    <a class="ghost-button" href="../index.html" target="_blank" rel="noopener">Ver web ↗</a>
-    <button class="ghost-button" id="logoutBtn" type="button" hidden>Salir</button>
+    <a class="public-site-button"
+       id="publicSiteLink"
+       href="https://fernandozl.github.io/404-Ideas/">
+      ← Ir a Nuestro lugar
+    </a>
+
+    <button class="ghost-button" id="changeTokenBtn" type="button" hidden>
+      Cambiar token
+    </button>
+
+    <button class="ghost-button" id="logoutBtn" type="button" hidden>
+      Salir
+    </button>
   </div>
 </header>
 
 <section id="loginView" class="login-panel">
+  <div id="authNotice" class="auth-notice" hidden>
+    <strong id="authNoticeTitle">Debes volver a conectar GitHub.</strong>
+    <p id="authNoticeText">
+      Si el token venció o fue revocado, crea uno nuevo y pégalo aquí.
+    </p>
+  </div>
   <div class="login-copy">
     <span class="eyebrow">Acceso personal</span>
     <h2>Conecta tu GitHub.</h2>
     <p>
       Este panel no guarda ninguna credencial dentro del repositorio.
       Utiliza un token personal limitado únicamente a este proyecto.
+      Si algún día vence, el panel te pedirá reemplazarlo; no debes modificar código.
     </p>
   </div>
 
@@ -71,75 +90,88 @@
        rel="noopener">
       Crear token en GitHub ↗
     </a>
+
+    <a class="text-link secondary-link"
+       href="https://github.com/settings/personal-access-tokens"
+       target="_blank"
+       rel="noopener">
+      Ver / administrar mis tokens ↗
+    </a>
   </form>
 </section>
 
 <main id="appView" hidden>
 
   <section class="status-strip">
-    <div>
+    <div class="connection-status">
       <span class="status-dot"></span>
-      <strong id="connectedUser">Conectado</strong>
-      <small id="repoStatus">FernandoZL / 404-Ideas · main</small>
+      <div>
+        <strong id="connectedUser">Conectado</strong>
+        <small id="repoStatus">FernandoZL / 404-Ideas · main</small>
+      </div>
     </div>
 
-    <button id="refreshBtn" class="mini-button" type="button">
-      Actualizar
-    </button>
+    <div class="status-detail">
+      <span>Todo cambio se guarda como Commit en <strong>main</strong>.</span>
+    </div>
+
+    <div class="status-actions">
+      <a class="mini-public-link" href="https://fernandozl.github.io/404-Ideas/">Abrir web</a>
+      <button id="refreshBtn" class="mini-button" type="button">Actualizar</button>
+    </div>
   </section>
 
   <nav class="admin-tabs" aria-label="Administración">
     <button class="tab active" type="button" data-tab="new">＋ Nuevo</button>
     <button class="tab" type="button" data-tab="manage">Archivo</button>
     <button class="tab" type="button" data-tab="inbox">Inbox</button>
-    <button class="tab" type="button" data-tab="help">Ayuda</button>
+    <button class="tab" type="button" data-tab="help">Guía</button>
   </nav>
 
   <!-- NEW -->
   <section class="tab-panel active" id="tab-new">
 
     <div class="section-heading">
-      <span class="eyebrow">Agregar</span>
+      <span class="eyebrow">Nuevo contenido</span>
       <h2>¿Qué quieres guardar?</h2>
-      <p>Elige el tipo. El panel crea la estructura y hace el Commit por ti.</p>
+      <p>Sigue cuatro pasos. El panel se encarga de carpetas, archivos y Commit.</p>
     </div>
 
-    <div class="how-it-works">
-      <strong>Cómo funciona</strong>
-      <div class="how-steps">
-        <span><b>1</b> Eliges qué guardar</span>
-        <span><b>2</b> Escribes y adjuntas archivos</span>
-        <span><b>3</b> Decides borrador o publicado</span>
-        <span><b>4</b> Guardar en GitHub crea el Commit</span>
+    <div class="workflow-steps" aria-label="Pasos para guardar contenido">
+      <div class="workflow-step active">
+        <b>1</b><span><strong>Tipo</strong><small>Elige qué guardar</small></span>
       </div>
-      <p>
-        No tienes que entrar manualmente al repositorio. El panel crea carpetas,
-        archivos y el Commit en <code>main</code>. Si publicas, GitHub Actions
-        actualizará Nuestro lugar automáticamente.
-      </p>
+      <div class="workflow-step">
+        <b>2</b><span><strong>Contenido</strong><small>Escribe y adjunta</small></span>
+      </div>
+      <div class="workflow-step">
+        <b>3</b><span><strong>Estado</strong><small>Borrador o publicado</small></span>
+      </div>
+      <div class="workflow-step">
+        <b>4</b><span><strong>Guardar</strong><small>Crea el Commit</small></span>
+      </div>
     </div>
-
-    <div class="type-grid" id="typeGrid">
+<div class="type-grid" id="typeGrid">
       <button class="type-card active" type="button" data-type="recuerdo">
-        <span>01</span><strong>Recuerdo</strong><small>Texto, fotos, lugar, etiquetas.</small>
+        <span>01</span><strong>Recuerdo</strong><small>Historia, fotos y lugar.</small>
       </button>
       <button class="type-card" type="button" data-type="carta">
-        <span>02</span><strong>Carta</strong><small>Un texto con más espacio.</small>
+        <span>02</span><strong>Carta</strong><small>Una carta que quieres guardar.</small>
       </button>
       <button class="type-card" type="button" data-type="frase">
-        <span>03</span><strong>Frase</strong><small>Algo corto que vale guardar.</small>
+        <span>03</span><strong>Frase</strong><small>Una frase y su contexto.</small>
       </button>
       <button class="type-card" type="button" data-type="fecha">
         <span>04</span><strong>Fecha</strong><small>Contador y aniversario.</small>
       </button>
       <button class="type-card" type="button" data-type="cancion">
-        <span>05</span><strong>Canción</strong><small>Audio y enlaces musicales.</small>
+        <span>05</span><strong>Canción</strong><small>Audio o plataformas.</small>
       </button>
       <button class="type-card" type="button" data-type="video">
-        <span>06</span><strong>Video</strong><small>MP4/MOV o YouTube.</small>
+        <span>06</span><strong>Video</strong><small>Archivo o YouTube.</small>
       </button>
       <button class="type-card" type="button" data-type="especial">
-        <span>07</span><strong>Sorpresa</strong><small>HTML, CSS, JS y archivos.</small>
+        <span>07</span><strong>Sorpresa</strong><small>Una experiencia HTML.</small>
       </button>
     </div>
 
@@ -148,7 +180,7 @@
 
       <section class="file-section" id="fileSection">
         <div>
-          <span class="eyebrow">Archivos</span>
+          <span class="eyebrow">Paso 2 · Archivos</span>
           <h3>Adjunta lo que acompaña este contenido.</h3>
           <p id="fileHelp">Puedes subir fotografías con sus nombres originales.</p>
         </div>
@@ -164,6 +196,7 @@
 
       <div class="publication-box">
         <div>
+          <span class="eyebrow">Paso 3</span>
           <strong>Estado inicial</strong>
           <p>
             Puedes guardarlo en GitHub sin mostrarlo todavía.
@@ -179,6 +212,14 @@
 
       <div class="save-preview" id="savePreview"></div>
 
+      <div class="commit-summary">
+        <span class="eyebrow">Paso 4</span>
+        <div>
+          <strong>Guardar crea el Commit automáticamente</strong>
+          <small>No necesitas hacer git add, git commit ni git push para este contenido.</small>
+        </div>
+      </div>
+
       <button id="saveContentBtn" class="primary-button large" type="submit">
         Guardar en GitHub
       </button>
@@ -193,8 +234,8 @@
   <section class="tab-panel" id="tab-manage">
     <div class="section-heading row-heading">
       <div>
-        <span class="eyebrow">Administrar</span>
-        <h2>Lo que ya está en el archivo.</h2>
+        <span class="eyebrow">Archivo</span>
+        <h2>Gestionar lo que ya guardaste.</h2>
       </div>
 
       <button id="reloadContentBtn" class="ghost-button" type="button">
@@ -228,7 +269,7 @@
       <h2>Inbox.</h2>
       <p>
         Para cuando no quieres organizar nada todavía. Subes archivos, escribes una nota
-        y queda fuera de la web pública.
+        y el panel crea un Commit en <code>contenido/inbox</code>. Nunca aparece en la web pública.
       </p>
     </div>
 
@@ -256,8 +297,8 @@
   <!-- HELP -->
   <section class="tab-panel" id="tab-help">
     <div class="section-heading">
-      <span class="eyebrow">Instrucciones</span>
-      <h2>Cómo usar este panel.</h2>
+      <span class="eyebrow">Guía integrada</span>
+      <h2>Todo lo que necesitas saber.</h2>
       <p>
         Esta guía está dentro del panel para que no tengas que recordar rutas,
         nombres de archivos ni comandos de Git.
@@ -396,8 +437,36 @@
         </div>
       </article>
 
-      <article class="instruction-card">
+      <article class="instruction-card token-card">
         <span class="instruction-number">09</span>
+        <div>
+          <h3>¿Qué hago cuando venza el token?</h3>
+          <p>
+            No tienes que modificar el panel ni el repositorio. Un token vencido no se
+            puede reactivar: simplemente creas otro y lo sustituyes.
+          </p>
+          <ol>
+            <li>Abre GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens.</li>
+            <li>Crea un token nuevo para <strong>404-Ideas</strong>.</li>
+            <li>Permiso: <strong>Contents → Read and write</strong>. Metadata puede quedar Read-only automáticamente.</li>
+            <li>Copia el nuevo <code>github_pat_...</code>.</li>
+            <li>Vuelve al panel. Si el token ya venció, el panel mostrará la pantalla de conexión automáticamente.</li>
+            <li>Pega el token nuevo y pulsa <strong>Conectar</strong>.</li>
+          </ol>
+          <p class="instruction-result">
+            También puedes usar <strong>Cambiar token</strong> en la parte superior antes de que venza.
+          </p>
+          <div class="token-help-actions">
+            <a href="https://github.com/settings/personal-access-tokens/new"
+               target="_blank" rel="noopener">Crear token nuevo ↗</a>
+            <a href="https://github.com/settings/personal-access-tokens"
+               target="_blank" rel="noopener">Administrar tokens ↗</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="instruction-card">
+        <span class="instruction-number">10</span>
         <div>
           <h3>Privacidad</h3>
           <p>
@@ -412,6 +481,14 @@
         </div>
       </article>
 
+    </div>
+
+    <div class="panel-navigation-note">
+      <strong>Salir del panel y ver la página</strong>
+      <p>
+        Usa <a href="https://fernandozl.github.io/404-Ideas/">← Ir a Nuestro lugar</a> en la parte superior.
+        El enlace es absoluto para funcionar igual en computadora y iPhone.
+      </p>
     </div>
 
     <div class="quick-rule">
@@ -466,6 +543,6 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="admin.js?v=20260821-0515"></script>
+<script src="admin.js?v=20260821-0630"></script>
 </body>
 </html>

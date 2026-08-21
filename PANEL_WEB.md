@@ -234,3 +234,56 @@ crear, borrador/publicado, agregar fotos después, editar, Inbox,
 tipos de contenido, commits, límites y privacidad.
 
 En `＋ Nuevo` aparece además un resumen de cuatro pasos antes del formulario.
+
+
+# Si el token vence o es revocado
+
+GitHub no permite reactivar un token vencido o revocado.
+
+No se pierde ningún recuerdo: únicamente debes conectar un token nuevo.
+
+Pasos:
+
+```text
+GitHub
+→ Settings
+→ Developer settings
+→ Personal access tokens
+→ Fine-grained tokens
+→ Generate new token
+```
+
+Usa:
+
+```text
+Repository:
+404-Ideas
+
+Contents:
+Read and write
+```
+
+Después vuelve a:
+
+```text
+https://fernandozl.github.io/404-Ideas/gestion-8f3c6a91/
+```
+
+y pega el token nuevo.
+
+Desde v2.10.2 el panel detecta una respuesta 401 de GitHub, borra el token
+inválido de ese navegador y te devuelve automáticamente a la pantalla de conexión.
+
+También existe:
+
+```text
+Cambiar token
+```
+
+en la cabecera del panel.
+
+Guía dedicada:
+
+```text
+GUIA_TOKEN_GITHUB.md
+```

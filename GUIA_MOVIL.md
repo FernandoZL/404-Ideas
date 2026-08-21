@@ -229,3 +229,19 @@ publicado: true
 Commit.
 
 En móvil es más práctico subir un HTML que ya hayas preparado previamente que intentar escribir una experiencia compleja desde cero en la app de GitHub.
+
+
+## Si el token vence
+
+No necesitas volver a Git ni cambiar archivos.
+
+1. El panel te devolverá a la pantalla de conexión.
+2. Crea un Fine-grained token nuevo.
+3. Selecciona `404-Ideas`.
+4. `Contents → Read and write`.
+5. Pega el token nuevo.
+6. Continúa usando el panel.
+
+También puedes pulsar `Cambiar token` desde la cabecera.
+
+Consulta `GUIA_TOKEN_GITHUB.md`.

@@ -1,0 +1,17 @@
+[
+  {
+    "id": "te-amo-1000",
+    "tipo": "especial",
+    "fecha": "2026-06-06",
+    "titulo": "Te amo x1000",
+    "archivo": "index.html",
+    "url": "contenido/especiales/te-amo-1000/index.html",
+    "portada": "",
+    "favorito": true,
+    "texto": "Como una vez no alcanza, un pequeño programa para repetirlo.",
+    "carpeta": "contenido/especiales/te-amo-1000",
+    "imagenes": [],
+    "audio": [],
+    "videos": []
+  }
+]

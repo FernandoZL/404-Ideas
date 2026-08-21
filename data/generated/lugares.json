@@ -1,1 +1,19 @@
-[]
+[
+  {
+    "id": "14-583178505558523-90-56521179386338",
+    "nombre": "Café Cartel",
+    "direccion": "Café cartel",
+    "latitud": "14.583178505558523",
+    "longitud": "-90.56521179386338",
+    "maps": "",
+    "recuerdos": [
+      {
+        "id": "2026-08-20-una-tarde-en-cafe-cartel",
+        "titulo": "Una tarde en Café Cartel",
+        "fecha": "2026-08-20"
+      }
+    ],
+    "primeraFecha": "2026-08-20",
+    "ultimaFecha": "2026-08-20"
+  }
+]

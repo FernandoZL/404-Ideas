@@ -1,0 +1,41 @@
+[
+  {
+    "id": "2026-02-17-empezamos-a-hablar",
+    "tipo": "fecha",
+    "clave": "startedTalking",
+    "fecha": "2026-02-17",
+    "titulo": "Empezamos a hablar",
+    "contador": true,
+    "aniversario": true,
+    "destacada": false,
+    "enlace": "",
+    "mensajeAniversario": "Un día como hoy empezó una parte importante de nuestra historia.",
+    "texto": "El punto donde comenzó todo lo demás."
+  },
+  {
+    "id": "2026-03-27-primer-beso",
+    "tipo": "fecha",
+    "clave": "firstKiss",
+    "fecha": "2026-03-27",
+    "titulo": "Nuestro primer beso",
+    "contador": true,
+    "aniversario": true,
+    "destacada": false,
+    "enlace": "",
+    "mensajeAniversario": "Un día como hoy pasó uno de esos momentos que se quedan.",
+    "texto": "Uno de esos días que cambian el significado de los anteriores."
+  },
+  {
+    "id": "2026-06-06-oficialmente-nosotros",
+    "tipo": "fecha",
+    "clave": "official",
+    "fecha": "2026-06-06",
+    "titulo": "Oficialmente nosotros",
+    "contador": true,
+    "aniversario": true,
+    "destacada": true,
+    "enlace": "expediente-0606.html",
+    "mensajeAniversario": "Hoy cumplimos otro capítulo 🤍",
+    "texto": "El día de una pregunta bastante informal que terminó siendo muy importante."
+  }
+]

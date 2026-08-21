@@ -7,7 +7,7 @@
   const BRANCH = "main";
   const API = "https://api.github.com";
   const API_VERSION = "2026-03-10";
-  const PUBLIC_BASE = "../";
+  const PUBLIC_BASE = "https://fernandozl.github.io/404-Ideas/";
   const MAX_FILE_BYTES = 90 * 1024 * 1024;
 
   const $ = id => document.getElementById(id);
@@ -169,6 +169,42 @@
     return `---\npublicado: ${value}\n---\n\n${text}`;
   }
 
+  function clearStoredToken(){
+    sessionStorage.removeItem("nl_admin_token");
+    localStorage.removeItem("nl_admin_token");
+  }
+
+  function showLoginNotice(title, message){
+    const box = $("authNotice");
+    if(!box) return;
+
+    $("authNoticeTitle").textContent = title;
+    $("authNoticeText").textContent = message;
+    box.hidden = false;
+  }
+
+  function returnToLogin(title = "", message = ""){
+    clearStoredToken();
+    token = "";
+
+    $("tokenInput").value = "";
+    $("loginView").hidden = false;
+    $("appView").hidden = true;
+    $("logoutBtn").hidden = true;
+    $("changeTokenBtn").hidden = true;
+
+    if(title || message){
+      showLoginNotice(
+        title || "Debes volver a conectar GitHub.",
+        message || "Pega un token válido para continuar."
+      );
+    }else{
+      $("authNotice").hidden = true;
+    }
+
+    window.scrollTo({top:0,behavior:"smooth"});
+  }
+
   async function api(path, options = {}){
     const response = await fetch(`${API}${path}`, {
       ...options,
@@ -191,11 +227,45 @@
     }
 
     if(!response.ok){
-      const message =
+      const githubMessage =
         payload?.message ||
         (typeof payload === "string" ? payload : "") ||
         `GitHub respondió ${response.status}`;
-      throw new Error(message);
+
+      if(response.status === 401){
+        returnToLogin(
+          "El token ya no es válido.",
+          "Puede haber vencido, haber sido revocado o haberse reemplazado. Crea un token nuevo con acceso a 404-Ideas y Contents: Read and write, luego conéctalo aquí."
+        );
+
+        const error = new Error(
+          "El token venció, fue revocado o no es válido. Debes crear y conectar uno nuevo."
+        );
+        error.code = "AUTH_EXPIRED";
+        throw error;
+      }
+
+      if(response.status === 403){
+        const remaining = response.headers.get("x-ratelimit-remaining");
+
+        if(remaining === "0"){
+          throw new Error(
+            "GitHub alcanzó temporalmente el límite de solicitudes. Espera unos minutos y vuelve a intentar."
+          );
+        }
+
+        throw new Error(
+          "GitHub rechazó la operación. Revisa que el token pertenezca a 404-Ideas y tenga Contents: Read and write."
+        );
+      }
+
+      if(response.status === 409){
+        throw new Error(
+          "El repositorio cambió mientras estabas trabajando. Pulsa Actualizar y vuelve a intentar."
+        );
+      }
+
+      throw new Error(githubMessage);
     }
 
     return payload;
@@ -221,10 +291,15 @@
   }
 
   function logout(){
-    sessionStorage.removeItem("nl_admin_token");
-    localStorage.removeItem("nl_admin_token");
-    token = "";
-    location.reload();
+    returnToLogin();
+    toast("Sesión cerrada.");
+  }
+
+  function changeToken(){
+    returnToLogin(
+      "Conecta un token nuevo.",
+      "Crea o pega el reemplazo. No necesitas cambiar ningún archivo del proyecto."
+    );
   }
 
   async function connect(value, remember = false){
@@ -246,6 +321,8 @@
     $("loginView").hidden = true;
     $("appView").hidden = false;
     $("logoutBtn").hidden = false;
+    $("changeTokenBtn").hidden = false;
+    $("authNotice").hidden = true;
 
     await refreshRepository();
   }
@@ -281,26 +358,30 @@
     const folder = itemFolder(item);
     const id = folder.split("/").pop();
 
-    switch(item.type){
-      case "recuerdo":
-        return `${PUBLIC_BASE}recuerdo.html?id=${encodeURIComponent(id)}`;
-      case "carta":
-        return `${PUBLIC_BASE}carta.html?id=${encodeURIComponent(id)}`;
-      case "frase":
-        return `${PUBLIC_BASE}frases.html`;
-      case "fecha":
-        return `${PUBLIC_BASE}fechas.html`;
-      case "cancion":
-        return `${PUBLIC_BASE}canciones.html`;
-      case "video":
-        return `${PUBLIC_BASE}videos.html`;
-      case "especial":{
-        const filename = item.meta.archivo || "index.html";
-        return `${PUBLIC_BASE}${folder}/${filename}`;
+    const page = (() => {
+      switch(item.type){
+        case "recuerdo":
+          return `recuerdo.html?id=${encodeURIComponent(id)}`;
+        case "carta":
+          return `carta.html?id=${encodeURIComponent(id)}`;
+        case "frase":
+          return "frases.html";
+        case "fecha":
+          return "fechas.html";
+        case "cancion":
+          return "canciones.html";
+        case "video":
+          return "videos.html";
+        case "especial":{
+          const filename = item.meta.archivo || "index.html";
+          return `${folder}/${filename}`;
+        }
+        default:
+          return "";
       }
-      default:
-        return `${PUBLIC_BASE}`;
-    }
+    })();
+
+    return new URL(page, PUBLIC_BASE).href;
   }
 
   async function getRawFile(path){
@@ -1346,12 +1427,15 @@ ${fields.texto || "Una experiencia especial que quiero preparar."}
       toast("✓ GitHub conectado.");
     }catch(error){
       console.error(error);
-      alert(
-        "No pude conectar con GitHub.\n\n" +
-        error.message +
-        "\n\nRevisa que el token sea fine-grained, del repositorio 404-Ideas y tenga Contents: Read and write."
-      );
-      token = "";
+
+      if(error.code !== "AUTH_EXPIRED"){
+        alert(
+          "No pude conectar con GitHub.\n\n" +
+          error.message +
+          "\n\nRevisa que el token sea fine-grained, del repositorio 404-Ideas y tenga Contents: Read and write."
+        );
+        token = "";
+      }
     }finally{
       setBusy(button,false);
     }
@@ -1364,6 +1448,7 @@ ${fields.texto || "Una experiencia especial que quiero preparar."}
   };
 
   $("logoutBtn").onclick = logout;
+  $("changeTokenBtn").onclick = changeToken;
 
   $("refreshBtn").onclick = async () => {
     try{
@@ -1472,12 +1557,13 @@ ${fields.texto || "Una experiencia especial que quiero preparar."}
       .then(() => toast("✓ Sesión recuperada."))
       .catch(error => {
         console.warn(error);
-        sessionStorage.removeItem("nl_admin_token");
-        localStorage.removeItem("nl_admin_token");
-        token = "";
-        $("loginView").hidden = false;
-        $("appView").hidden = true;
-        $("logoutBtn").hidden = true;
+
+        if(error.code !== "AUTH_EXPIRED"){
+          returnToLogin(
+            "No pude recuperar la sesión.",
+            "Vuelve a pegar tu token o crea uno nuevo si ya venció."
+          );
+        }
       });
   }
 })();

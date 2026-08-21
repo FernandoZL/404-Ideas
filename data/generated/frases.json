@@ -1,0 +1,29 @@
+[
+  {
+    "id": "originales--003-mmmmmmmm-mire",
+    "tipo": "frase",
+    "fecha": "",
+    "texto": "“Mmmmmmmm mire”",
+    "contexto": "",
+    "favorito": false,
+    "origen": "expediente-0606"
+  },
+  {
+    "id": "originales--002-no-hay-internet",
+    "tipo": "frase",
+    "fecha": "",
+    "texto": "“No hay internet...”",
+    "contexto": "",
+    "favorito": false,
+    "origen": "expediente-0606"
+  },
+  {
+    "id": "originales--001-te-ves-muy-tierna",
+    "tipo": "frase",
+    "fecha": "",
+    "texto": "“Te ves muy tierna para tener ese carácter 👀”",
+    "contexto": "",
+    "favorito": false,
+    "origen": "expediente-0606"
+  }
+]

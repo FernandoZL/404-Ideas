@@ -210,3 +210,16 @@ Es deliberado: primero congelamos y estabilizamos la base actual.
 - Límite preventivo de 90 MiB por archivo.
 - `/herramientas` sigue siendo local y no se publica.
 - Documentación: `PANEL_WEB.md`.
+
+
+## v2.10.2 — estabilización de administración
+
+- Panel reorganizado por cuatro pasos.
+- Navegación absoluta y visible hacia Nuestro lugar.
+- Detección de token inválido/vencido (HTTP 401).
+- Limpieza automática del token inválido en el navegador.
+- Botón `Cambiar token`.
+- Mensajes específicos para 401 / 403 / 409.
+- Guía integrada de renovación del token.
+- Nuevo `GUIA_TOKEN_GITHUB.md`.
+- Se mantiene el modelo de un Commit por operación.
