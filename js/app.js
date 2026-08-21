@@ -1,11 +1,12 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const $ = NL.$;
-  const [config, memories, stats, phrases, dates] = await Promise.all([
+  const [config, memories, stats, phrases, dates, randomGroups] = await Promise.all([
     NL.readJson("data/configuracion.json", null),
     NL.readJson("data/generated/recuerdos.json", []),
     NL.readJson("data/generated/estadisticas.json", null),
     NL.readJson("data/generated/frases.json", []),
-    NL.readJson("data/generated/fechas.json", [])
+    NL.readJson("data/generated/fechas.json", []),
+    NL.readJson("data/generated/azar.json", {})
   ]);
 
   if (config?.subtitle && $("subtitle")) $("subtitle").textContent = config.subtitle;
@@ -156,12 +157,98 @@ document.addEventListener("DOMContentLoaded", async () => {
   const modal = $("randomModal");
   const randomButton = $("randomBtn");
   let randomPreviousFocus = null;
+  let currentRandomKey = sessionStorage.getItem("nl-last-random") || "";
+
+  const randomCollections = () =>
+    Object.entries(randomGroups || {})
+      .filter(([,items]) => Array.isArray(items) && items.length);
+
+  const chooseRandomItem = () => {
+    const groups = randomCollections();
+
+    if(!groups.length) return null;
+
+    let chosen = null;
+
+    for(let attempt = 0; attempt < 12; attempt++){
+      // First choose a content TYPE uniformly, then choose one item inside it.
+      // This prevents a future gallery with hundreds of photos from drowning
+      // out letters, songs, dates or surprises.
+      const [,items] =
+        groups[Math.floor(Math.random() * groups.length)];
+
+      const item =
+        items[Math.floor(Math.random() * items.length)];
+
+      const key = `${item.tipo}:${item.id}`;
+
+      if(groups.length === 1 && items.length === 1){
+        chosen = item;
+        break;
+      }
+
+      if(key !== currentRandomKey){
+        chosen = item;
+        break;
+      }
+    }
+
+    chosen ||= groups[0][1][0];
+
+    currentRandomKey = `${chosen.tipo}:${chosen.id}`;
+    sessionStorage.setItem("nl-last-random", currentRandomKey);
+
+    return chosen;
+  };
+
+  const showRandomItem = () => {
+    const item = chooseRandomItem();
+
+    const kind = $("randomKind");
+    const date = $("randomDate");
+    const title = $("randomTitle");
+    const text = $("randomText");
+    const link = $("randomOpen");
+    const media = $("randomMedia");
+    const image = $("randomImage");
+
+    if(!item){
+      kind.textContent = "Nuestro archivo";
+      date.textContent = "";
+      title.textContent = "Volvamos al comienzo.";
+      text.textContent = "A veces el mejor lugar para volver es donde empezó todo.";
+      link.href = "historia.html";
+      link.textContent = "Ir a nuestra historia";
+      media.hidden = true;
+      image.removeAttribute("src");
+      return;
+    }
+
+    kind.textContent = item.etiqueta || "Del archivo";
+    date.textContent = item.fecha ? NL.shortDate(item.fecha) : "";
+    title.textContent = item.titulo || "Algo bonito";
+    text.textContent = NL.excerpt(item.texto || "", 330);
+    link.href = item.url || "archivo.html";
+    link.textContent = item.accion || "Abrir";
+
+    if(item.imagen){
+      image.src = item.imagen;
+      image.alt = item.titulo || "Fotografía del archivo";
+      media.hidden = false;
+    }else{
+      media.hidden = true;
+      image.removeAttribute("src");
+      image.alt = "";
+    }
+  };
 
   const closeRandomModal = () => {
     if(!modal || modal.hidden) return;
+
     modal.classList.remove("open");
     modal.setAttribute("aria-hidden", "true");
     document.body.classList.remove("menu-open");
+
     setTimeout(() => {
       modal.hidden = true;
       if(randomPreviousFocus) randomPreviousFocus.focus();
@@ -169,36 +256,35 @@ document.addEventListener("DOMContentLoaded", async () => {
   };
 
   const openRandomModal = () => {
-    const memory = memories.length
-      ? memories[Math.floor(Math.random() * memories.length)]
-      : null;
-
-    $("randomDate").textContent = memory ? NL.shortDate(memory.fecha) : "Nuestro archivo";
-    $("randomTitle").textContent = memory ? memory.titulo : "Volvamos al comienzo.";
-    $("randomText").textContent = memory
-      ? NL.excerpt(memory.texto, 300)
-      : "A veces el mejor lugar para volver es donde empezó todo.";
-    $("randomOpen").href = memory ? NL.memoryUrl(memory) : "historia.html";
-    $("randomOpen").textContent = memory ? "Abrir recuerdo" : "Ir a nuestra historia";
+    showRandomItem();
 
     randomPreviousFocus = document.activeElement;
     modal.hidden = false;
     modal.setAttribute("aria-hidden", "false");
     document.body.classList.add("menu-open");
+
     requestAnimationFrame(() => {
       modal.classList.add("open");
       const close = modal.querySelector(".random-close");
-      if(close) close.focus();
+      if(close) close.focus({preventScroll:true});
     });
   };
 
   if(randomButton && modal){
     randomButton.addEventListener("click", openRandomModal);
+
+    $("randomAgain")?.addEventListener("click", () => {
+      showRandomItem();
+    });
+
     modal.querySelectorAll("[data-random-close]").forEach(el =>
       el.addEventListener("click", closeRandomModal)
     );
+
     document.addEventListener("keydown", event => {
-      if(event.key === "Escape" && !modal.hidden) closeRandomModal();
+      if(event.key === "Escape" && !modal.hidden){
+        closeRandomModal();
+      }
     });
   }
 

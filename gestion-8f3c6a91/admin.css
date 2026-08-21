@@ -838,3 +838,187 @@ input:focus,textarea:focus,select:focus{
     grid-column:1/-1;
   }
 }
+
+
+/* ==========================================================
+   v2.10.3 · Responsive universal for manager
+========================================================== */
+html{
+  -webkit-text-size-adjust:100%;
+  text-size-adjust:100%;
+  overflow-x:hidden;
+}
+body{
+  min-height:100dvh;
+  overflow-x:hidden;
+}
+img,video{max-width:100%}
+button,a,input,textarea,select{touch-action:manipulation}
+button,.ghost-button,.public-site-button,.mini-button,.primary-button{
+  min-height:44px;
+}
+.edit-drawer{
+  height:100dvh;
+}
+@media(max-width:760px){
+  input,textarea,select{
+    font-size:16px; /* prevents Safari form zoom */
+  }
+
+  .admin-shell{
+    width:100%;
+    padding:
+      calc(10px + env(safe-area-inset-top))
+      max(12px,env(safe-area-inset-right))
+      calc(82px + env(safe-area-inset-bottom))
+      max(12px,env(safe-area-inset-left));
+  }
+
+  .admin-header{
+    padding-top:10px;
+  }
+
+  .admin-header h1{
+    font-size:clamp(34px,10vw,46px);
+  }
+
+  .admin-tabs{
+    width:100%;
+    top:calc(5px + env(safe-area-inset-top));
+    margin:16px auto 24px;
+  }
+
+  .section-heading{
+    margin-bottom:17px;
+  }
+
+  .section-heading h2{
+    font-size:clamp(36px,10vw,48px);
+  }
+
+  .workflow-steps{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .type-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .type-card{
+    min-height:108px;
+  }
+
+  .content-form{
+    width:100%;
+    border-radius:22px;
+    padding:17px;
+  }
+
+  .file-section{
+    padding:14px;
+    margin:18px 0;
+  }
+
+  .drop-zone{
+    min-height:96px;
+  }
+
+  .publication-box{
+    padding:14px;
+  }
+
+  .manage-card{
+    padding:14px;
+  }
+
+  .manage-actions button{
+    min-height:44px;
+  }
+
+  .edit-drawer{
+    width:100%;
+    padding:
+      calc(12px + env(safe-area-inset-top))
+      max(14px,env(safe-area-inset-right))
+      calc(20px + env(safe-area-inset-bottom))
+      max(14px,env(safe-area-inset-left));
+  }
+
+  .raw-editor{
+    min-height:45dvh;
+    font-size:14px;
+  }
+
+  .instruction-card{
+    padding:17px;
+  }
+}
+@media(max-width:420px){
+  .header-actions{
+    grid-template-columns:1fr 1fr;
+    width:100%;
+  }
+
+  .public-site-button{
+    grid-column:1/-1;
+  }
+
+  .admin-tabs{
+    gap:4px;
+    padding:5px;
+  }
+
+  .tab{
+    min-width:0;
+    padding-left:4px;
+    padding-right:4px;
+  }
+
+  .workflow-steps{
+    gap:5px;
+  }
+
+  .workflow-step{
+    min-height:58px;
+    padding:8px;
+  }
+
+  .workflow-step small{
+    display:none;
+  }
+
+  .type-grid{
+    gap:7px;
+  }
+
+  .type-card{
+    min-height:102px;
+    padding:12px;
+  }
+
+  .type-card strong{
+    font-size:21px;
+  }
+
+  .type-card small{
+    font-size:10px;
+  }
+
+  .status-actions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+  }
+
+  .content-help-grid{
+    grid-template-columns:1fr;
+  }
+}
+@media(max-width:340px){
+  .type-grid{
+    grid-template-columns:1fr;
+  }
+
+  .workflow-steps{
+    grid-template-columns:1fr;
+  }
+}

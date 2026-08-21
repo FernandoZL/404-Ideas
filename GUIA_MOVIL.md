@@ -245,3 +245,18 @@ No necesitas volver a Git ni cambiar archivos.
 También puedes pulsar `Cambiar token` desde la cabecera.
 
 Consulta `GUIA_TOKEN_GITHUB.md`.
+
+
+## Compatibilidad de pantalla v2.10.3
+
+La web pública y el panel están preparados para:
+
+- iPhone con notch / Dynamic Island;
+- iPhone SE y pantallas compactas;
+- Android;
+- iPad y tablets;
+- modo horizontal;
+- laptops y escritorio.
+
+`Recuérdame algo bonito` ahora puede traer cualquier contenido público del
+archivo, no únicamente un recuerdo.

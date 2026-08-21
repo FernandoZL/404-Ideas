@@ -392,3 +392,38 @@ body.dark .terminal{
     grid-template-columns:1fr;
   }
 }
+
+
+/* Responsive/safe-area hardening · v2.10.3 */
+html{
+  -webkit-text-size-adjust:100%;
+  text-size-adjust:100%;
+}
+body{
+  min-height:100dvh;
+}
+.app{
+  width:min(100%,540px);
+  padding:
+    calc(18px + env(safe-area-inset-top))
+    max(16px,env(safe-area-inset-right))
+    calc(28px + env(safe-area-inset-bottom))
+    max(16px,env(safe-area-inset-left));
+}
+button,.mainbtn,.actions button{
+  min-height:44px;
+  touch-action:manipulation;
+}
+@media(max-width:430px){
+  .app{padding-top:calc(12px + env(safe-area-inset-top))}
+  .top{align-items:flex-start;gap:10px}
+  .actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+  .actions button{margin-left:0}
+  .card{padding:22px;border-radius:24px}
+  p{font-size:16px}
+  .counter{grid-template-columns:1fr 1fr}
+  .loader{min-height:390px}
+}
+@media(max-width:340px){
+  .counter{grid-template-columns:1fr}
+}

@@ -9,6 +9,7 @@
   const API_VERSION = "2026-03-10";
   const PUBLIC_BASE = "https://fernandozl.github.io/404-Ideas/";
   const MAX_FILE_BYTES = 90 * 1024 * 1024;
+  const MOBILE_WARNING_BYTES = 28 * 1024 * 1024;
 
   const $ = id => document.getElementById(id);
 
@@ -951,12 +952,26 @@ ${fields.texto || "Una experiencia especial que quiero preparar."}
 
   function validateFiles(files){
     const duplicate = new Set();
+    const isCompactDevice =
+      matchMedia("(max-width: 760px), (pointer: coarse)").matches;
 
     for(const file of files){
       if(file.size > MAX_FILE_BYTES){
         throw new Error(
           `${file.name} pesa ${formatBytes(file.size)}. El panel limita cada archivo a 90 MiB.`
         );
+      }
+
+      if(
+        isCompactDevice &&
+        file.size > MOBILE_WARNING_BYTES &&
+        !confirm(
+          `${file.name} pesa ${formatBytes(file.size)}.\n\n` +
+          "En un teléfono una subida de este tamaño puede consumir bastante memoria. " +
+          "¿Quieres intentarlo de todas formas?"
+        )
+      ){
+        throw new Error("Carga cancelada.");
       }
 
       if(duplicate.has(file.name)){

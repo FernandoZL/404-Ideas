@@ -180,6 +180,26 @@ function typeLine(
     },speed);
 }
 
+
+function requestedLegacySection(){
+  const allowed = new Set([
+    "inicio",
+    "historia",
+    "frases",
+    "perfil",
+    "datos",
+    "contador",
+    "junio",
+    "milveces",
+    "final"
+  ]);
+
+  const requested =
+    new URLSearchParams(window.location.search).get("seccion");
+
+  return allowed.has(requested) ? requested : "inicio";
+}
+
 function startLoading(){
   let index = 0;
   let percent = 0;
@@ -193,7 +213,7 @@ function startLoading(){
   function nextStep(){
     if(index >= loadingSteps.length){
       setTimeout(() => {
-        show("inicio");
+        show(requestedLegacySection());
       },900);
 
       return;

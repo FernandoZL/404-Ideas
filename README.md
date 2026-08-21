@@ -223,3 +223,20 @@ Es deliberado: primero congelamos y estabilizamos la base actual.
 - Guía integrada de renovación del token.
 - Nuevo `GUIA_TOKEN_GITHUB.md`.
 - Se mantiene el modelo de un Commit por operación.
+
+
+## v2.10.3 — Azar de todo el archivo + responsive universal
+
+- `Recuérdame algo bonito` deja de elegir únicamente recuerdos.
+- Nuevo `data/generated/azar.json`.
+- Selección aleatoria equilibrada por tipo de contenido.
+- Puede mostrar recuerdos, fotos, frases, cartas, fechas, canciones, videos,
+  sorpresas, lugares y secciones del Expediente #0606.
+- Nunca incluye borradores, Inbox, herramientas, admin ni archivos técnicos.
+- Se restauraron las páginas públicas de Canciones y Videos detectadas como
+  faltantes durante la auditoría.
+- Nuevo `css/responsive.css` para iPhone, Android, iPad/tablets y escritorio.
+- Safe areas, landscape, touch targets, modal tipo bottom-sheet en móvil,
+  tipografía fluida y rejillas adaptativas.
+- El panel de gestión recibió una segunda pasada responsive.
+- El panel avisa en móvil antes de intentar archivos superiores a 28 MiB.

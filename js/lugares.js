@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const memories = place.recuerdos || [];
 
     return `
-      <article class="place-card">
+      <article class="place-card" id="place-${NL.escapeHtml(place.id)}" data-place-id="${NL.escapeHtml(place.id)}">
         <div class="place-card-copy">
           <span class="kicker">${memories.length} ${memories.length === 1 ? "recuerdo" : "recuerdos"}</span>
           <h2>${NL.escapeHtml(place.nombre || "Lugar guardado")}</h2>
@@ -63,4 +63,20 @@ document.addEventListener("DOMContentLoaded", async () => {
       button.disabled = true;
     });
   });
+
+  const requested =
+    new URLSearchParams(location.search).get("lugar");
+
+  if(requested){
+    const card =
+      document.querySelector(`[data-place-id="${CSS.escape(requested)}"]`);
+
+    if(card){
+      requestAnimationFrame(() => {
+        card.scrollIntoView({behavior:"smooth",block:"center"});
+        card.classList.add("place-highlight");
+        setTimeout(() => card.classList.remove("place-highlight"),2200);
+      });
+    }
+  }
 });

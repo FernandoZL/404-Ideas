@@ -817,6 +817,242 @@ def write_generated(memories, phrases, letters, dates, songs, video_entries, spe
         encoding="utf-8",
     )
 
+
+    # "Recuérdame algo bonito" can pull from any meaningful PUBLIC part
+    # of the archive. Technical files, drafts, inbox, tools and admin are
+    # intentionally excluded.
+    random_groups = {
+        "recuerdos": [],
+        "fotos": [],
+        "frases": [],
+        "cartas": [],
+        "fechas": [],
+        "canciones": [],
+        "videos": [],
+        "sorpresas": [],
+        "lugares": [],
+        "expediente": [],
+    }
+
+    for memory in memories:
+        image = ""
+        if memory.get("portada"):
+            image = f"{memory['carpeta']}/{memory['portada']}"
+        elif memory.get("imagenes"):
+            image = f"{memory['carpeta']}/{memory['imagenes'][0]}"
+
+        random_groups["recuerdos"].append({
+            "id": memory["id"],
+            "tipo": "recuerdo",
+            "etiqueta": "Recuerdo",
+            "fecha": memory.get("fecha") or "",
+            "titulo": memory.get("titulo") or "Un recuerdo",
+            "texto": memory.get("texto") or "",
+            "imagen": image,
+            "url": f"recuerdo.html?id={memory['id']}",
+            "accion": "Abrir recuerdo",
+        })
+
+    for photo in gallery:
+        random_groups["fotos"].append({
+            "id": photo["id"],
+            "tipo": "foto",
+            "etiqueta": "Fotografía",
+            "fecha": photo.get("fecha") or "",
+            "titulo": photo.get("titulo") or "Una fotografía nuestra",
+            "texto": "Una imagen guardada dentro de nuestra historia.",
+            "imagen": photo.get("src") or "",
+            "url": f"recuerdo.html?id={photo['recuerdoId']}",
+            "accion": "Ver fotografía",
+        })
+
+    for phrase in phrases:
+        random_groups["frases"].append({
+            "id": phrase["id"],
+            "tipo": "frase",
+            "etiqueta": "Frase nuestra",
+            "fecha": phrase.get("fecha") or "",
+            "titulo": "Una frase nuestra",
+            "texto": phrase.get("texto") or "",
+            "imagen": "",
+            "url": "frases.html",
+            "accion": "Ver frases",
+        })
+
+    for letter in letters:
+        image = ""
+        if letter.get("portada"):
+            image = f"{letter['carpeta']}/{letter['portada']}"
+        elif letter.get("imagenes"):
+            image = f"{letter['carpeta']}/{letter['imagenes'][0]}"
+
+        random_groups["cartas"].append({
+            "id": letter["id"],
+            "tipo": "carta",
+            "etiqueta": "Carta",
+            "fecha": letter.get("fecha") or "",
+            "titulo": letter.get("titulo") or "Una carta",
+            "texto": letter.get("texto") or "",
+            "imagen": image,
+            "url": f"carta.html?id={letter['id']}",
+            "accion": "Leer carta",
+        })
+
+    for item in dates:
+        random_groups["fechas"].append({
+            "id": item["id"],
+            "tipo": "fecha",
+            "etiqueta": "Fecha importante",
+            "fecha": item.get("fecha") or "",
+            "titulo": item.get("titulo") or "Una fecha importante",
+            "texto": item.get("texto") or "",
+            "imagen": "",
+            "url": item.get("enlace") or "fechas.html",
+            "accion": "Volver a esa fecha",
+        })
+
+    for song in songs:
+        image = ""
+        if song.get("portada"):
+            image = f"{song['carpeta']}/{song['portada']}"
+        elif song.get("imagenes"):
+            image = f"{song['carpeta']}/{song['imagenes'][0]}"
+
+        random_groups["canciones"].append({
+            "id": song["id"],
+            "tipo": "cancion",
+            "etiqueta": "Canción",
+            "fecha": song.get("fecha") or "",
+            "titulo": song.get("titulo") or "Una canción",
+            "texto": song.get("texto") or "",
+            "imagen": image,
+            "url": f"cancion.html?id={song['id']}",
+            "accion": "Escuchar",
+        })
+
+    for item in video_entries:
+        image = ""
+        if item.get("portada"):
+            image = f"{item['carpeta']}/{item['portada']}"
+        elif item.get("imagenes"):
+            image = f"{item['carpeta']}/{item['imagenes'][0]}"
+
+        random_groups["videos"].append({
+            "id": item["id"],
+            "tipo": "video",
+            "etiqueta": "Video",
+            "fecha": item.get("fecha") or "",
+            "titulo": item.get("titulo") or "Un video",
+            "texto": item.get("texto") or "",
+            "imagen": image,
+            "url": f"video.html?id={item['id']}",
+            "accion": "Ver video",
+        })
+
+    for item in specials:
+        image = ""
+        if item.get("portada"):
+            image = f"{item['carpeta']}/{item['portada']}"
+        elif item.get("imagenes"):
+            image = f"{item['carpeta']}/{item['imagenes'][0]}"
+
+        random_groups["sorpresas"].append({
+            "id": item["id"],
+            "tipo": "sorpresa",
+            "etiqueta": "Sorpresa",
+            "fecha": item.get("fecha") or "",
+            "titulo": item.get("titulo") or "Una sorpresa",
+            "texto": item.get("texto") or "",
+            "imagen": image,
+            "url": item.get("url") or "sorpresas.html",
+            "accion": "Abrir sorpresa",
+        })
+
+    for place in places:
+        memory_names = ", ".join(
+            memory.get("titulo") or ""
+            for memory in (place.get("recuerdos") or [])[:3]
+            if memory.get("titulo")
+        )
+
+        description = place.get("direccion") or ""
+        if memory_names:
+            description = (
+                f"{description}. {memory_names}".strip(". ")
+                if description
+                else memory_names
+            )
+
+        random_groups["lugares"].append({
+            "id": place["id"],
+            "tipo": "lugar",
+            "etiqueta": "Nuestro lugar",
+            "fecha": place.get("ultimaFecha") or "",
+            "titulo": place.get("nombre") or "Un lugar nuestro",
+            "texto": description or "Un lugar que terminó formando parte de nuestra historia.",
+            "imagen": "",
+            "url": f"lugares.html?lugar={place['id']}",
+            "accion": "Ver lugar",
+        })
+
+    # The original #0606 contains several pieces of the relationship that
+    # are still part of the archive, even though they predate the new CMS.
+    legacy_entries = [
+        (
+            "historia",
+            "Cómo empezó todo",
+            "Todo empezó en el trabajo, entre mensajes, pendientes, bromas y conversaciones que fueron dejando de sentirse casuales."
+        ),
+        (
+            "perfil",
+            "Tu forma de ser",
+            "Cosas tuyas que fui notando y que hicieron que hablar contigo se sintiera diferente."
+        ),
+        (
+            "datos",
+            "Cosas que recuerdo",
+            "Pequeños detalles a los que puse atención porque venían de ti."
+        ),
+        (
+            "contador",
+            "Nuestros tiempos",
+            "Tres momentos distintos que terminaron llevándome a lo mismo: tú."
+        ),
+        (
+            "junio",
+            "6 de junio",
+            "El día de una pregunta bastante informal detrás de la que había cariño, confianza y muchas ganas de elegirte."
+        ),
+        (
+            "milveces",
+            "Te amo x1000 ❤️",
+            "Como una vez no alcanza, hice un pequeño programa para repetirlo."
+        ),
+        (
+            "final",
+            "Un último detalle",
+            "Gracias por llegar a mi vida de una forma tan inesperada. Me encanta lo que estamos construyendo."
+        ),
+    ]
+
+    for section, title, text in legacy_entries:
+        random_groups["expediente"].append({
+            "id": f"0606-{section}",
+            "tipo": "expediente",
+            "etiqueta": "Expediente #0606",
+            "fecha": "2026-06-06",
+            "titulo": title,
+            "texto": text,
+            "imagen": "",
+            "url": f"expediente-0606.html?seccion={section}",
+            "accion": "Abrir expediente",
+        })
+
+    (GENERATED / "azar.json").write_text(
+        json.dumps(random_groups, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
     stats = {
         "recuerdos": len(memories),
         "fotografias": len(gallery),
@@ -829,6 +1065,7 @@ def write_generated(memories, phrases, letters, dates, songs, video_entries, spe
         "canciones": len(songs),
         "videosArchivo": len(video_entries),
         "especiales": len(specials),
+        "azar": sum(len(group) for group in random_groups.values()),
         "ultimaActualizacion": datetime.now().astimezone().isoformat(timespec="seconds"),
     }
 
