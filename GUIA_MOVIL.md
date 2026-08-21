@@ -169,3 +169,32 @@ GUARDAR SIN ORDENAR → inbox
 PREPARAR EN SECRETO → publicado:false
 MOSTRAR EN LA WEB   → publicado:true
 ```
+
+
+---
+
+## K. Sorpresa HTML
+
+Si ya tienes el HTML preparado:
+
+1. Ve a `contenido/especiales/`.
+2. Crea una carpeta corta, por ejemplo `una-sorpresa`.
+3. Sube `index.html`.
+4. Crea `info.md`.
+5. Déjalo con:
+
+```yaml
+publicado: false
+```
+
+mientras lo estás preparando.
+
+Cuando quieras que aparezca:
+
+```yaml
+publicado: true
+```
+
+Commit.
+
+En móvil es más práctico subir un HTML que ya hayas preparado previamente que intentar escribir una experiencia compleja desde cero en la app de GitHub.

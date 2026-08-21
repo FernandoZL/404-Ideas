@@ -8,4 +8,4 @@ portada:
 favorito: false
 ---
 
-Aquí puedes escribir una descripción breve de la sorpresa.
+Una experiencia especial que quiero preparar.

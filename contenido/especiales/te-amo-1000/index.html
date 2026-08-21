@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#fff7fa">
+<title>Te amo x1000 · Nuestro lugar</title>
+<style>
+:root{
+  --bg:#fff7fa;
+  --card:#ffffff;
+  --text:#2d1b24;
+  --muted:#7d6872;
+  --accent:#e75480;
+  --soft:#ffe5ee;
+  --line:rgba(0,0,0,.08);
+}
+body.dark{
+  --bg:#0f0f14;
+  --card:#1c1922;
+  --text:#fff7fb;
+  --muted:#b9aab2;
+  --accent:#ff8fb3;
+  --soft:#2c2029;
+  --line:rgba(255,255,255,.1);
+}
+*{box-sizing:border-box}
+html{color-scheme:light}
+body{
+  margin:0;
+  min-height:100vh;
+  background:
+    radial-gradient(circle at top left,var(--soft),transparent 35%),
+    radial-gradient(circle at bottom right,var(--soft),transparent 35%),
+    var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  padding:
+    calc(18px + env(safe-area-inset-top))
+    18px
+    calc(28px + env(safe-area-inset-bottom));
+}
+body.dark{color-scheme:dark}
+.shell{width:min(100%,680px);margin:auto}
+.top{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;margin-bottom:18px
+}
+.back,.theme{
+  min-height:42px;border:1px solid var(--line);border-radius:999px;
+  background:var(--card);color:var(--text);text-decoration:none;
+  display:inline-flex;align-items:center;padding:0 14px;font-weight:800
+}
+.theme{width:42px;padding:0;justify-content:center;cursor:pointer}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:30px;
+  padding:28px;box-shadow:0 18px 50px rgba(0,0,0,.13)
+}
+.badge{
+  display:inline-block;background:var(--soft);color:var(--accent);
+  padding:8px 14px;border-radius:999px;font-size:13px;font-weight:800;
+  margin-bottom:18px
+}
+h1{margin:0 0 16px;font-size:clamp(36px,7vw,58px);letter-spacing:-.04em}
+p{color:var(--muted);font-size:17px;line-height:1.7}
+.love-code{
+  background:#1c1720;color:#f8eef3;border-radius:22px;padding:18px;
+  overflow:auto;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:15px;line-height:1.7;margin:18px 0
+}
+.love-code *{font-family:inherit}.code-key{color:#ff7fa8;font-weight:800}
+.code-num{color:#ffd36b}.code-text{color:#9ee8a1}.code-fn{color:#88ccff}
+.love-output{
+  background:var(--soft);border:1px dashed var(--accent);border-radius:22px;
+  padding:20px;margin:18px 0;text-align:center;min-height:170px;
+  display:flex;flex-direction:column;justify-content:center;align-items:center
+}
+.love-status{color:var(--muted);font-size:14px;margin-bottom:10px;font-weight:700}
+.love-message{color:var(--accent);font-size:34px;line-height:1.2;font-weight:900}
+.love-final{margin-top:12px;display:none;color:var(--text);font-size:16px;line-height:1.6}
+.love-final.show{display:block;animation:fade .5s ease}
+.actions{display:grid;grid-template-columns:1fr auto;gap:10px}
+.actions button{
+  border:none;background:var(--accent);color:white;border-radius:18px;
+  padding:15px;font-size:16px;font-weight:800;cursor:pointer
+}
+.actions button:last-child{background:var(--soft);color:var(--accent)}
+.burst-heart{
+  position:fixed;z-index:9999;pointer-events:none;font-size:22px;
+  animation:heartBurst 1.25s ease-out forwards
+}
+@keyframes heartBurst{
+  from{transform:translate(0,0) scale(.7);opacity:1}
+  to{transform:translate(var(--x),var(--y)) scale(1.5);opacity:0}
+}
+@keyframes fade{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@media(max-width:520px){
+  .card{padding:22px}.actions{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="top">
+    <a class="back" href="../../../sorpresas.html">← Sorpresas</a>
+    <button class="theme" id="theme" aria-label="Cambiar tema">◐</button>
+  </div>
+
+  <main class="card">
+    <span class="badge">Compilando sentimientos...</span>
+    <h1>Te voy a decir que te amo 1,000 veces ❤️</h1>
+
+    <p>Como una vez no alcanza, hice un pequeño programa para repetirlo.</p>
+
+    <div class="love-code" aria-label="Código del programa">
+      <span class="code-key">for</span> (
+      <span class="code-key">let</span> i =
+      <span class="code-num">1</span>;
+      i &lt;= <span class="code-num">1000</span>;
+      i++) {<br>
+      &nbsp;&nbsp;<span class="code-fn">decir</span>(
+      <span class="code-text">"Te amo ❤️"</span>);
+      <br>}
+    </div>
+
+    <div class="love-output">
+      <div class="love-status" id="loveStatus">Esperando ejecución...</div>
+      <div class="love-message" id="loveMessage">♡</div>
+      <div class="love-final" id="loveFinal">
+        Y aunque el programa termine en 1,000...
+        <br><strong>yo no pienso dejar de amarte ahí. ❤️</strong>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="loveRun" type="button">▶ Ejecutar programa</button>
+      <button id="loveReset" type="button">↻ Reiniciar</button>
+    </div>
+  </main>
+</div>
+
+<script>
+const body = document.body;
+const saved = localStorage.getItem("nl-theme");
+const prefersDark = matchMedia("(prefers-color-scheme:dark)").matches;
+body.classList.toggle("dark",(saved || (prefersDark ? "dark":"light")) === "dark");
+
+document.getElementById("theme").onclick = () => {
+  body.classList.toggle("dark");
+  localStorage.setItem("nl-theme",body.classList.contains("dark") ? "dark":"light");
+};
+
+let timer = null;
+let running = false;
+
+const status = document.getElementById("loveStatus");
+const message = document.getElementById("loveMessage");
+const final = document.getElementById("loveFinal");
+const run = document.getElementById("loveRun");
+
+function burstHearts(){
+  if(matchMedia("(prefers-reduced-motion:reduce)").matches) return;
+
+  const centerX = innerWidth / 2;
+  const centerY = innerHeight / 2;
+
+  for(let i=0;i<38;i++){
+    const heart = document.createElement("span");
+    heart.className = "burst-heart";
+    heart.textContent = Math.random() > .45 ? "❤️" : "💕";
+    heart.style.left = centerX + "px";
+    heart.style.top = centerY + "px";
+
+    const angle = Math.random() * Math.PI * 2;
+    const distance = 90 + Math.random() * 240;
+
+    heart.style.setProperty("--x",Math.cos(angle) * distance + "px");
+    heart.style.setProperty("--y",Math.sin(angle) * distance + "px");
+
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(),1300);
+  }
+}
+
+function resetLove(){
+  clearInterval(timer);
+  running = false;
+  run.disabled = false;
+  run.textContent = "▶ Ejecutar programa";
+  status.textContent = "Esperando ejecución...";
+  message.textContent = "♡";
+  final.classList.remove("show");
+}
+
+function runLove(){
+  if(running) return;
+  running = true;
+  run.disabled = true;
+  run.textContent = "Ejecutando...";
+  final.classList.remove("show");
+
+  let i = 0;
+
+  timer = setInterval(() => {
+    i += 7;
+    if(i > 1000) i = 1000;
+
+    status.textContent = "Te amo número " + i + " de 1000";
+    message.textContent = "Te amo ❤️";
+
+    if(i >= 1000){
+      clearInterval(timer);
+      status.textContent = "Programa completado correctamente ✓";
+      message.textContent = "Te amo 1,000 veces ❤️";
+      final.classList.add("show");
+      run.textContent = "✓ Ejecutado";
+      running = false;
+      burstHearts();
+    }
+  },18);
+}
+
+run.onclick = runLove;
+document.getElementById("loveReset").onclick = resetLove;
+</script>
+</body>
+</html>

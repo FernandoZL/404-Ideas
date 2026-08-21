@@ -623,7 +623,97 @@ def discover_video_entries():
     return items, warnings, errors
 
 
-def write_generated(memories, phrases, letters, dates, songs, video_entries):
+
+def discover_specials():
+    base = CONTENT / "especiales"
+    items = []
+    warnings = []
+    errors = []
+
+    if not base.exists():
+        return items, warnings, errors
+
+    for md in sorted(base.rglob("info.md")):
+        text = md.read_text(encoding="utf-8")
+        meta, body = parse_front_matter(text)
+
+        if not content_is_public(meta):
+            continue
+
+        if (meta.get("tipo") or "especial") != "especial":
+            continue
+
+        date = str(meta.get("fecha", "")).strip()
+        title = str(meta.get("titulo", "")).strip()
+        filename = str(meta.get("archivo", "index.html")).strip() or "index.html"
+        cover = str(meta.get("portada", "")).strip()
+
+        if date:
+            try:
+                datetime.strptime(date, "%Y-%m-%d")
+            except ValueError:
+                errors.append(
+                    f"{md.relative_to(ROOT)}: fecha inválida '{date}'. Usa AAAA-MM-DD o déjala vacía."
+                )
+                continue
+
+        if not title:
+            title = md.parent.name.replace("-", " ").title()
+            warnings.append(
+                f"{md.relative_to(ROOT)}: no tiene título; se usará '{title}'."
+            )
+
+        folder = md.parent
+        target_file = folder / filename
+
+        if not target_file.exists():
+            errors.append(
+                f"{md.relative_to(ROOT)}: archivo especial '{filename}' no existe."
+            )
+            continue
+
+        if target_file.suffix.lower() != ".html":
+            warnings.append(
+                f"{md.relative_to(ROOT)}: '{filename}' no es HTML; se publicará igualmente como archivo."
+            )
+
+        images, audio, videos = find_media(folder)
+
+        if cover:
+            if not (folder / cover).exists():
+                errors.append(
+                    f"{md.relative_to(ROOT)}: portada '{cover}' no existe."
+                )
+                continue
+        elif images:
+            cover = images[0]
+
+        rel_folder = folder.relative_to(ROOT).as_posix()
+
+        items.append({
+            "id": folder.name,
+            "tipo": "especial",
+            "fecha": date,
+            "titulo": title,
+            "archivo": filename,
+            "url": f"{rel_folder}/{filename}",
+            "portada": cover,
+            "favorito": bool(meta.get("favorito", False)),
+            "texto": body.strip(),
+            "carpeta": rel_folder,
+            "imagenes": images,
+            "audio": audio,
+            "videos": videos,
+        })
+
+    items.sort(
+        key=lambda item: (item["fecha"] or "0000-00-00", item["id"]),
+        reverse=True,
+    )
+    return items, warnings, errors
+
+
+def write_generated(memories, phrases, letters, dates, songs, video_entries, specials):
     GENERATED.mkdir(parents=True, exist_ok=True)
 
     (GENERATED / "recuerdos.json").write_text(
@@ -653,6 +743,11 @@ def write_generated(memories, phrases, letters, dates, songs, video_entries):
 
     (GENERATED / "videos.json").write_text(
         json.dumps(video_entries, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+    (GENERATED / "especiales.json").write_text(
+        json.dumps(specials, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
 
@@ -733,6 +828,7 @@ def write_generated(memories, phrases, letters, dates, songs, video_entries):
         "fechas": len(dates),
         "canciones": len(songs),
         "videosArchivo": len(video_entries),
+        "especiales": len(specials),
         "ultimaActualizacion": datetime.now().astimezone().isoformat(timespec="seconds"),
     }
 
@@ -785,7 +881,7 @@ def copy_if_exists(source: Path, destination: Path):
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source, destination)
 
-def build_site(memories, letters, songs, video_entries):
+def build_site(memories, letters, songs, video_entries, specials):
     if SITE.exists():
         shutil.rmtree(SITE)
 
@@ -798,7 +894,7 @@ def build_site(memories, letters, songs, video_entries):
         "recuerdo.html", "archivo.html", "lugares.html",
         "frases.html", "cartas.html", "carta.html", "fechas.html",
         "canciones.html", "cancion.html", "videos.html", "video.html",
-        "expediente-0606.html",
+        "sorpresas.html", "expediente-0606.html",
     ]
     for page in public_pages:
         copy_if_exists(ROOT / page, SITE / page)
@@ -847,6 +943,21 @@ def build_site(memories, letters, songs, video_entries):
         for filename in item["imagenes"] + item["videos"]:
             copy_if_exists(source_folder / filename, target_folder / filename)
 
+
+    # Publish public special experiences only.
+    for item in specials:
+        source_folder = ROOT / item["carpeta"]
+        target_folder = SITE / item["carpeta"]
+
+        if target_folder.exists():
+            shutil.rmtree(target_folder)
+
+        shutil.copytree(
+            source_folder,
+            target_folder,
+            ignore=shutil.ignore_patterns("info.md"),
+        )
+
     # Explicitly do NOT copy contenido/inbox.
 
 def main():
@@ -856,14 +967,15 @@ def main():
     dates, date_warnings, date_errors = discover_dates()
     songs, song_warnings, song_errors = discover_songs()
     video_entries, video_warnings, video_errors = discover_video_entries()
+    specials, special_warnings, special_errors = discover_specials()
 
     warnings = (
         memory_warnings + phrase_warnings + letter_warnings + date_warnings +
-        song_warnings + video_warnings
+        song_warnings + video_warnings + special_warnings
     )
     errors = (
         memory_errors + phrase_errors + letter_errors + date_errors +
-        song_errors + video_errors
+        song_errors + video_errors + special_errors
     )
 
     for warning in warnings:
@@ -874,8 +986,8 @@ def main():
             print(f"ERROR: {error}")
         raise SystemExit(1)
 
-    write_generated(memories, phrases, letters, dates, songs, video_entries)
-    build_site(memories, letters, songs, video_entries)
+    write_generated(memories, phrases, letters, dates, songs, video_entries, specials)
+    build_site(memories, letters, songs, video_entries, specials)
     validate_public_site()
 
     print("=" * 62)
@@ -888,6 +1000,7 @@ def main():
     print(f"Fechas:      {len(dates)}")
     print(f"Canciones:   {len(songs)}")
     print(f"Videos:      {len(video_entries)}")
+    print(f"Sorpresas:   {len(specials)}")
     print(f"Salida:       {SITE}")
     print("Inbox:        excluido de publicación")
     print("Herramientas: excluidas de publicación")

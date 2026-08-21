@@ -97,6 +97,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
+  if((stats?.especiales || 0) > 0){
+    numberItems.push({
+      value: stats.especiales,
+      label: stats.especiales === 1 ? "sorpresa" : "sorpresas"
+    });
+  }
+
   $("numberGrid").innerHTML = numberItems.map(item => `
     <div>
       <strong>${Number(item.value).toLocaleString("es-GT")}</strong>

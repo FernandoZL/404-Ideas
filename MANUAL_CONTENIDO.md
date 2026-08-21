@@ -406,3 +406,96 @@ NUESTRO LUGAR - BUILD CORRECTO
 Pero si el repositorio GitHub es público, los archivos fuente todavía podrían verse entrando deliberadamente al repositorio.
 
 Para una sorpresa que deba permanecer realmente secreta hasta el día de publicarla, no la subas aún al repositorio público. Usa tu teléfono/PC local o un repositorio privado.
+
+
+---
+
+# 17. Sorpresa / experiencia HTML
+
+Las sorpresas viven dentro de:
+
+```text
+contenido/especiales/
+```
+
+Cada sorpresa tiene su propia carpeta:
+
+```text
+contenido/especiales/una-sorpresa/
+├── info.md
+├── index.html
+├── imagen.jpeg
+└── otros-archivos...
+```
+
+`info.md` controla si aparece en la web:
+
+```yaml
+---
+tipo: especial
+publicado: false
+fecha: 2026-08-21
+titulo: "Una sorpresa"
+archivo: "index.html"
+portada:
+favorito: false
+---
+
+Una experiencia especial que quiero preparar.
+```
+
+Mientras:
+
+```yaml
+publicado: false
+```
+
+GitHub Actions **no copia esa carpeta al sitio público**.
+
+Cuando esté terminada:
+
+```yaml
+publicado: true
+```
+
+y haces Commit.
+
+## Qué puede ser una sorpresa
+
+- una página HTML;
+- un pequeño juego;
+- una animación;
+- una carta interactiva;
+- un cuestionario;
+- una experiencia con música;
+- un contador especial;
+- un recuerdo secreto;
+- cualquier mini proyecto compatible con HTML/CSS/JavaScript.
+
+## Regla importante
+
+Una sorpresa debe funcionar de forma autónoma dentro de su carpeta.
+
+No debería depender de editar `index.html` principal.
+
+## Ejemplo
+
+Consulta:
+
+```text
+ejemplos/especial/
+```
+
+Contiene `info.md` + `index.html`.
+
+## Te amo x1000
+
+La implementación original continúa dentro del Expediente #0606.
+
+Además existe formalmente como:
+
+```text
+contenido/especiales/te-amo-1000/
+```
+
+para que también aparezca dentro de la sección pública de Sorpresas.

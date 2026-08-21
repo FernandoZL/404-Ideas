@@ -676,3 +676,86 @@ body.dark .circle-btn,body.dark .quick-add,body.dark .nav-back{background:rgba(2
   .media-detail{padding-top:35px}
   .media-story{font-size:18px}
 }
+
+
+/* ==========================================
+   SORPRESAS · v2.9
+========================================== */
+.specials-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:18px
+}
+.special-card{
+  min-height:420px;
+  padding:28px;
+  border:1px solid var(--line);
+  border-radius:30px;
+  background:
+    radial-gradient(circle at top right,var(--soft),transparent 45%),
+    var(--surface);
+  box-shadow:var(--shadow);
+  text-decoration:none;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  position:relative;
+  overflow:hidden
+}
+.special-card.with-cover{
+  background-size:cover;
+  background-position:center;
+  color:white
+}
+.special-card.with-cover::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,.8))
+}
+.special-card>*{
+  position:relative;
+  z-index:1
+}
+.special-index{
+  width:48px;height:48px;border-radius:50%;
+  display:grid;place-items:center;
+  background:var(--soft);color:var(--accent);
+  font-size:22px
+}
+.special-card.with-cover .special-index{
+  background:rgba(255,255,255,.16);
+  color:white;
+  backdrop-filter:blur(12px)
+}
+.special-card time{
+  display:block;
+  color:var(--muted);
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  margin-bottom:10px
+}
+.special-card.with-cover time,
+.special-card.with-cover p{
+  color:rgba(255,255,255,.76)
+}
+.special-card h2{
+  margin:0 0 12px;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(38px,5vw,62px);
+  line-height:.98;
+  font-weight:500
+}
+.special-card p{
+  color:var(--muted);
+  line-height:1.55
+}
+.special-card strong{
+  display:block;
+  margin-top:22px
+}
+@media(max-width:720px){
+  .specials-grid{grid-template-columns:1fr}
+  .special-card{min-height:360px}
+}

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>Nueva sorpresa · Nuestro lugar</title>
+<link rel="stylesheet" href="../css/style.css?v=20260821-0435">
+
+<style>
+.tool{max-width:760px;margin:auto;padding:35px 20px 110px}
+.tool-card{background:var(--surface);border:1px solid var(--line);border-radius:28px;padding:22px;box-shadow:var(--shadow)}
+.tool label{display:block;font-weight:800;margin:16px 0 7px}
+.tool input,.tool textarea{width:100%;border:1px solid var(--line);border-radius:16px;padding:14px;background:var(--bg);color:var(--text);font:inherit}
+.tool textarea{min-height:170px;resize:vertical}
+.check{display:flex!important;align-items:center;gap:9px}.check input{width:auto!important}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+.actions button{min-height:48px;border:0;border-radius:16px;font-weight:900;cursor:pointer}
+.primary-tool{background:var(--text);color:var(--bg)}.secondary-tool{background:var(--soft);color:var(--text)}
+.result{margin-top:16px;padding:14px;border-radius:16px;background:var(--soft);font-family:ui-monospace,monospace;font-size:12px;white-space:pre-wrap;word-break:break-word}
+.helper{font-size:12px;color:var(--muted);line-height:1.5}
+@media(max-width:600px){.actions{grid-template-columns:1fr}}
+</style>
+
+</head>
+<body>
+<main class="tool">
+<a href="index.html" style="text-decoration:none">← Añadir algo</a>
+
+<section class="page-title" style="padding:35px 0 10px">
+  <span class="kicker">Zona de trabajo</span>
+  <h1>Nueva sorpresa.</h1>
+  <p>
+    Prepara la ficha que acompañará una página HTML, un juego o una experiencia interactiva.
+  </p>
+</section>
+
+<div class="tool-card">
+  <label for="date">Fecha (opcional)</label>
+  <input id="date" type="date">
+
+  <label for="title">Título</label>
+  <input id="title" placeholder="Una sorpresa">
+
+  <label for="filename">Archivo principal</label>
+  <input id="filename" value="index.html" placeholder="index.html">
+
+  <label for="text">Descripción</label>
+  <textarea id="text" placeholder="Una experiencia especial que quiero preparar..."></textarea>
+
+  <label class="check">
+    <input id="favorite" type="checkbox">
+    Marcar como favorita
+  </label>
+
+  <label class="check">
+    <input id="publishNow" type="checkbox">
+    Publicar inmediatamente
+  </label>
+
+  <p class="helper">
+    Lo normal es dejarlo apagado mientras construyes y pruebas el HTML.
+  </p>
+
+  <div class="actions">
+    <button class="primary-tool" id="prepare">Preparar info.md</button>
+    <button class="secondary-tool" id="download" hidden>Descargar info.md</button>
+  </div>
+
+  <pre id="result" class="result" hidden></pre>
+</div>
+</main>
+
+<script>
+const $=id=>document.getElementById(id);
+const slug=s=>String(s||"")
+  .normalize("NFD")
+  .replace(/[\u0300-\u036f]/g,"")
+  .toLowerCase()
+  .replace(/[^a-z0-9]+/g,"-")
+  .replace(/^-+|-+$/g,"")
+  .slice(0,70);
+
+const yaml=v=>'"'+String(v||"")
+  .replace(/\\/g,"\\\\")
+  .replace(/"/g,'\\"')+'"';
+
+let prepared="";
+
+function build(){
+  const date=$("date").value;
+  const title=$("title").value.trim();
+  const filename=$("filename").value.trim() || "index.html";
+  const text=$("text").value.trim();
+
+  if(!title){
+    alert("El título es obligatorio.");
+    return null;
+  }
+
+  const folder=slug(title) || "sorpresa";
+
+  const md=`---
+tipo: especial
+publicado: ${$("publishNow").checked}
+fecha: ${date}
+titulo: ${yaml(title)}
+archivo: ${yaml(filename)}
+portada:
+favorito: ${$("favorite").checked}
+---
+
+${text || "Aquí puedes escribir una descripción breve de la sorpresa."}
+`;
+
+  return {
+    md,
+    path:`contenido/especiales/${folder}/`
+  };
+}
+
+$("prepare").onclick=()=>{
+  const value=build();
+  if(!value)return;
+
+  prepared=value.md;
+  $("result").hidden=false;
+  $("result").textContent=
+`CARPETA:
+${value.path}
+
+ARCHIVOS:
+- info.md
+- index.html
+
+${value.md}`;
+
+  $("download").hidden=false;
+};
+
+$("download").onclick=()=>{
+  if(!prepared)return;
+  const blob=new Blob([prepared],{type:"text/markdown;charset=utf-8"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;
+  a.download="info.md";
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),500);
+};
+</script>
+</body>
+</html>

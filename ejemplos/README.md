@@ -11,3 +11,4 @@ No se publican en la web.
 - `cancion/cancion.md`
 - `video/video.md`
 - `inbox/nota.txt`
+- `especial/info.md` + `especial/index.html`

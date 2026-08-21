@@ -179,3 +179,16 @@ Es deliberado: primero congelamos y estabilizamos la base actual.
 - Editores privados de canción y video.
 - Manual completo: `MANUAL_CONTENIDO.md`.
 - Ejemplos copiables: `/ejemplos`.
+
+
+## v2.9 — Sorpresas
+
+- Sistema `contenido/especiales/`.
+- `data/generated/especiales.json`.
+- `sorpresas.html`.
+- Una sorpresa puede contener su propio HTML/CSS/JS y archivos.
+- Solo las sorpresas `publicado:true` se copian al sitio.
+- `Te amo x1000` es la primera sorpresa formal.
+- El Expediente #0606 conserva su implementación original.
+- Editor privado `editor-especial.html`.
+- Plantilla y ejemplo genérico incluidos.

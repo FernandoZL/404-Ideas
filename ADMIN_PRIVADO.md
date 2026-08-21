@@ -135,3 +135,18 @@ herramientas/editor-video.html
 Ambos generan contenido con `publicado: false` por defecto.
 
 Ninguna herramienta se copia al sitio público.
+
+
+## Sorpresas
+
+Editor local:
+
+```text
+herramientas/editor-especial.html
+```
+
+Genera el `info.md` de una sorpresa.
+
+La carpeta completa de una sorpresa con `publicado:false` no se copia a `_site`.
+
+Esto es más importante que en otros contenidos, porque evita publicar accidentalmente el propio `index.html` sorpresa antes de tiempo.
