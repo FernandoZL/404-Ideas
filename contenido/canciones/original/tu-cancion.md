@@ -7,7 +7,7 @@ artista:"Danny Ocean"
 archivo: "dembow.mp3"
 archivo_raiz: true
 spotify:
-youtube:"https://youtu.be/kQKGI24aydk?si=YNlt2BVrAf-VyGAy"
+youtube:"https://youtu.be/HZ8nhGgdZxY?si=5Ln3AOQ3-F894dso"
 apple_music:
 portada:
 favorito: true
