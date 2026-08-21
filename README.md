@@ -132,3 +132,14 @@ Es deliberado: primero congelamos y estabilizamos la base actual.
 - Página pública `cartas.html` y detalle `carta.html`.
 - Herramientas privadas para generar cartas y frases.
 - Los ejemplos del editor son genéricos y no reutilizan recuerdos reales recientes.
+
+## v2.7 — Fechas + aniversarios + números
+
+- Las fechas principales ya no están codificadas en JavaScript.
+- Nueva fuente `contenido/fechas/`.
+- `data/generated/fechas.json` se genera automáticamente.
+- La línea del tiempo consume las fechas generadas.
+- Nueva página pública `fechas.html`.
+- “Nosotros en números” se genera desde fechas + estadísticas.
+- Los aniversarios pueden aparecer automáticamente en “Un día como hoy”.
+- El ejemplo técnico de Café Cartel fue sustituido por un ejemplo genérico.

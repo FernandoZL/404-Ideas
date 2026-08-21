@@ -300,7 +300,71 @@ def discover_letters():
     return letters, warnings, errors
 
 
-def write_generated(memories, phrases, letters):
+
+def discover_dates():
+    base = CONTENT / "fechas"
+    dates = []
+    warnings = []
+    errors = []
+
+    if not base.exists():
+        return dates, warnings, errors
+
+    for md in sorted(base.rglob("*.md")):
+        if md.name.startswith("."):
+            continue
+
+        text = md.read_text(encoding="utf-8")
+        meta, body = parse_front_matter(text)
+
+        if (meta.get("tipo") or "fecha") != "fecha":
+            continue
+
+        date = str(meta.get("fecha", "")).strip()
+        title = str(meta.get("titulo", "")).strip()
+
+        if not date:
+            errors.append(f"{md.relative_to(ROOT)}: falta 'fecha'.")
+            continue
+
+        try:
+            datetime.strptime(date, "%Y-%m-%d")
+        except ValueError:
+            errors.append(
+                f"{md.relative_to(ROOT)}: fecha inválida '{date}'. Usa AAAA-MM-DD."
+            )
+            continue
+
+        if not title:
+            title = re.sub(r"^\d{4}-\d{2}-\d{2}-", "", md.stem)
+            title = title.replace("-", " ").strip().title() or "Fecha importante"
+            warnings.append(
+                f"{md.relative_to(ROOT)}: no tiene título; se usará '{title}'."
+            )
+
+        dates.append({
+            "id": md.stem,
+            "tipo": "fecha",
+            "clave": str(meta.get("clave", "")).strip(),
+            "fecha": date,
+            "titulo": title,
+            "contador": bool(meta.get("contador", False)),
+            "aniversario": bool(meta.get("aniversario", False)),
+            "destacada": bool(meta.get("destacada", False)),
+            "enlace": str(meta.get("enlace", "")).strip(),
+            "mensajeAniversario": str(meta.get("mensaje_aniversario", "")).strip(),
+            "texto": body.strip(),
+        })
+
+    keys = [item["clave"] for item in dates if item["clave"]]
+    duplicated_keys = sorted({key for key in keys if keys.count(key) > 1})
+    for key in duplicated_keys:
+        errors.append(f"contenido/fechas: clave duplicada '{key}'.")
+
+    dates.sort(key=lambda item: (item["fecha"], item["id"]))
+    return dates, warnings, errors
+
+def write_generated(memories, phrases, letters, dates):
     GENERATED.mkdir(parents=True, exist_ok=True)
 
     (GENERATED / "recuerdos.json").write_text(
@@ -315,6 +379,11 @@ def write_generated(memories, phrases, letters):
 
     (GENERATED / "cartas.json").write_text(
         json.dumps(letters, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+    (GENERATED / "fechas.json").write_text(
+        json.dumps(dates, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
 
@@ -392,6 +461,7 @@ def write_generated(memories, phrases, letters):
         "favoritos": sum(1 for m in memories if m["favorito"]),
         "frases": len(phrases),
         "cartas": len(letters),
+        "fechas": len(dates),
         "ultimaActualizacion": datetime.now().astimezone().isoformat(timespec="seconds"),
     }
 
@@ -416,7 +486,8 @@ def build_site(memories, letters):
     public_pages = [
         "index.html", "historia.html", "recuerdos.html", "fotos.html",
         "recuerdo.html", "archivo.html", "lugares.html",
-        "frases.html", "cartas.html", "carta.html", "expediente-0606.html",
+        "frases.html", "cartas.html", "carta.html", "fechas.html",
+        "expediente-0606.html",
     ]
     for page in public_pages:
         copy_if_exists(ROOT / page, SITE / page)
@@ -453,9 +524,10 @@ def main():
     memories, memory_warnings, memory_errors = discover_memories()
     phrases, phrase_warnings, phrase_errors = discover_phrases()
     letters, letter_warnings, letter_errors = discover_letters()
+    dates, date_warnings, date_errors = discover_dates()
 
-    warnings = memory_warnings + phrase_warnings + letter_warnings
-    errors = memory_errors + phrase_errors + letter_errors
+    warnings = memory_warnings + phrase_warnings + letter_warnings + date_warnings
+    errors = memory_errors + phrase_errors + letter_errors + date_errors
 
     for warning in warnings:
         print(f"WARNING: {warning}")
@@ -465,7 +537,7 @@ def main():
             print(f"ERROR: {error}")
         raise SystemExit(1)
 
-    write_generated(memories, phrases, letters)
+    write_generated(memories, phrases, letters, dates)
     build_site(memories, letters)
 
     print("=" * 62)
@@ -475,6 +547,7 @@ def main():
     print(f"Fotografías: {sum(len(m['imagenes']) for m in memories)}")
     print(f"Frases:      {len(phrases)}")
     print(f"Cartas:      {len(letters)}")
+    print(f"Fechas:      {len(dates)}")
     print(f"Salida:       {SITE}")
     print("Inbox:        excluido de publicación")
     print("=" * 62)

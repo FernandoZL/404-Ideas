@@ -92,3 +92,10 @@ Abre directamente:
 `https://fernandozl.github.io/404-Ideas/herramientas/editor-frase.html`
 
 La fecha es opcional. Puedes guardar también un contexto breve.
+
+## Guardar una fecha importante
+
+Abre directamente:
+`https://fernandozl.github.io/404-Ideas/herramientas/editor-fecha.html`
+
+Puedes decidir si la fecha debe tener contador y si quieres recordarla cada año.

@@ -1,10 +1,11 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const $ = NL.$;
-  const [config, memories, stats, phrases] = await Promise.all([
+  const [config, memories, stats, phrases, dates] = await Promise.all([
     NL.readJson("data/configuracion.json", null),
     NL.readJson("data/generated/recuerdos.json", []),
     NL.readJson("data/generated/estadisticas.json", null),
-    NL.readJson("data/generated/frases.json", [])
+    NL.readJson("data/generated/frases.json", []),
+    NL.readJson("data/generated/fechas.json", [])
   ]);
 
   if (config?.subtitle && $("subtitle")) $("subtitle").textContent = config.subtitle;
@@ -12,9 +13,82 @@ document.addEventListener("DOMContentLoaded", async () => {
   const photoCount = stats?.fotografias || 0;
   $("memoryCount").textContent = `${memoryCount} ${memoryCount === 1 ? "guardado" : "guardados"}`;
   $("photoCount").textContent = `${photoCount} ${photoCount === 1 ? "fotografía" : "fotografías"}`;
-  $("talkDays").textContent = NL.daysSince("2026-02-17").toLocaleString("es-GT");
-  $("kissDays").textContent = NL.daysSince("2026-03-27").toLocaleString("es-GT");
-  $("officialDays").textContent = NL.daysSince("2026-06-06").toLocaleString("es-GT");
+
+  const dateByKey = key => dates.find(item => item.clave === key);
+  const startedTalking = dateByKey("startedTalking");
+  const firstKiss = dateByKey("firstKiss");
+  const official = dateByKey("official");
+
+  const numberItems = [];
+
+  if(startedTalking){
+    numberItems.push({
+      value: NL.daysSince(startedTalking.fecha),
+      label: "días desde que empezamos a hablar"
+    });
+  }
+
+  if(firstKiss){
+    numberItems.push({
+      value: NL.daysSince(firstKiss.fecha),
+      label: "días desde nuestro primer beso"
+    });
+  }
+
+  if(official){
+    numberItems.push({
+      value: NL.daysSince(official.fecha),
+      label: "días siendo oficialmente nosotros"
+    });
+
+    numberItems.push({
+      value: NL.completeMonthsSince(official.fecha),
+      label: "meses completos juntos"
+    });
+
+    const years = NL.completeYearsSince(official.fecha);
+    if(years > 0){
+      numberItems.push({
+        value: years,
+        label: years === 1 ? "año juntos" : "años juntos"
+      });
+    }
+  }
+
+  if(memoryCount > 0){
+    numberItems.push({
+      value: memoryCount,
+      label: memoryCount === 1 ? "recuerdo guardado" : "recuerdos guardados"
+    });
+  }
+
+  if(photoCount > 0){
+    numberItems.push({
+      value: photoCount,
+      label: photoCount === 1 ? "fotografía" : "fotografías"
+    });
+  }
+
+  if((stats?.cartas || 0) > 0){
+    numberItems.push({
+      value: stats.cartas,
+      label: stats.cartas === 1 ? "carta" : "cartas"
+    });
+  }
+
+  if((stats?.frases || 0) > 0){
+    numberItems.push({
+      value: stats.frases,
+      label: stats.frases === 1 ? "frase nuestra" : "frases nuestras"
+    });
+  }
+
+  $("numberGrid").innerHTML = numberItems.map(item => `
+    <div>
+      <strong>${Number(item.value).toLocaleString("es-GT")}</strong>
+      <span>${NL.escapeHtml(item.label)}</span>
+    </div>
+  `).join("");
 
   if (memories.length) {
     $("memoryGrid").innerHTML = memories.slice(0, 6).map(memory => {
@@ -32,11 +106,29 @@ document.addEventListener("DOMContentLoaded", async () => {
     $("homePhraseSection").hidden = false;
   }
 
-  const now = new Date(), month = now.getMonth() + 1, day = now.getDate();
-  const today = memories.find(memory => { const p = memory.fecha.split("-"); return +p[1] === month && +p[2] === day; });
-  if (today) {
-    $("todayTitle").textContent = today.titulo;
-    $("todayText").textContent = NL.excerpt(today.texto, 180);
+  const now = new Date();
+
+  const anniversary =
+    dates.find(item =>
+      item.aniversario &&
+      NL.sameMonthDay(item.fecha, now)
+    );
+
+  const todayMemory =
+    memories.find(memory =>
+      NL.sameMonthDay(memory.fecha, now)
+    );
+
+  const todayItem = anniversary || todayMemory;
+
+  if(todayItem){
+    $("todayTitle").textContent = todayItem.titulo;
+
+    $("todayText").textContent =
+      anniversary
+        ? (anniversary.mensajeAniversario || anniversary.texto)
+        : NL.excerpt(todayMemory.texto, 180);
+
     $("todayCard").hidden = false;
   }
 

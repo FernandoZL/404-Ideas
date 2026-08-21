@@ -8,11 +8,6 @@
     "case": "Caso especial #0606",
     "enabled": true
   },
-  "dates": {
-    "startedTalking": "2026-02-17",
-    "firstKiss": "2026-03-27",
-    "official": "2026-06-06"
-  },
   "content": {
     "defaultSort": "desc",
     "autoDetectImages": true,

@@ -1,9 +1,13 @@
 ---
 tipo: fecha
-fecha: 2026-06-06
-titulo: Oficialmente nosotros
+clave:
+fecha: 2026-08-21
+titulo: "Una fecha importante"
 contador: true
-aniversario: true
+aniversario: false
+destacada: false
+enlace:
+mensaje_aniversario:
 ---
 
-El día que te pregunté si querías ser mi novia.
+Aquí puedes escribir por qué esta fecha importa.

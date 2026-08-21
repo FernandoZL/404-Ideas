@@ -67,6 +67,38 @@
     return Math.floor(Math.max(0, Date.now() - start.getTime()) / 86400000);
   };
 
+  NL.completeMonthsSince = (dateText) => {
+    if (!dateText) return 0;
+    const start = new Date(`${dateText}T00:00:00`);
+    const now = new Date();
+    let months =
+      (now.getFullYear() - start.getFullYear()) * 12 +
+      (now.getMonth() - start.getMonth());
+
+    if (now.getDate() < start.getDate()) months--;
+    return Math.max(0, months);
+  };
+
+  NL.completeYearsSince = (dateText) => {
+    if (!dateText) return 0;
+    const start = new Date(`${dateText}T00:00:00`);
+    const now = new Date();
+    let years = now.getFullYear() - start.getFullYear();
+
+    const anniversaryThisYear =
+      new Date(now.getFullYear(), start.getMonth(), start.getDate());
+
+    if (now < anniversaryThisYear) years--;
+    return Math.max(0, years);
+  };
+
+  NL.sameMonthDay = (dateText, date = new Date()) => {
+    if (!dateText) return false;
+    const parts = dateText.split("-");
+    return Number(parts[1]) === date.getMonth() + 1 &&
+           Number(parts[2]) === date.getDate();
+  };
+
   NL.memoryUrl = (memory) => `recuerdo.html?id=${encodeURIComponent(memory.id)}`;
   NL.mediaUrl = (memory, file) => file && memory?.carpeta ? `${memory.carpeta}/${file}` : "";
 
@@ -149,13 +181,14 @@
         <nav class="menu-links">
           <a href="index.html"><span>01</span><strong>Inicio</strong><small>Volver a nuestro lugar</small></a>
           <a href="historia.html"><span>02</span><strong>Nuestra historia</strong><small>Todo en orden, desde el comienzo</small></a>
-          <a href="recuerdos.html"><span>03</span><strong>Recuerdos</strong><small>Buscar, filtrar y volver a un momento</small></a>
-          <a href="fotos.html"><span>04</span><strong>Nosotros en fotos</strong><small>La galería completa</small></a>
-          <a href="lugares.html"><span>05</span><strong>Nuestros lugares</strong><small>Los sitios que también se volvieron recuerdo</small></a>
-          <a href="frases.html"><span>06</span><strong>Frases nuestras</strong><small>Esas cosas que solo nosotros entendemos</small></a>
-          <a href="cartas.html"><span>07</span><strong>Cartas</strong><small>Palabras que merecían quedarse</small></a>
-          <a href="archivo.html"><span>08</span><strong>Todo el archivo</strong><small>Distintas formas de volver</small></a>
-          <a href="expediente-0606.html"><span>09</span><strong>Expediente #0606</strong><small>La página con la que empezó todo</small></a>
+          <a href="fechas.html"><span>03</span><strong>Nuestros tiempos</strong><small>Las fechas que cambiaron algo</small></a>
+          <a href="recuerdos.html"><span>04</span><strong>Recuerdos</strong><small>Buscar, filtrar y volver a un momento</small></a>
+          <a href="fotos.html"><span>05</span><strong>Nosotros en fotos</strong><small>La galería completa</small></a>
+          <a href="lugares.html"><span>06</span><strong>Nuestros lugares</strong><small>Los sitios que también se volvieron recuerdo</small></a>
+          <a href="frases.html"><span>07</span><strong>Frases nuestras</strong><small>Esas cosas que solo nosotros entendemos</small></a>
+          <a href="cartas.html"><span>08</span><strong>Cartas</strong><small>Palabras que merecían quedarse</small></a>
+          <a href="archivo.html"><span>09</span><strong>Todo el archivo</strong><small>Distintas formas de volver</small></a>
+          <a href="expediente-0606.html"><span>10</span><strong>Expediente #0606</strong><small>La página con la que empezó todo</small></a>
         </nav>
       </div>`;
     document.body.appendChild(overlay);

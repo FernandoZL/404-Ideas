@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>Nueva fecha · Nuestro lugar</title>
+<link rel="stylesheet" href="../css/style.css?v=20260821-0245">
+<style>
+.tool{max-width:720px;margin:auto;padding:35px 20px 110px}
+.tool-card{background:var(--surface);border:1px solid var(--line);border-radius:28px;padding:22px;box-shadow:var(--shadow)}
+.tool label{display:block;font-weight:800;margin:16px 0 7px}
+.tool input,.tool textarea{width:100%;border:1px solid var(--line);border-radius:16px;padding:14px;background:var(--bg);color:var(--text);font:inherit}
+.tool textarea{min-height:150px}
+.check{display:flex!important;align-items:center;gap:9px}.check input{width:auto!important}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+.actions button{min-height:48px;border:0;border-radius:16px;font-weight:900;cursor:pointer}
+.primary-tool{background:var(--text);color:var(--bg)}.secondary-tool{background:var(--soft);color:var(--text)}
+.result{margin-top:16px;padding:14px;border-radius:16px;background:var(--soft);font-family:ui-monospace,monospace;font-size:12px;white-space:pre-wrap;word-break:break-word}
+@media(max-width:600px){.actions{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main class="tool">
+<a href="../index.html" style="text-decoration:none">← Nuestro lugar</a>
+<section class="page-title" style="padding:35px 0 10px">
+<span class="kicker">Guardar algo</span><h1>Nueva fecha.</h1>
+<p>Para los días que quieres que sigan contando.</p>
+</section>
+<div class="tool-card">
+<label for="date">Fecha</label><input id="date" type="date">
+<label for="title">Título</label><input id="title" placeholder="Una fecha importante">
+<label for="text">Por qué importa</label><textarea id="text" placeholder="Escribe aquí lo que quieres recordar de esta fecha..."></textarea>
+<label class="check"><input id="counter" type="checkbox" checked> Mostrar cuánto tiempo ha pasado</label>
+<label class="check"><input id="anniversary" type="checkbox"> Recordarla cada año</label>
+<div class="actions">
+<button class="primary-tool" id="prepare">Preparar fecha</button>
+<button class="secondary-tool" id="download" hidden>Descargar fecha.md</button>
+</div>
+<pre id="result" class="result" hidden></pre>
+</div>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const now=new Date();$("date").value=[now.getFullYear(),String(now.getMonth()+1).padStart(2,"0"),String(now.getDate()).padStart(2,"0")].join("-");
+const slug=s=>String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,65);
+const yaml=v=>'"'+String(v||"").replace(/\\/g,"\\\\").replace(/"/g,'\\"')+'"';
+let prepared="";
+function build(){
+ const date=$("date").value,title=$("title").value.trim(),text=$("text").value.trim();
+ if(!date||!title){alert("Fecha y título son obligatorios.");return null}
+ const md=`---\ntipo: fecha\nclave:\nfecha: ${date}\ntitulo: ${yaml(title)}\ncontador: ${$("counter").checked}\naniversario: ${$("anniversary").checked}\ndestacada: false\nenlace:\nmensaje_aniversario:\n---\n\n${text||"Aquí puedes escribir por qué esta fecha importa."}\n`;
+ return {md,path:`contenido/fechas/${date}-${slug(title)}.md`};
+}
+$("prepare").onclick=()=>{const b=build();if(!b)return;prepared=b.md;$("result").hidden=false;$("result").textContent=`RUTA:\n${b.path}\n\n${b.md}`;$("download").hidden=false};
+$("download").onclick=()=>{if(!prepared)return;const blob=new Blob([prepared],{type:"text/markdown;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="fecha.md";a.click();setTimeout(()=>URL.revokeObjectURL(url),500)};
+</script>
+</body>
+</html>
