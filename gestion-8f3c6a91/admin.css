@@ -453,3 +453,122 @@ input:focus,textarea:focus,select:focus{
   .tab{font-size:12px}
   .header-actions .ghost-button:first-child{display:none}
 }
+
+
+/* v2.10.1 — instrucciones integradas */
+.how-it-works{
+  margin:0 0 22px;
+  padding:17px 18px;
+  border:1px solid var(--line);
+  border-radius:19px;
+  background:rgba(255,255,255,.72)
+}
+.how-it-works>strong{display:block;margin-bottom:11px}
+.how-it-works>p{
+  margin:12px 0 0;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.55
+}
+.how-it-works code{background:var(--surface-2);padding:2px 5px;border-radius:6px}
+.how-steps{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px
+}
+.how-steps span{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  min-height:44px;
+  padding:9px;
+  border-radius:13px;
+  background:var(--surface-2);
+  font-size:12px;
+  font-weight:750
+}
+.how-steps b{
+  width:23px;height:23px;border-radius:50%;
+  display:grid;place-items:center;
+  flex:0 0 auto;
+  background:var(--accent);
+  color:white;
+  font-size:10px
+}
+.instruction-stack{display:grid;gap:12px}
+.instruction-card{
+  display:grid;
+  grid-template-columns:48px 1fr;
+  gap:16px;
+  padding:22px;
+  border:1px solid var(--line);
+  border-radius:22px;
+  background:rgba(255,255,255,.82)
+}
+.instruction-number{
+  width:44px;height:44px;border-radius:50%;
+  display:grid;place-items:center;
+  background:var(--accent-soft);
+  color:var(--accent);
+  font-size:11px;
+  font-weight:900
+}
+.instruction-card h3{margin:0 0 9px;font-size:20px}
+.instruction-card p,
+.instruction-card li{
+  color:var(--muted);
+  line-height:1.6;
+  font-size:14px
+}
+.instruction-card ol,
+.instruction-card ul{padding-left:20px}
+.instruction-result{
+  padding:10px 12px;
+  border-radius:12px;
+  background:var(--surface-2);
+  color:var(--text)!important
+}
+.status-examples{
+  display:grid;
+  grid-template-columns:max-content 1fr;
+  gap:7px 12px;
+  align-items:center
+}
+.status-examples code,
+.commit-examples code,
+.quick-rule code{
+  padding:8px 10px;
+  border-radius:10px;
+  background:var(--surface-2);
+  font:12px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace
+}
+.status-examples p{margin:0}
+.content-help-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:8px
+}
+.content-help-grid div{
+  padding:11px 12px;
+  border-radius:13px;
+  background:var(--surface-2)
+}
+.content-help-grid strong{display:block;margin-bottom:3px}
+.content-help-grid span{color:var(--muted);font-size:12px;line-height:1.45}
+.commit-examples{display:grid;gap:6px}
+.quick-rule{
+  margin-top:14px;
+  padding:20px;
+  display:grid;
+  gap:8px;
+  border:1px solid rgba(220,102,136,.25);
+  border-radius:22px;
+  background:var(--accent-soft)
+}
+.quick-rule strong{margin-bottom:3px}
+@media(max-width:700px){
+  .how-steps{grid-template-columns:1fr 1fr}
+  .instruction-card{grid-template-columns:1fr}
+  .content-help-grid{grid-template-columns:1fr}
+  .status-examples{grid-template-columns:1fr}
+}

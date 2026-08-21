@@ -104,6 +104,21 @@
       <p>Elige el tipo. El panel crea la estructura y hace el Commit por ti.</p>
     </div>
 
+    <div class="how-it-works">
+      <strong>Cómo funciona</strong>
+      <div class="how-steps">
+        <span><b>1</b> Eliges qué guardar</span>
+        <span><b>2</b> Escribes y adjuntas archivos</span>
+        <span><b>3</b> Decides borrador o publicado</span>
+        <span><b>4</b> Guardar en GitHub crea el Commit</span>
+      </div>
+      <p>
+        No tienes que entrar manualmente al repositorio. El panel crea carpetas,
+        archivos y el Commit en <code>main</code>. Si publicas, GitHub Actions
+        actualizará Nuestro lugar automáticamente.
+      </p>
+    </div>
+
     <div class="type-grid" id="typeGrid">
       <button class="type-card active" type="button" data-type="recuerdo">
         <span>01</span><strong>Recuerdo</strong><small>Texto, fotos, lugar, etiquetas.</small>
@@ -241,42 +256,169 @@
   <!-- HELP -->
   <section class="tab-panel" id="tab-help">
     <div class="section-heading">
-      <span class="eyebrow">Referencia rápida</span>
-      <h2>Cómo funciona.</h2>
-    </div>
-
-    <div class="help-grid">
-      <article>
-        <strong>Borrador</strong>
-        <code>publicado: false</code>
-        <p>Existe en GitHub, pero no aparece en la web.</p>
-      </article>
-
-      <article>
-        <strong>Publicado</strong>
-        <code>publicado: true</code>
-        <p>GitHub Actions lo incorpora automáticamente a Nuestro lugar.</p>
-      </article>
-
-      <article>
-        <strong>Inbox</strong>
-        <code>contenido/inbox/</code>
-        <p>Archivos que quieres conservar y organizar después.</p>
-      </article>
-
-      <article>
-        <strong>Tamaño</strong>
-        <code>&lt; 90 MiB por archivo</code>
-        <p>Para videos grandes conviene usar YouTube o comprimir antes.</p>
-      </article>
-    </div>
-
-    <div class="help-note">
-      <strong>Importante</strong>
+      <span class="eyebrow">Instrucciones</span>
+      <h2>Cómo usar este panel.</h2>
       <p>
-        El enlace del panel no aparece en la navegación pública. La autorización real
-        para modificar el repositorio es tu token de GitHub.
+        Esta guía está dentro del panel para que no tengas que recordar rutas,
+        nombres de archivos ni comandos de Git.
       </p>
+    </div>
+
+    <div class="instruction-stack">
+
+      <article class="instruction-card">
+        <span class="instruction-number">01</span>
+        <div>
+          <h3>Crear contenido nuevo</h3>
+          <p>En <strong>＋ Nuevo</strong> eliges Recuerdo, Carta, Frase, Fecha, Canción, Video o Sorpresa.</p>
+          <ol>
+            <li>Completa los campos.</li>
+            <li>Adjunta fotos, audio, video o HTML cuando aplique.</li>
+            <li>Deja apagado <strong>Publicar en Nuestro lugar</strong> si aún no quieres mostrarlo.</li>
+            <li>Pulsa <strong>Guardar en GitHub</strong>.</li>
+          </ol>
+          <p class="instruction-result">
+            Resultado: el panel crea la carpeta, el Markdown, sube los archivos
+            y genera <strong>un solo Commit</strong>.
+          </p>
+        </div>
+      </article>
+
+      <article class="instruction-card">
+        <span class="instruction-number">02</span>
+        <div>
+          <h3>Borrador vs publicado</h3>
+          <div class="status-examples">
+            <code>publicado: false</code>
+            <p>Se guarda en GitHub, pero no aparece en la web.</p>
+            <code>publicado: true</code>
+            <p>GitHub Actions lo incorpora a Nuestro lugar.</p>
+          </div>
+          <p>
+            Puedes crear algo hoy como borrador y publicarlo días después desde
+            <strong>Archivo → Editar → Publicar en la web</strong>.
+          </p>
+        </div>
+      </article>
+
+      <article class="instruction-card">
+        <span class="instruction-number">03</span>
+        <div>
+          <h3>Agregar fotos después</h3>
+          <ol>
+            <li>Ve a <strong>Archivo</strong>.</li>
+            <li>Busca el recuerdo.</li>
+            <li>Pulsa <strong>Editar</strong>.</li>
+            <li>En “Agregar archivos a esta carpeta” selecciona las nuevas fotos.</li>
+            <li>Pulsa <strong>Guardar cambios</strong>.</li>
+          </ol>
+          <p>No necesitas reconstruir el recuerdo ni editar GitHub manualmente.</p>
+        </div>
+      </article>
+
+      <article class="instruction-card">
+        <span class="instruction-number">04</span>
+        <div>
+          <h3>Editar algo existente</h3>
+          <p>
+            En <strong>Archivo</strong> puedes buscar por título, fecha o tipo.
+            Al editar verás el archivo Markdown completo.
+          </p>
+          <ul>
+            <li><strong>Guardar cambios</strong>: crea un Commit con la edición y archivos nuevos.</li>
+            <li><strong>Publicar / ocultar</strong>: cambia <code>publicado</code> y crea otro Commit.</li>
+            <li><strong>Eliminar</strong>: elimina el contenido mediante un Commit, con doble confirmación.</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="instruction-card">
+        <span class="instruction-number">05</span>
+        <div>
+          <h3>Inbox: guardar ahora, ordenar después</h3>
+          <p>
+            Usa <strong>Inbox</strong> cuando solo quieras guardar algo rápido.
+            Puedes escribir una nota y subir cualquier archivo.
+          </p>
+          <p class="instruction-result">
+            Inbox nunca aparece en Nuestro lugar.
+          </p>
+        </div>
+      </article>
+
+      <article class="instruction-card">
+        <span class="instruction-number">06</span>
+        <div>
+          <h3>Qué acepta cada opción</h3>
+          <div class="content-help-grid">
+            <div><strong>Recuerdo</strong><span>Texto, fotos, audio, video, lugar, etiquetas.</span></div>
+            <div><strong>Carta</strong><span>Texto largo, fotos y música opcional.</span></div>
+            <div><strong>Frase</strong><span>Frase corta, fecha y contexto opcionales.</span></div>
+            <div><strong>Fecha</strong><span>Fecha, contador, aniversario y mensaje.</span></div>
+            <div><strong>Canción</strong><span>MP3/M4A/AAC/WAV, Spotify, YouTube o Apple Music.</span></div>
+            <div><strong>Video</strong><span>MP4/MOV/M4V o enlace de YouTube.</span></div>
+            <div><strong>Sorpresa</strong><span>index.html, CSS, JS, imágenes, audio y otros archivos.</span></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="instruction-card">
+        <span class="instruction-number">07</span>
+        <div>
+          <h3>Commits automáticos</h3>
+          <p>Cada operación importante queda registrada en GitHub:</p>
+          <div class="commit-examples">
+            <code>Guardar borrador: Un momento bonito</code>
+            <code>Publicar: Una carta</code>
+            <code>Actualizar: Un recuerdo</code>
+            <code>Ocultar: Una sorpresa</code>
+            <code>Eliminar: Una frase</code>
+            <code>Guardar en inbox: Algo de hoy</code>
+          </div>
+          <p>
+            Eso significa que sigues conservando historial y puedes revisar
+            qué cambió en el repositorio.
+          </p>
+        </div>
+      </article>
+
+      <article class="instruction-card">
+        <span class="instruction-number">08</span>
+        <div>
+          <h3>Archivos grandes</h3>
+          <p>
+            El panel limita cada archivo a <strong>90 MiB</strong> para evitar
+            que GitHub lo rechace.
+          </p>
+          <p>
+            Para videos más grandes usa YouTube o espera la fase de optimización.
+          </p>
+        </div>
+      </article>
+
+      <article class="instruction-card">
+        <span class="instruction-number">09</span>
+        <div>
+          <h3>Privacidad</h3>
+          <p>
+            Este enlace no aparece en la navegación de Nuestro lugar.
+            El panel necesita tu token para modificar el repositorio.
+          </p>
+          <p>
+            <strong>Importante:</strong> si el repositorio sigue siendo público,
+            un borrador no aparece en la web, pero sus archivos fuente podrían
+            verse entrando deliberadamente al repositorio.
+          </p>
+        </div>
+      </article>
+
+    </div>
+
+    <div class="quick-rule">
+      <strong>Regla rápida</strong>
+      <code>Quiero guardarlo sin mostrarlo → Publicar apagado</code>
+      <code>Quiero que aparezca → Publicar encendido</code>
+      <code>No quiero organizarlo todavía → Inbox</code>
     </div>
   </section>
 

@@ -225,3 +225,12 @@ La configuración actual ofrece:
 
 Si posteriormente quieres que ni siquiera tengas que usar un token en el navegador,
 la evolución será autenticación GitHub OAuth mediante un pequeño backend/serverless.
+
+
+## v2.10.1 — Instrucciones dentro del panel
+
+La pestaña `Ayuda` contiene ahora el flujo completo:
+crear, borrador/publicado, agregar fotos después, editar, Inbox,
+tipos de contenido, commits, límites y privacidad.
+
+En `＋ Nuevo` aparece además un resumen de cuatro pasos antes del formulario.
