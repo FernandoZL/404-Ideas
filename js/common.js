@@ -24,8 +24,21 @@
 
   NL.readJson = async (path, fallback) => {
     try {
-      const response = await fetch(path, { cache: "no-store" });
-      if (!response.ok) throw new Error(`HTTP ${response.status}: ${path}`);
+      const url = new URL(path, document.baseURI);
+      url.searchParams.set("_fresh", Date.now().toString());
+
+      const response = await fetch(url.href, {
+        cache: "no-store",
+        headers: {
+          "Cache-Control": "no-cache",
+          "Pragma": "no-cache"
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${url.pathname}`);
+      }
+
       return await response.json();
     } catch (error) {
       console.warn("Nuestro lugar:", error);

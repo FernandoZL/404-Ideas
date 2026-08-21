@@ -92,3 +92,10 @@ Es deliberado: primero congelamos y estabilizamos la base actual.
 - `data/generated/lugares.json`.
 - Nueva sección `lugares.html`.
 - El buscador de recuerdos también encuentra lugares y direcciones.
+
+
+## v2.3.1 — Hotfix de caché
+
+- CSS y JavaScript llevan versión en la URL.
+- Los JSON generados se solicitan con cache-busting.
+- Evita que el navegador muestre 0 recuerdos después de un deploy nuevo.
