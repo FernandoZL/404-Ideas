@@ -1,9 +1,10 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const $ = NL.$;
-  const [config, memories, stats] = await Promise.all([
+  const [config, memories, stats, phrases] = await Promise.all([
     NL.readJson("data/configuracion.json", null),
     NL.readJson("data/generated/recuerdos.json", []),
-    NL.readJson("data/generated/estadisticas.json", null)
+    NL.readJson("data/generated/estadisticas.json", null),
+    NL.readJson("data/generated/frases.json", [])
   ]);
 
   if (config?.subtitle && $("subtitle")) $("subtitle").textContent = config.subtitle;
@@ -22,6 +23,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     }).join("");
   } else if ($("recentSection")) {
     $("recentSection").hidden = true;
+  }
+
+
+  if (phrases.length && $("homePhraseSection")) {
+    const phrase = phrases[Math.floor(Math.random() * phrases.length)];
+    $("homePhrase").textContent = phrase.texto;
+    $("homePhraseSection").hidden = false;
   }
 
   const now = new Date(), month = now.getMonth() + 1, day = now.getDate();

@@ -123,3 +123,12 @@ Es deliberado: primero congelamos y estabilizamos la base actual.
 - `archivo.html` muestra únicamente secciones públicas reales.
 - El editor sigue disponible por URL directa y lleva `noindex,nofollow,noarchive`.
 - El acceso de edición recomendado es mediante un favorito directo en el teléfono.
+
+## v2.6 — Frases + Cartas
+
+- Frases originales del Expediente #0606 migradas como contenido fuente.
+- `frases.json` y `cartas.json` generados automáticamente.
+- Página pública `frases.html` con frase aleatoria.
+- Página pública `cartas.html` y detalle `carta.html`.
+- Herramientas privadas para generar cartas y frases.
+- Los ejemplos del editor son genéricos y no reutilizan recuerdos reales recientes.

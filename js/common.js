@@ -152,8 +152,10 @@
           <a href="recuerdos.html"><span>03</span><strong>Recuerdos</strong><small>Buscar, filtrar y volver a un momento</small></a>
           <a href="fotos.html"><span>04</span><strong>Nosotros en fotos</strong><small>La galería completa</small></a>
           <a href="lugares.html"><span>05</span><strong>Nuestros lugares</strong><small>Los sitios que también se volvieron recuerdo</small></a>
-          <a href="archivo.html"><span>06</span><strong>Todo el archivo</strong><small>Cartas, frases, canciones y más</small></a>
-          <a href="expediente-0606.html"><span>07</span><strong>Expediente #0606</strong><small>La página con la que empezó todo</small></a>
+          <a href="frases.html"><span>06</span><strong>Frases nuestras</strong><small>Esas cosas que solo nosotros entendemos</small></a>
+          <a href="cartas.html"><span>07</span><strong>Cartas</strong><small>Palabras que merecían quedarse</small></a>
+          <a href="archivo.html"><span>08</span><strong>Todo el archivo</strong><small>Distintas formas de volver</small></a>
+          <a href="expediente-0606.html"><span>09</span><strong>Expediente #0606</strong><small>La página con la que empezó todo</small></a>
         </nav>
       </div>`;
     document.body.appendChild(overlay);

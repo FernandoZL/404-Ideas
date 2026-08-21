@@ -1,6 +1,6 @@
 ---
 tipo: carta
-fecha: 2026-08-20
+fecha: 2026-08-21
 titulo: Para ti
 portada:
 musica:
@@ -8,7 +8,7 @@ musica:
 
 Rocío,
 
-Hoy quería escribirte algo...
+Aquí escribo lo que quiero decirte.
 
 Con amor,
 

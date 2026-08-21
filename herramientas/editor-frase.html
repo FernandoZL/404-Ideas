@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>Nueva frase · Nuestro lugar</title>
+<link rel="stylesheet" href="../css/style.css?v=20260821-0215">
+<style>
+.tool{max-width:720px;margin:auto;padding:35px 20px 110px}
+.tool-card{background:var(--surface);border:1px solid var(--line);border-radius:28px;padding:22px;box-shadow:var(--shadow)}
+.tool label{display:block;font-weight:800;margin:16px 0 7px}
+.tool input,.tool textarea{width:100%;border:1px solid var(--line);border-radius:16px;padding:14px;background:var(--bg);color:var(--text);font:inherit}
+.tool textarea{min-height:150px;resize:vertical}
+.type-nav{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:20px 0}
+.type-nav a{padding:14px;border:1px solid var(--line);border-radius:16px;text-decoration:none;color:var(--text);text-align:center;font-weight:800}
+.type-nav a.active{border-color:var(--accent);color:var(--accent)}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+.actions button{min-height:48px;border:0;border-radius:16px;font-weight:900;cursor:pointer}
+.primary-tool{background:var(--text);color:var(--bg)}.secondary-tool{background:var(--soft);color:var(--text)}
+.result{margin-top:16px;padding:14px;border-radius:16px;background:var(--soft);font-family:ui-monospace,monospace;font-size:12px;white-space:pre-wrap;word-break:break-word}
+@media(max-width:600px){.type-nav,.actions{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main class="tool">
+<a href="../index.html" style="text-decoration:none">← Nuestro lugar</a>
+<section class="page-title" style="padding:35px 0 10px">
+<span class="kicker">Guardar algo</span><h1>Nueva frase.</h1>
+<p>Para esas cosas pequeñas que después terminan significando mucho.</p>
+</section>
+<nav class="type-nav">
+<a href="editor.html">Recuerdo</a>
+<a href="editor-carta.html">Carta</a>
+<a class="active" href="editor-frase.html">Frase</a>
+</nav>
+<div class="tool-card">
+<label for="date">Fecha (opcional)</label><input id="date" type="date">
+<label for="phrase">Frase</label><textarea id="phrase" placeholder="Escribe aquí una frase que quieras guardar..."></textarea>
+<label for="context">Contexto (opcional)</label><input id="context" placeholder="Una conversación, un momento...">
+<div class="actions">
+<button class="primary-tool" id="prepare">Preparar frase</button>
+<button class="secondary-tool" id="download" hidden>Descargar frase.md</button>
+</div>
+<pre id="result" class="result" hidden></pre>
+</div>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const slug=s=>String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,55);
+const yaml=v=>'"'+String(v||"").replace(/\\/g,"\\\\").replace(/"/g,'\\"')+'"';
+let prepared="";
+function build(){
+ const date=$("date").value,phrase=$("phrase").value.trim(),context=$("context").value.trim();
+ if(!phrase){alert("Escribe una frase.");return null}
+ const clean=phrase.replace(/^["“”']+|["“”']+$/g,"").trim();
+ const folder=(date?date+"-":"")+slug(clean.slice(0,45));
+ const year=date?date.slice(0,4):"sin-fecha";
+ const md=`---\ntipo: frase\nfecha: ${date}\nfavorito: false\ncontexto: ${yaml(context)}\n---\n\n${phrase}\n`;
+ return {md,path:`contenido/frases/${year}/${folder||"frase"}/frase.md`};
+}
+$("prepare").onclick=()=>{const b=build();if(!b)return;prepared=b.md;$("result").hidden=false;$("result").textContent=`RUTA:\n${b.path}\n\n${b.md}`;$("download").hidden=false};
+$("download").onclick=()=>{if(!prepared)return;const blob=new Blob([prepared],{type:"text/markdown;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="frase.md";a.click();setTimeout(()=>URL.revokeObjectURL(url),500)};
+</script>
+</body>
+</html>

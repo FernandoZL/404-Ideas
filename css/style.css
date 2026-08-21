@@ -135,3 +135,222 @@ body.dark .circle-btn,body.dark .quick-add,body.dark .nav-back{background:rgba(2
   .place-inline-map{min-height:220px}
   .place-map iframe{height:280px}
 }
+
+
+/* ==========================================
+   FRASES · CARTAS · v2.6
+========================================== */
+.phrase-hero{
+  max-width:820px;
+  margin:0 auto 70px;
+  padding:54px 34px;
+  text-align:center;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:30px;
+  box-shadow:var(--shadow)
+}
+.phrase-hero blockquote{
+  margin:18px auto 24px;
+  max-width:700px;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(34px,5vw,60px);
+  line-height:1.13;
+  letter-spacing:-.03em
+}
+.phrase-hero>p{
+  color:var(--muted);
+  margin:-6px 0 20px
+}
+.phrases-grid{
+  columns:2 280px;
+  column-gap:16px
+}
+.phrase-card{
+  break-inside:avoid;
+  margin:0 0 16px;
+  padding:25px;
+  border:1px solid var(--line);
+  border-radius:24px;
+  background:var(--surface)
+}
+.phrase-card blockquote{
+  margin:0;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:27px;
+  line-height:1.25
+}
+.phrase-card time,
+.phrase-card p{
+  display:block;
+  margin-top:15px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.5
+}
+
+.letters-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:18px
+}
+.letter-card{
+  min-height:340px;
+  padding:30px;
+  border:1px solid var(--line);
+  border-radius:28px;
+  background:var(--surface);
+  box-shadow:var(--shadow);
+  text-decoration:none;
+  display:flex;
+  flex-direction:column;
+  position:relative;
+  overflow:hidden
+}
+.letter-card.has-cover{
+  min-height:480px;
+  background-size:cover;
+  background-position:center;
+  color:white
+}
+.letter-card.has-cover::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.78))
+}
+.letter-card>*{
+  position:relative;
+  z-index:1
+}
+.letter-card time{
+  color:var(--accent);
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.1em;
+  font-weight:850
+}
+.letter-card.has-cover time,
+.letter-card.has-cover p{
+  color:rgba(255,255,255,.78)
+}
+.letter-card h2{
+  margin:auto 0 12px;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(34px,4vw,52px);
+  line-height:1;
+  font-weight:500
+}
+.letter-card p{
+  color:var(--muted);
+  line-height:1.6;
+  margin:0 0 22px
+}
+.letter-card>span{
+  font-weight:850
+}
+.letter-empty{
+  max-width:720px;
+  margin:20px auto;
+  padding:70px 25px;
+  text-align:center
+}
+.letter-empty p{
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(29px,4vw,48px);
+  line-height:1.25;
+  margin:0;
+  color:var(--text)
+}
+.letter-empty a{
+  display:inline-block;
+  margin-top:20px;
+  color:var(--accent)
+}
+.letter-detail{
+  max-width:900px;
+  margin:auto;
+  padding:60px 0 90px
+}
+.letter-head{
+  max-width:720px;
+  margin:0 auto 44px;
+  text-align:center
+}
+.letter-head time{
+  color:var(--accent);
+  font-size:11px;
+  font-weight:850;
+  letter-spacing:.12em;
+  text-transform:uppercase
+}
+.letter-head h1{
+  margin:15px 0 0;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(52px,8vw,88px);
+  line-height:.95;
+  font-weight:500;
+  letter-spacing:-.045em
+}
+.letter-cover{
+  width:100%;
+  max-height:720px;
+  object-fit:cover;
+  border-radius:32px;
+  box-shadow:var(--shadow);
+  margin-bottom:42px
+}
+.letter-paper{
+  max-width:700px;
+  margin:auto;
+  padding:54px clamp(24px,7vw,70px);
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:28px;
+  box-shadow:var(--shadow);
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:20px;
+  line-height:1.85
+}
+.letter-paper p:first-child{
+  margin-top:0
+}
+.letter-paper p:last-child{
+  margin-bottom:0
+}
+.letter-footer{
+  max-width:700px;
+  margin:34px auto 0;
+  text-align:center
+}
+.letter-footer a{
+  color:var(--muted);
+  text-underline-offset:5px
+}
+@media(max-width:720px){
+  .phrases-grid{columns:1}
+  .letters-grid{grid-template-columns:1fr}
+  .phrase-hero{padding:38px 20px}
+  .letter-detail{padding-top:36px}
+  .letter-paper{font-size:18px;padding:38px 24px}
+}
+
+.home-phrase-section{
+  text-align:center
+}
+.home-phrase-inner{
+  max-width:800px;
+  margin:auto;
+  padding:35px 0
+}
+.home-phrase-inner blockquote{
+  margin:14px auto 24px;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(36px,5vw,64px);
+  line-height:1.14;
+  letter-spacing:-.035em
+}
+.home-phrase-inner a{
+  color:var(--muted);
+  text-underline-offset:5px
+}

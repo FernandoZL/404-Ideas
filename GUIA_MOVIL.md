@@ -78,3 +78,17 @@ También puedes añadir esa página a la pantalla de inicio de iOS para entrar d
 Esto evita que la experiencia normal de Nuestro lugar muestre instrucciones de construcción o publicación.
 
 Importante: la URL no es una autenticación real. El editor sigue siendo una página estática del sitio; simplemente no está enlazado desde la experiencia pública.
+
+## Guardar una carta
+
+Abre directamente:
+`https://fernandozl.github.io/404-Ideas/herramientas/editor-carta.html`
+
+Completa fecha, título y texto. Descarga `carta.md` y colócalo dentro de la ruta indicada.
+
+## Guardar una frase
+
+Abre directamente:
+`https://fernandozl.github.io/404-Ideas/herramientas/editor-frase.html`
+
+La fecha es opcional. Puedes guardar también un contexto breve.

@@ -3,6 +3,7 @@ tipo: frase
 fecha:
 favorito: false
 contexto:
+origen: expediente-0606
 ---
 
-“Escribe aquí una frase que quieras guardar.”
+“No hay internet...”

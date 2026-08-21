@@ -171,11 +171,150 @@ def discover_memories():
     memories.sort(key=lambda item: (item["fecha"], item["id"]), reverse=True)
     return memories, warnings, errors
 
-def write_generated(memories):
+
+def discover_phrases():
+    base = CONTENT / "frases"
+    phrases = []
+    warnings = []
+    errors = []
+
+    if not base.exists():
+        return phrases, warnings, errors
+
+    for md in sorted(base.rglob("*.md")):
+        if md.name.startswith("."):
+            continue
+
+        text = md.read_text(encoding="utf-8")
+        meta, body = parse_front_matter(text)
+
+        phrase_text = body.strip()
+        if not phrase_text:
+            warnings.append(f"{md.relative_to(ROOT)}: frase vacía; se omitirá.")
+            continue
+
+        date = str(meta.get("fecha", "")).strip()
+        if date:
+            try:
+                datetime.strptime(date, "%Y-%m-%d")
+            except ValueError:
+                errors.append(
+                    f"{md.relative_to(ROOT)}: fecha inválida '{date}'. Usa AAAA-MM-DD o déjala vacía."
+                )
+                continue
+
+        rel = md.relative_to(base).with_suffix("").as_posix()
+        phrase_id = rel.replace("/", "--")
+
+        phrases.append({
+            "id": phrase_id,
+            "tipo": meta.get("tipo") or "frase",
+            "fecha": date,
+            "texto": phrase_text,
+            "contexto": meta.get("contexto") or "",
+            "favorito": bool(meta.get("favorito", False)),
+            "origen": meta.get("origen") or "",
+        })
+
+    phrases.sort(
+        key=lambda item: (item["fecha"] or "0000-00-00", item["id"]),
+        reverse=True,
+    )
+    return phrases, warnings, errors
+
+
+def discover_letters():
+    base = CONTENT / "cartas"
+    letters = []
+    warnings = []
+    errors = []
+
+    if not base.exists():
+        return letters, warnings, errors
+
+    for md in sorted(base.rglob("*.md")):
+        if md.name.startswith("."):
+            continue
+
+        text = md.read_text(encoding="utf-8")
+        meta, body = parse_front_matter(text)
+
+        if (meta.get("tipo") or "").strip() not in ("", "carta"):
+            continue
+
+        date = str(meta.get("fecha", "")).strip()
+        title = str(meta.get("titulo", "")).strip()
+
+        if not date:
+            errors.append(f"{md.relative_to(ROOT)}: falta 'fecha'.")
+            continue
+
+        try:
+            datetime.strptime(date, "%Y-%m-%d")
+        except ValueError:
+            errors.append(f"{md.relative_to(ROOT)}: fecha inválida '{date}'. Usa AAAA-MM-DD.")
+            continue
+
+        if not title:
+            title = md.parent.name if md.name == "carta.md" else md.stem
+            title = title.replace("-", " ").strip().title() or "Carta"
+            warnings.append(
+                f"{md.relative_to(ROOT)}: no tiene título; se usará '{title}'."
+            )
+
+        folder = md.parent
+        images, audio, videos = find_media(folder)
+        cover = str(meta.get("portada", "")).strip()
+
+        if cover:
+            if not (folder / cover).exists():
+                errors.append(
+                    f"{md.relative_to(ROOT)}: la portada declarada '{cover}' no existe."
+                )
+                continue
+        elif images:
+            cover = images[0]
+
+        rel_folder = folder.relative_to(ROOT).as_posix()
+        letter_id = (
+            folder.name
+            if md.name == "carta.md"
+            else md.relative_to(base).with_suffix("").as_posix().replace("/", "--")
+        )
+
+        letters.append({
+            "id": letter_id,
+            "tipo": "carta",
+            "fecha": date,
+            "titulo": title,
+            "portada": cover,
+            "musica": meta.get("musica") or "",
+            "texto": body.strip(),
+            "carpeta": rel_folder,
+            "imagenes": images,
+            "audio": audio,
+            "videos": videos,
+        })
+
+    letters.sort(key=lambda item: (item["fecha"], item["id"]), reverse=True)
+    return letters, warnings, errors
+
+
+def write_generated(memories, phrases, letters):
     GENERATED.mkdir(parents=True, exist_ok=True)
 
     (GENERATED / "recuerdos.json").write_text(
         json.dumps(memories, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+    (GENERATED / "frases.json").write_text(
+        json.dumps(phrases, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+    (GENERATED / "cartas.json").write_text(
+        json.dumps(letters, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
 
@@ -251,6 +390,8 @@ def write_generated(memories):
         "videos": sum(len(m["videos"]) for m in memories),
         "audios": sum(len(m["audio"]) for m in memories),
         "favoritos": sum(1 for m in memories if m["favorito"]),
+        "frases": len(phrases),
+        "cartas": len(letters),
         "ultimaActualizacion": datetime.now().astimezone().isoformat(timespec="seconds"),
     }
 
@@ -264,7 +405,7 @@ def copy_if_exists(source: Path, destination: Path):
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source, destination)
 
-def build_site(memories):
+def build_site(memories, letters):
     if SITE.exists():
         shutil.rmtree(SITE)
 
@@ -274,7 +415,8 @@ def build_site(memories):
     # relative paths continue to work on GitHub Pages project sites.
     public_pages = [
         "index.html", "historia.html", "recuerdos.html", "fotos.html",
-        "recuerdo.html", "archivo.html", "lugares.html", "expediente-0606.html",
+        "recuerdo.html", "archivo.html", "lugares.html",
+        "frases.html", "cartas.html", "carta.html", "expediente-0606.html",
     ]
     for page in public_pages:
         copy_if_exists(ROOT / page, SITE / page)
@@ -295,10 +437,25 @@ def build_site(memories):
         for filename in memory["imagenes"] + memory["audio"] + memory["videos"]:
             copy_if_exists(source_folder / filename, target_folder / filename)
 
+
+    # Publish media that belongs to letters.
+    for letter in letters:
+        source_folder = ROOT / letter["carpeta"]
+        target_folder = SITE / letter["carpeta"]
+        target_folder.mkdir(parents=True, exist_ok=True)
+
+        for filename in letter["imagenes"] + letter["audio"] + letter["videos"]:
+            copy_if_exists(source_folder / filename, target_folder / filename)
+
     # Explicitly do NOT copy contenido/inbox.
 
 def main():
-    memories, warnings, errors = discover_memories()
+    memories, memory_warnings, memory_errors = discover_memories()
+    phrases, phrase_warnings, phrase_errors = discover_phrases()
+    letters, letter_warnings, letter_errors = discover_letters()
+
+    warnings = memory_warnings + phrase_warnings + letter_warnings
+    errors = memory_errors + phrase_errors + letter_errors
 
     for warning in warnings:
         print(f"WARNING: {warning}")
@@ -308,14 +465,16 @@ def main():
             print(f"ERROR: {error}")
         raise SystemExit(1)
 
-    write_generated(memories)
-    build_site(memories)
+    write_generated(memories, phrases, letters)
+    build_site(memories, letters)
 
     print("=" * 62)
     print("NUESTRO LUGAR - BUILD CORRECTO")
     print("=" * 62)
     print(f"Recuerdos:   {len(memories)}")
     print(f"Fotografías: {sum(len(m['imagenes']) for m in memories)}")
+    print(f"Frases:      {len(phrases)}")
+    print(f"Cartas:      {len(letters)}")
     print(f"Salida:       {SITE}")
     print("Inbox:        excluido de publicación")
     print("=" * 62)
