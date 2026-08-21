@@ -150,3 +150,17 @@ Genera el `info.md` de una sorpresa.
 La carpeta completa de una sorpresa con `publicado:false` no se copia a `_site`.
 
 Esto es más importante que en otros contenidos, porque evita publicar accidentalmente el propio `index.html` sorpresa antes de tiempo.
+
+
+## Panel web (flujo principal desde v2.10)
+
+Dirección:
+
+```text
+https://fernandozl.github.io/404-Ideas/gestion-8f3c6a91/
+```
+
+El panel no está enlazado desde la web pública.
+
+Las herramientas locales de `/herramientas` se mantienen como respaldo,
+pero el panel web pasa a ser el flujo recomendado para celular.

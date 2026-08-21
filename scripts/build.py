@@ -876,6 +876,25 @@ def validate_public_site():
         )
 
 
+    admin_dir = SITE / "gestion-8f3c6a91"
+    if not admin_dir.exists():
+        raise RuntimeError(
+            "ADMIN: el panel web no fue copiado al sitio."
+        )
+
+    public_link_leaks = []
+    for page in SITE.glob("*.html"):
+        text = page.read_text(encoding="utf-8", errors="ignore")
+        if "gestion-8f3c6a91" in text:
+            public_link_leaks.append(page.name)
+
+    if public_link_leaks:
+        raise RuntimeError(
+            "ADMIN: el enlace del panel apareció en páginas públicas: "
+            + ", ".join(public_link_leaks)
+        )
+
+
 def copy_if_exists(source: Path, destination: Path):
     if source.exists():
         destination.parent.mkdir(parents=True, exist_ok=True)
@@ -958,6 +977,12 @@ def build_site(memories, letters, songs, video_entries, specials):
             ignore=shutil.ignore_patterns("info.md"),
         )
 
+    # Publish the standalone admin client at a non-navigation route.
+    # Authentication is provided by the user's GitHub token; no token is stored here.
+    admin_source = ROOT / "gestion-8f3c6a91"
+    if admin_source.exists():
+        shutil.copytree(admin_source, SITE / "gestion-8f3c6a91", dirs_exist_ok=True)
+
     # Explicitly do NOT copy contenido/inbox.
 
 def main():
@@ -1004,6 +1029,7 @@ def main():
     print(f"Salida:       {SITE}")
     print("Inbox:        excluido de publicación")
     print("Herramientas: excluidas de publicación")
+    print("Admin web:    /gestion-8f3c6a91/ (sin enlace público)")
     print("Borradores:   publicado:false no se indexa")
     print("=" * 62)
 

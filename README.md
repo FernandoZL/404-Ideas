@@ -192,3 +192,21 @@ Es deliberado: primero congelamos y estabilizamos la base actual.
 - El Expediente #0606 conserva su implementación original.
 - Editor privado `editor-especial.html`.
 - Plantilla y ejemplo genérico incluidos.
+
+
+## v2.10 — Administración web
+
+- Nuevo panel web en `/gestion-8f3c6a91/`.
+- No existe enlace al panel desde la experiencia pública.
+- Autenticación mediante Fine-grained Personal Access Token.
+- El token no se almacena en el repositorio.
+- GitHub REST API desde navegador.
+- Commits atómicos de texto + archivos usando Git Data API.
+- Nuevo contenido: recuerdo, carta, frase, fecha, canción, video, sorpresa.
+- Administración de contenido existente.
+- Agregar fotos después.
+- Publicar / ocultar sin editar GitHub manualmente.
+- Inbox desde navegador.
+- Límite preventivo de 90 MiB por archivo.
+- `/herramientas` sigue siendo local y no se publica.
+- Documentación: `PANEL_WEB.md`.

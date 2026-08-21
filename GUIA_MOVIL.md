@@ -1,5 +1,36 @@
 # GUÍA MÓVIL — Nuestro lugar
 
+## Forma recomendada desde ahora
+
+Ya no necesitas crear carpetas o archivos manualmente para el uso normal.
+
+Guarda como favorito en tu iPhone:
+
+```text
+https://fernandozl.github.io/404-Ideas/gestion-8f3c6a91/
+```
+
+Desde ahí puedes:
+
+- crear recuerdos;
+- subir fotos;
+- agregar fotos posteriormente;
+- crear cartas;
+- guardar frases;
+- crear fechas;
+- subir canciones;
+- subir videos;
+- subir páginas HTML/sorpresas;
+- guardar cosas en Inbox;
+- editar contenido existente;
+- publicar u ocultar.
+
+Consulta `PANEL_WEB.md` para configurar el acceso por primera vez.
+
+---
+
+# GUÍA MÓVIL — Nuestro lugar
+
 Guía rápida para trabajar desde iPhone.
 
 ---
