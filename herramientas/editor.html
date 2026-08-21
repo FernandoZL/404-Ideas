@@ -3,50 +3,537 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#fff8fa">
+<meta name="robots" content="noindex,nofollow,noarchive">
 <title>Guardar algo · Nuestro lugar</title>
-<link rel="stylesheet" href="../css/style.css?v=20260821-0055">
+<link rel="stylesheet" href="../css/style.css?v=20260821-0200">
+
 <style>
-.editor-wrap{max-width:760px;margin:auto;padding:25px 0 90px}
-.editor-card{background:var(--surface);border:1px solid var(--line);border-radius:28px;padding:24px;box-shadow:var(--shadow)}
-.editor-card label{display:block;font-weight:780;margin:16px 0 7px}
-.editor-card input,.editor-card textarea,.editor-card select{width:100%;border:1px solid var(--line);border-radius:16px;padding:14px;background:var(--bg);color:var(--text);outline:none}
-.editor-card input:focus,.editor-card textarea:focus,.editor-card select:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-2)}
-.editor-card textarea{min-height:180px;resize:vertical}
-.editor-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
-.output{margin-top:18px;background:var(--soft);border-radius:18px;padding:14px;white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
-.quick-ways{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
-.quick-way{padding:15px;border:1px solid var(--line);border-radius:18px;background:var(--bg)}
-.quick-way strong{display:block}.quick-way span{display:block;color:var(--muted);font-size:12px;margin-top:4px}
-.editor-back{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:850}
-.location-box{margin-top:18px;padding:18px;border:1px solid var(--line);border-radius:22px;background:var(--soft)}
-.location-box h3{margin:0 0 4px;font-size:18px}
-.location-box>p{margin:0 0 14px;color:var(--muted);font-size:13px;line-height:1.5}
-.location-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
-.map-button{min-height:46px;border:1px solid var(--line);border-radius:16px;background:var(--surface);color:var(--text);font-weight:800;cursor:pointer}
-.map-preview{margin-top:14px;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--surface);min-height:210px}
-.map-preview iframe{display:block;width:100%;height:260px;border:0}
-.map-empty{min-height:210px;display:grid;place-items:center;padding:22px;text-align:center;color:var(--muted);font-size:13px}
-.location-advanced{margin-top:12px}
-.location-advanced summary{cursor:pointer;font-weight:750;color:var(--muted)}
-.coord-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.helper{margin-top:7px;color:var(--muted);font-size:12px;line-height:1.45}
-.mobile-editor-nav{display:none}
-@media(max-width:600px){
-  .editor-actions,.quick-ways,.location-actions,.coord-grid{grid-template-columns:1fr}
-  .editor-card{padding:18px}
-  .mobile-editor-nav{
-    position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:80;
-    display:grid;grid-template-columns:repeat(4,1fr);padding:7px;background:rgba(255,255,255,.88);
-    border:1px solid rgba(0,0,0,.08);border-radius:22px;backdrop-filter:blur(22px);box-shadow:0 18px 50px rgba(0,0,0,.14)
+:root{
+  --editor-good:#2c8a5a;
+  --editor-warn:#b17921;
+}
+
+.editor-wrap{
+  max-width:780px;
+  margin:auto;
+  padding:24px 0 110px;
+}
+
+.editor-card{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:28px;
+  padding:24px;
+  box-shadow:var(--shadow);
+}
+
+.editor-card label{
+  display:block;
+  font-weight:800;
+  margin:17px 0 7px;
+}
+
+.editor-card input,
+.editor-card textarea,
+.editor-card select{
+  width:100%;
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:14px;
+  background:var(--bg);
+  color:var(--text);
+  outline:none;
+  font:inherit;
+}
+
+.editor-card textarea{
+  min-height:190px;
+  resize:vertical;
+}
+
+.editor-card input:focus,
+.editor-card textarea:focus,
+.editor-card select:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 12%,transparent);
+}
+
+.editor-back{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  text-decoration:none;
+  font-weight:850;
+}
+
+.draft-banner{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  padding:14px 16px;
+  margin-bottom:16px;
+  border:1px solid var(--line);
+  background:var(--soft);
+  border-radius:18px;
+}
+
+.draft-banner[hidden]{
+  display:none;
+}
+
+.draft-banner strong{
+  display:block;
+}
+
+.draft-banner span{
+  display:block;
+  margin-top:3px;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.draft-banner button{
+  border:0;
+  background:transparent;
+  color:var(--accent);
+  font-weight:850;
+  cursor:pointer;
+  white-space:nowrap;
+}
+
+.save-status{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-height:34px;
+  margin:6px 0 2px;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.save-status .dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:var(--muted);
+}
+
+.save-status.saved{
+  color:var(--editor-good);
+}
+
+.save-status.saved .dot{
+  background:var(--editor-good);
+}
+
+.save-status.saving{
+  color:var(--editor-warn);
+}
+
+.save-status.saving .dot{
+  background:var(--editor-warn);
+}
+
+.quick-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin:18px 0;
+}
+
+.quick-card{
+  padding:15px;
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:var(--bg);
+}
+
+.quick-card strong{
+  display:block;
+}
+
+.quick-card span{
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.45;
+  margin-top:4px;
+}
+
+.location-box,
+.photos-box{
+  margin-top:20px;
+  padding:18px;
+  border:1px solid var(--line);
+  border-radius:22px;
+  background:var(--soft);
+}
+
+.location-box h3,
+.photos-box h3{
+  margin:0 0 4px;
+  font-size:18px;
+}
+
+.location-box>p,
+.photos-box>p{
+  margin:0 0 14px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.5;
+}
+
+.location-actions,
+.coord-grid,
+.editor-actions,
+.publish-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.map-button,
+.secondary-button{
+  min-height:46px;
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:var(--surface);
+  color:var(--text);
+  font-weight:850;
+  cursor:pointer;
+}
+
+.map-preview{
+  margin-top:14px;
+  border:1px solid var(--line);
+  border-radius:18px;
+  overflow:hidden;
+  background:var(--surface);
+  min-height:210px;
+}
+
+.map-preview iframe{
+  display:block;
+  width:100%;
+  height:260px;
+  border:0;
+}
+
+.map-empty{
+  min-height:210px;
+  display:grid;
+  place-items:center;
+  padding:22px;
+  text-align:center;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.location-advanced{
+  margin-top:12px;
+}
+
+.location-advanced summary{
+  cursor:pointer;
+  font-weight:750;
+  color:var(--muted);
+}
+
+.helper{
+  margin-top:7px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.45;
+}
+
+.photo-picker{
+  position:relative;
+  display:block;
+  border:1px dashed var(--accent);
+  border-radius:18px;
+  padding:22px;
+  text-align:center;
+  cursor:pointer;
+  background:var(--surface);
+}
+
+.photo-picker input{
+  position:absolute;
+  inset:0;
+  opacity:0;
+  cursor:pointer;
+}
+
+.photo-picker strong{
+  display:block;
+}
+
+.photo-picker span{
+  display:block;
+  margin-top:5px;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.photo-list{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:9px;
+  margin-top:12px;
+}
+
+.photo-thumb{
+  min-width:0;
+  border:1px solid var(--line);
+  border-radius:16px;
+  overflow:hidden;
+  background:var(--surface);
+}
+
+.photo-thumb img{
+  display:block;
+  width:100%;
+  aspect-ratio:1/1;
+  object-fit:cover;
+}
+
+.photo-thumb div{
+  padding:8px;
+  font-size:10px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:var(--muted);
+}
+
+.favorite-row{
+  display:flex!important;
+  align-items:center;
+  gap:10px;
+}
+
+.favorite-row input{
+  width:auto!important;
+}
+
+.editor-actions{
+  margin-top:20px;
+}
+
+.button-primary{
+  min-height:50px;
+  border:0;
+  border-radius:18px;
+  background:var(--text);
+  color:var(--bg);
+  font-weight:900;
+  cursor:pointer;
+}
+
+.button-accent{
+  background:var(--accent);
+  color:white;
+}
+
+.output-panel{
+  margin-top:20px;
+  padding:20px;
+  border:1px solid var(--line);
+  border-radius:22px;
+  background:var(--surface);
+}
+
+.output-panel[hidden]{
+  display:none;
+}
+
+.output-panel h3{
+  margin:0 0 5px;
+}
+
+.output-panel>p{
+  margin:0;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.5;
+}
+
+.folder-path{
+  margin-top:14px;
+  padding:12px;
+  border-radius:14px;
+  background:var(--soft);
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:12px;
+  word-break:break-all;
+}
+
+.publish-steps{
+  display:grid;
+  gap:10px;
+  margin:16px 0;
+  counter-reset:step;
+}
+
+.publish-step{
+  position:relative;
+  padding:13px 13px 13px 46px;
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:var(--bg);
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.5;
+}
+
+.publish-step::before{
+  counter-increment:step;
+  content:counter(step);
+  position:absolute;
+  left:13px;
+  top:12px;
+  width:24px;
+  height:24px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:var(--text);
+  color:var(--bg);
+  font-weight:900;
+  font-size:11px;
+}
+
+.md-preview{
+  max-height:280px;
+  overflow:auto;
+  margin-top:14px;
+  padding:14px;
+  border-radius:16px;
+  background:var(--soft);
+  white-space:pre-wrap;
+  word-break:break-word;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:11px;
+  line-height:1.55;
+}
+
+.danger-zone{
+  margin-top:22px;
+  padding-top:18px;
+  border-top:1px solid var(--line);
+}
+
+.danger-button{
+  border:0;
+  background:transparent;
+  color:var(--muted);
+  text-decoration:underline;
+  cursor:pointer;
+}
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:calc(84px + env(safe-area-inset-bottom));
+  transform:translateX(-50%) translateY(15px);
+  z-index:120;
+  max-width:min(92vw,520px);
+  padding:12px 16px;
+  border-radius:999px;
+  background:var(--text);
+  color:var(--bg);
+  box-shadow:0 16px 50px rgba(0,0,0,.2);
+  opacity:0;
+  pointer-events:none;
+  transition:.22s ease;
+  font-size:13px;
+  font-weight:800;
+  text-align:center;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
+
+.mobile-editor-nav{
+  display:none;
+}
+
+@media(max-width:640px){
+  .editor-card{
+    padding:18px;
   }
-  body.dark .mobile-editor-nav{background:rgba(25,25,31,.92);border-color:rgba(255,255,255,.08)}
-  .mobile-editor-nav a{min-height:47px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-decoration:none;color:var(--muted);font-size:10px;font-weight:800;border-radius:15px}
-  .mobile-editor-nav a span{font-size:18px;line-height:1}.mobile-editor-nav a.active{background:var(--soft);color:var(--accent)}
+
+  .quick-grid,
+  .location-actions,
+  .coord-grid,
+  .editor-actions,
+  .publish-actions{
+    grid-template-columns:1fr;
+  }
+
+  .photo-list{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .draft-banner{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .mobile-editor-nav{
+    position:fixed;
+    left:12px;
+    right:12px;
+    bottom:calc(12px + env(safe-area-inset-bottom));
+    z-index:80;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    padding:7px;
+    background:rgba(255,255,255,.9);
+    border:1px solid rgba(0,0,0,.08);
+    border-radius:22px;
+    backdrop-filter:blur(22px);
+    box-shadow:0 18px 50px rgba(0,0,0,.14);
+  }
+
+  body.dark .mobile-editor-nav{
+    background:rgba(25,25,31,.92);
+    border-color:rgba(255,255,255,.08);
+  }
+
+  .mobile-editor-nav a{
+    min-height:47px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:2px;
+    text-decoration:none;
+    color:var(--muted);
+    font-size:10px;
+    font-weight:800;
+    border-radius:15px;
+  }
+
+  .mobile-editor-nav a span{
+    font-size:18px;
+    line-height:1;
+  }
+
+  .mobile-editor-nav a.active{
+    background:var(--soft);
+    color:var(--accent);
+  }
 }
 </style>
 </head>
 
 <body data-page="editor">
+
 <div class="page-shell">
 
 <header class="topbar">
@@ -54,6 +541,7 @@
     <button class="nav-back" id="editorBack" type="button" aria-label="Volver">←</button>
     <a class="brand" href="../index.html">Nuestro lugar <span>🤍</span></a>
   </div>
+
   <div class="chrome-actions">
     <a class="quick-add" href="../archivo.html">Archivo</a>
   </div>
@@ -64,27 +552,44 @@
 <section class="page-title" style="padding-top:35px">
   <span class="kicker">Desde el celular</span>
   <h1>Guardar algo.</h1>
-  <p>Escribe lo que quieras recordar. El sistema se encarga de la estructura.</p>
+  <p>
+    Escribe primero. No tienes que terminarlo todo hoy:
+    el borrador se guarda automáticamente en este dispositivo.
+  </p>
 </section>
 
-<div class="quick-ways">
-  <div class="quick-way">
-    <strong>Recuerdo completo</strong>
-    <span>Historia + fotos + etiquetas + ubicación.</span>
+<div id="draftBanner" class="draft-banner" hidden>
+  <div>
+    <strong>Tienes un recuerdo sin publicar.</strong>
+    <span id="draftBannerText">Tu borrador está guardado en este dispositivo.</span>
   </div>
-  <div class="quick-way">
-    <strong>¿Tienes prisa?</strong>
-    <span>Escribe poco. Después puedes ampliar el recuerdo sin cambiar su URL.</span>
+  <button id="discardDraftTop" type="button">Descartar</button>
+</div>
+
+<div class="quick-grid">
+  <div class="quick-card">
+    <strong>Autoguardado</strong>
+    <span>Fecha, historia, etiquetas y ubicación se guardan mientras escribes.</span>
+  </div>
+
+  <div class="quick-card">
+    <strong>Fotos</strong>
+    <span>Puedes seleccionarlas aquí para comprobar cuáles vas a subir. No se renombran.</span>
   </div>
 </div>
 
 <div class="editor-card">
 
+<div id="saveStatus" class="save-status saved">
+  <span class="dot"></span>
+  <span id="saveStatusText">Borrador listo</span>
+</div>
+
 <label for="date">Fecha</label>
 <input id="date" type="date">
 
 <label for="title">Título</label>
-<input id="title" placeholder="Nuestra noche">
+<input id="title" placeholder="Una tarde en Café Cartel">
 
 <label for="category">Categoría</label>
 <select id="category">
@@ -103,10 +608,30 @@
 <label for="tags">Etiquetas</label>
 <input id="tags" placeholder="nosotros, café, cita">
 
+<div class="photos-box">
+  <span class="kicker">Fotos</span>
+  <h3>¿Qué imágenes acompañan este recuerdo?</h3>
+  <p>
+    Aquí solo las previsualizamos y recordamos sus nombres para ayudarte a publicarlas.
+    Por seguridad del navegador, debes volver a seleccionarlas si recargas la página.
+  </p>
+
+  <label class="photo-picker">
+    <input id="photos" type="file" accept="image/*,.heic,.heif" multiple>
+    <strong>＋ Seleccionar fotos</strong>
+    <span>JPG, JPEG, PNG, WEBP, HEIC/HEIF</span>
+  </label>
+
+  <div id="photoList" class="photo-list"></div>
+</div>
+
 <div class="location-box">
   <span class="kicker">Lugar</span>
   <h3>¿Dónde pasó?</h3>
-  <p>Puedes escribir solamente el nombre, buscarlo en el mapa o guardar coordenadas exactas.</p>
+  <p>
+    Puedes escribir solo el nombre, verificarlo en el mapa
+    o guardar coordenadas exactas.
+  </p>
 
   <label for="place">Nombre del lugar</label>
   <input id="place" placeholder="Ej. Café Cartel">
@@ -121,8 +646,7 @@
 
   <div class="map-preview" id="mapPreview">
     <div class="map-empty">
-      Escribe un lugar y toca <strong>Buscar en mapa</strong>.<br>
-      Si tienes las coordenadas exactas, también puedes pegarlas abajo.
+      Escribe el lugar y toca <strong>Buscar en mapa</strong>.
     </div>
   </div>
 
@@ -134,6 +658,7 @@
         <label for="latitude">Latitud</label>
         <input id="latitude" inputmode="decimal" placeholder="14.000000">
       </div>
+
       <div>
         <label for="longitude">Longitud</label>
         <input id="longitude" inputmode="decimal" placeholder="-90.000000">
@@ -142,31 +667,73 @@
 
     <label for="mapsUrl">Enlace de Google Maps</label>
     <input id="mapsUrl" type="url" placeholder="https://maps.app.goo.gl/...">
-
-    <div class="helper">
-      Si pegas coordenadas, la vista del recuerdo mostrará el punto exacto.
-      Si solo guardas el nombre, el sistema buscará ese lugar cuando abras el mapa.
-    </div>
   </details>
 </div>
 
-<label style="display:flex;align-items:center;gap:10px">
-  <input id="favorite" type="checkbox" style="width:auto">
+<label class="favorite-row">
+  <input id="favorite" type="checkbox">
   Marcar como favorito
 </label>
 
 <div class="editor-actions">
-  <button id="generate" class="button-primary" type="button">Preparar recuerdo</button>
-  <button id="copy" class="button-primary" type="button" hidden>Copiar recuerdo.md</button>
+  <button id="saveDraft" class="secondary-button" type="button">Guardar borrador</button>
+  <button id="prepare" class="button-primary button-accent" type="button">Preparar para publicar</button>
 </div>
 
-<div id="result" class="output" hidden></div>
+<div id="outputPanel" class="output-panel" hidden>
+  <span class="kicker">Listo para publicar</span>
+  <h3 id="outputTitle">Tu recuerdo está preparado.</h3>
+  <p>
+    Nada se ha publicado todavía. Estos son los pasos finales para enviarlo a GitHub.
+  </p>
 
+  <div id="folderPath" class="folder-path"></div>
+
+  <div class="publish-steps">
+    <div class="publish-step">
+      En GitHub abre <strong>contenido/recuerdos/AÑO</strong> y crea la carpeta indicada arriba.
+    </div>
+
+    <div class="publish-step">
+      Sube las fotos seleccionadas con sus nombres originales.
+      <span id="photoPublishNote"></span>
+    </div>
+
+    <div class="publish-step">
+      Crea dentro de esa carpeta un archivo llamado <strong>recuerdo.md</strong>
+      y pega el contenido generado.
+    </div>
+
+    <div class="publish-step">
+      Haz <strong>Commit</strong>. GitHub Actions actualizará la web automáticamente.
+    </div>
+  </div>
+
+  <div class="publish-actions">
+    <button id="downloadMd" class="button-primary" type="button">Descargar recuerdo.md</button>
+    <button id="copyMd" class="secondary-button" type="button">Copiar contenido</button>
+  </div>
+
+  <div class="publish-actions" style="margin-top:10px">
+    <button id="copyFolder" class="secondary-button" type="button">Copiar ruta de carpeta</button>
+    <a id="openGithub" class="button-primary" href="https://github.com/FernandoZL/404-Ideas" target="_blank" rel="noopener"
+       style="text-decoration:none;display:flex;align-items:center;justify-content:center">
+      Abrir GitHub ↗
+    </a>
+  </div>
+
+  <details style="margin-top:16px">
+    <summary style="cursor:pointer;font-weight:800;color:var(--muted)">Ver contenido de recuerdo.md</summary>
+    <pre id="mdPreview" class="md-preview"></pre>
+  </details>
 </div>
 
-<div class="notice" style="margin-top:18px">
-  <strong>Después:</strong> crea la carpeta indicada en GitHub, sube las fotos con sus nombres originales,
-  crea <code>recuerdo.md</code>, pega lo generado y haz Commit.
+<div class="danger-zone">
+  <button id="newMemory" class="danger-button" type="button">
+    Empezar un recuerdo nuevo
+  </button>
+</div>
+
 </div>
 
 </main>
@@ -179,67 +746,291 @@
   <a href="../archivo.html"><span>◫</span>Archivo</a>
 </nav>
 
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
 <script>
 const $ = id => document.getElementById(id);
 
-const slug = text => text
-  .normalize("NFD")
-  .replace(/[\u0300-\u036f]/g,"")
-  .toLowerCase()
-  .replace(/[^a-z0-9]+/g,"-")
-  .replace(/^-+|-+$/g,"")
-  .slice(0,70);
+const STORAGE_KEY = "nuestro-lugar-draft-v2";
+const META_KEY = "nuestro-lugar-draft-meta-v2";
+const SAVE_DELAY = 450;
 
-const yaml = value =>
-  '"' + String(value || "")
+let saveTimer = null;
+let selectedPhotoNames = [];
+let preparedMarkdown = "";
+let preparedFolder = "";
+
+const fields = [
+  "date",
+  "title",
+  "category",
+  "story",
+  "tags",
+  "place",
+  "address",
+  "latitude",
+  "longitude",
+  "mapsUrl",
+  "favorite"
+];
+
+function slugify(text){
+  return String(text || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g,"-")
+    .replace(/^-+|-+$/g,"")
+    .slice(0,70);
+}
+
+function yaml(value){
+  return '"' + String(value || "")
     .replace(/\\/g,"\\\\")
     .replace(/"/g,'\\"') + '"';
+}
 
-$("editorBack").onclick = () => {
-  if(document.referrer && history.length > 1){
-    history.back();
-  }else{
-    location.href = "../index.html";
+function toast(message){
+  const element = $("toast");
+
+  element.textContent = message;
+  element.classList.add("show");
+
+  clearTimeout(element._timer);
+
+  element._timer = setTimeout(() => {
+    element.classList.remove("show");
+  },1900);
+}
+
+function setSaveStatus(mode,text){
+  const status = $("saveStatus");
+
+  status.className =
+    "save-status " + mode;
+
+  $("saveStatusText").textContent = text;
+}
+
+function collectDraft(){
+  const draft = {};
+
+  fields.forEach(id => {
+    const element = $(id);
+
+    draft[id] =
+      element.type === "checkbox"
+        ? element.checked
+        : element.value;
+  });
+
+  draft.photoNames = selectedPhotoNames;
+  draft.updatedAt = new Date().toISOString();
+
+  return draft;
+}
+
+function draftHasMeaningfulContent(draft){
+  if(!draft) return false;
+
+  return Boolean(
+    (draft.title || "").trim() ||
+    (draft.story || "").trim() ||
+    (draft.place || "").trim() ||
+    (draft.tags || "").trim()
+  );
+}
+
+function saveDraft({showToast=false} = {}){
+  const draft = collectDraft();
+
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(draft)
+  );
+
+  localStorage.setItem(
+    META_KEY,
+    JSON.stringify({
+      updatedAt:draft.updatedAt,
+      title:draft.title || ""
+    })
+  );
+
+  setSaveStatus(
+    "saved",
+    "✓ Borrador guardado en este dispositivo"
+  );
+
+  updateDraftBanner(draft);
+
+  if(showToast){
+    toast("✓ Borrador guardado");
   }
-};
+}
 
-const now = new Date();
-$("date").value = [
-  now.getFullYear(),
-  String(now.getMonth()+1).padStart(2,"0"),
-  String(now.getDate()).padStart(2,"0")
-].join("-");
+function scheduleSave(){
+  setSaveStatus(
+    "saving",
+    "Guardando cambios..."
+  );
+
+  clearTimeout(saveTimer);
+
+  saveTimer = setTimeout(() => {
+    saveDraft();
+  },SAVE_DELAY);
+}
+
+function restoreDraft(){
+  const raw = localStorage.getItem(STORAGE_KEY);
+
+  if(!raw) return false;
+
+  try{
+    const draft = JSON.parse(raw);
+
+    fields.forEach(id => {
+      const element = $(id);
+
+      if(!(id in draft)) return;
+
+      if(element.type === "checkbox"){
+        element.checked = Boolean(draft[id]);
+      }else{
+        element.value = draft[id] ?? "";
+      }
+    });
+
+    selectedPhotoNames =
+      Array.isArray(draft.photoNames)
+        ? draft.photoNames
+        : [];
+
+    updateDraftBanner(draft);
+
+    setSaveStatus(
+      "saved",
+      "✓ Borrador recuperado"
+    );
+
+    if(draft.place || draft.latitude){
+      updateMapPreview(false);
+    }
+
+    return draftHasMeaningfulContent(draft);
+  }catch(error){
+    console.warn(error);
+    return false;
+  }
+}
+
+function updateDraftBanner(draft = collectDraft()){
+  const banner = $("draftBanner");
+
+  if(!draftHasMeaningfulContent(draft)){
+    banner.hidden = true;
+    return;
+  }
+
+  banner.hidden = false;
+
+  const date = draft.updatedAt
+    ? new Date(draft.updatedAt)
+    : new Date();
+
+  $("draftBannerText").textContent =
+    `${draft.title ? draft.title + " · " : ""}guardado ${date.toLocaleString("es-GT",{
+      dateStyle:"short",
+      timeStyle:"short"
+    })}`;
+}
+
+function clearDraft(){
+  localStorage.removeItem(STORAGE_KEY);
+  localStorage.removeItem(META_KEY);
+
+  selectedPhotoNames = [];
+  preparedMarkdown = "";
+  preparedFolder = "";
+
+  fields.forEach(id => {
+    const element = $(id);
+
+    if(element.type === "checkbox"){
+      element.checked = false;
+    }else{
+      element.value = "";
+    }
+  });
+
+  const now = new Date();
+
+  $("date").value = [
+    now.getFullYear(),
+    String(now.getMonth()+1).padStart(2,"0"),
+    String(now.getDate()).padStart(2,"0")
+  ].join("-");
+
+  $("category").value = "momento";
+  $("photos").value = "";
+  $("photoList").innerHTML = "";
+  $("outputPanel").hidden = true;
+  $("mapPreview").innerHTML =
+    `<div class="map-empty">Escribe el lugar y toca <strong>Buscar en mapa</strong>.</div>`;
+
+  $("draftBanner").hidden = true;
+
+  setSaveStatus(
+    "saved",
+    "Borrador listo"
+  );
+}
 
 function validCoordinates(){
-  const lat = parseFloat($("latitude").value);
-  const lng = parseFloat($("longitude").value);
+  const lat =
+    parseFloat($("latitude").value);
+
+  const lng =
+    parseFloat($("longitude").value);
 
   return (
     Number.isFinite(lat) &&
     Number.isFinite(lng) &&
-    lat >= -90 && lat <= 90 &&
-    lng >= -180 && lng <= 180
+    lat >= -90 &&
+    lat <= 90 &&
+    lng >= -180 &&
+    lng <= 180
   ) ? {lat,lng} : null;
 }
 
 function mapQuery(){
-  const coords = validCoordinates();
+  const coordinates =
+    validCoordinates();
 
-  if(coords){
-    return `${coords.lat},${coords.lng}`;
+  if(coordinates){
+    return `${coordinates.lat},${coordinates.lng}`;
   }
 
   return [
     $("place").value.trim(),
     $("address").value.trim()
-  ].filter(Boolean).join(", ");
+  ]
+    .filter(Boolean)
+    .join(", ");
 }
 
-function updateMapPreview(){
-  const query = mapQuery();
+function updateMapPreview(showAlert=true){
+  const query =
+    mapQuery();
 
   if(!query){
-    alert("Escribe el nombre del lugar o agrega coordenadas.");
+    if(showAlert){
+      alert(
+        "Escribe el nombre del lugar o agrega coordenadas."
+      );
+    }
+
     return;
   }
 
@@ -247,83 +1038,128 @@ function updateMapPreview(){
     `https://www.google.com/maps?q=${encodeURIComponent(query)}&z=16&output=embed`;
 
   $("mapPreview").innerHTML =
-    `<iframe loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="${embed}" title="Vista previa del lugar"></iframe>`;
+    `<iframe loading="lazy"
+             referrerpolicy="no-referrer-when-downgrade"
+             src="${embed}"
+             title="Vista previa del lugar">
+     </iframe>`;
 }
 
-$("searchMap").onclick = updateMapPreview;
+function renderPhotoPreviews(files){
+  const list =
+    $("photoList");
 
-$("useLocation").onclick = () => {
-  if(!navigator.geolocation){
-    alert("Este navegador no permite obtener la ubicación.");
-    return;
-  }
+  list.innerHTML = "";
+  selectedPhotoNames = [];
 
-  $("useLocation").textContent = "Buscando ubicación...";
+  [...files].forEach(file => {
+    selectedPhotoNames.push(file.name);
 
-  navigator.geolocation.getCurrentPosition(
-    position => {
-      $("latitude").value = position.coords.latitude.toFixed(7);
-      $("longitude").value = position.coords.longitude.toFixed(7);
+    const card =
+      document.createElement("div");
 
-      if(!$("mapsUrl").value){
-        $("mapsUrl").value =
-          `https://www.google.com/maps/search/?api=1&query=${position.coords.latitude},${position.coords.longitude}`;
-      }
+    card.className =
+      "photo-thumb";
 
-      $("useLocation").textContent = "✓ Ubicación guardada";
-      updateMapPreview();
+    const info =
+      document.createElement("div");
 
-      setTimeout(() => {
-        $("useLocation").textContent = "📍 Usar mi ubicación";
-      },1800);
-    },
-    error => {
-      console.warn(error);
-      $("useLocation").textContent = "📍 Usar mi ubicación";
-      alert("No pude obtener la ubicación. Puedes pegar las coordenadas manualmente.");
-    },
-    {
-      enableHighAccuracy:true,
-      timeout:12000,
-      maximumAge:0
+    info.textContent =
+      file.name;
+
+    if(file.type.startsWith("image/")){
+      const image =
+        document.createElement("img");
+
+      const url =
+        URL.createObjectURL(file);
+
+      image.src = url;
+      image.alt = file.name;
+
+      image.onload = () => {
+        URL.revokeObjectURL(url);
+      };
+
+      card.appendChild(image);
+    }else{
+      const placeholder =
+        document.createElement("div");
+
+      placeholder.style.aspectRatio =
+        "1 / 1";
+
+      placeholder.style.display =
+        "grid";
+
+      placeholder.style.placeItems =
+        "center";
+
+      placeholder.style.fontSize =
+        "28px";
+
+      placeholder.textContent =
+        "🖼️";
+
+      card.appendChild(
+        placeholder
+      );
     }
-  );
-};
 
-["latitude","longitude"].forEach(id => {
-  $(id).addEventListener("change", () => {
-    if(validCoordinates()) updateMapPreview();
+    card.appendChild(info);
+    list.appendChild(card);
   });
-});
 
-$("generate").onclick = () => {
-  const date = $("date").value;
-  const title = $("title").value.trim();
-  const story = $("story").value.trim();
-  const tags = $("tags").value
-    .split(",")
-    .map(value => value.trim())
-    .filter(Boolean);
+  scheduleSave();
+}
 
-  const place = $("place").value.trim();
-  const address = $("address").value.trim();
-  const favorite = $("favorite").checked;
-  const coords = validCoordinates();
+function buildMarkdown(){
+  const date =
+    $("date").value;
 
-  const latitude = coords ? String(coords.lat) : "";
-  const longitude = coords ? String(coords.lng) : "";
-  const mapsUrl = $("mapsUrl").value.trim();
+  const title =
+    $("title").value.trim();
+
+  const story =
+    $("story").value.trim();
 
   if(!date || !title){
-    alert("Fecha y título son obligatorios.");
-    return;
+    alert(
+      "Fecha y título son obligatorios."
+    );
+
+    return null;
   }
 
-  const folder = `${date}-${slug(title)}`;
+  const tags =
+    $("tags").value
+      .split(",")
+      .map(value => value.trim())
+      .filter(Boolean);
 
-  const tagLines = tags.length
-    ? "tags:\n" + tags.map(tag => `  - ${tag}`).join("\n")
-    : "tags: []";
+  const coordinates =
+    validCoordinates();
+
+  const latitude =
+    coordinates
+      ? String(coordinates.lat)
+      : "";
+
+  const longitude =
+    coordinates
+      ? String(coordinates.lng)
+      : "";
+
+  const folder =
+    `${date}-${slugify(title)}`;
+
+  const tagLines =
+    tags.length
+      ? "tags:\n" +
+        tags
+          .map(tag => `  - ${tag}`)
+          .join("\n")
+      : "tags: []";
 
   const md =
 `---
@@ -331,15 +1167,15 @@ tipo: recuerdo
 fecha: ${date}
 titulo: ${yaml(title)}
 categoria: ${$("category").value}
-favorito: ${favorite}
+favorito: ${$("favorite").checked}
 portada:
 ${tagLines}
 musica:
-lugar: ${yaml(place)}
-direccion: ${yaml(address)}
+lugar: ${yaml($("place").value.trim())}
+direccion: ${yaml($("address").value.trim())}
 latitud: ${yaml(latitude)}
 longitud: ${yaml(longitude)}
-maps: ${yaml(mapsUrl)}
+maps: ${yaml($("mapsUrl").value.trim())}
 ---
 
 # ${title}
@@ -347,30 +1183,336 @@ maps: ${yaml(mapsUrl)}
 ${story || "Hoy pasó algo que no quiero olvidar..."}
 `;
 
-  $("result").textContent =
-`CARPETA:
-contenido/recuerdos/${date.slice(0,4)}/${folder}/
+  return {
+    md,
+    folder,
+    year:date.slice(0,4),
+    title
+  };
+}
 
-ARCHIVO recuerdo.md:
+function downloadTextFile(filename,text){
+  const blob =
+    new Blob(
+      [text],
+      {type:"text/markdown;charset=utf-8"}
+    );
 
-${md}`;
+  const url =
+    URL.createObjectURL(blob);
 
-  $("result").hidden = false;
-  $("copy").hidden = false;
-  $("copy").dataset.md = md;
-};
+  const link =
+    document.createElement("a");
 
-$("copy").onclick = async () => {
-  await navigator.clipboard.writeText(
-    $("copy").dataset.md || ""
-  );
+  link.href = url;
+  link.download = filename;
 
-  $("copy").textContent = "✓ Copiado";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
 
   setTimeout(() => {
-    $("copy").textContent = "Copiar recuerdo.md";
-  },1300);
-};
+    URL.revokeObjectURL(url);
+  },1000);
+}
+
+function preparePublication(){
+  const built =
+    buildMarkdown();
+
+  if(!built) return;
+
+  saveDraft();
+
+  preparedMarkdown =
+    built.md;
+
+  preparedFolder =
+    `contenido/recuerdos/${built.year}/${built.folder}/`;
+
+  $("folderPath").textContent =
+    preparedFolder;
+
+  $("mdPreview").textContent =
+    preparedMarkdown;
+
+  $("outputTitle").textContent =
+    `${built.title} está listo.`;
+
+  $("photoPublishNote").textContent =
+    selectedPhotoNames.length
+      ? ` Seleccionaste ${selectedPhotoNames.length}: ${selectedPhotoNames.join(", ")}.`
+      : " Puedes agregar las fotos ahora o después.";
+
+  $("outputPanel").hidden =
+    false;
+
+  $("outputPanel").scrollIntoView({
+    behavior:"smooth",
+    block:"start"
+  });
+
+  toast(
+    "✓ Recuerdo preparado para publicar"
+  );
+}
+
+/* -------------------------------
+   Eventos
+-------------------------------- */
+
+$("editorBack").addEventListener(
+  "click",
+  () => {
+    if(
+      document.referrer &&
+      history.length > 1
+    ){
+      history.back();
+    }else{
+      location.href =
+        "../index.html";
+    }
+  }
+);
+
+fields.forEach(id => {
+  const element = $(id);
+
+  const eventName =
+    element.tagName === "SELECT" ||
+    element.type === "checkbox"
+      ? "change"
+      : "input";
+
+  element.addEventListener(
+    eventName,
+    scheduleSave
+  );
+});
+
+$("photos").addEventListener(
+  "change",
+  event => {
+    renderPhotoPreviews(
+      event.target.files
+    );
+  }
+);
+
+$("searchMap").addEventListener(
+  "click",
+  () => updateMapPreview(true)
+);
+
+$("useLocation").addEventListener(
+  "click",
+  () => {
+    if(!navigator.geolocation){
+      alert(
+        "Este navegador no permite obtener la ubicación."
+      );
+
+      return;
+    }
+
+    const button =
+      $("useLocation");
+
+    button.textContent =
+      "Buscando ubicación...";
+
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        $("latitude").value =
+          position.coords.latitude.toFixed(7);
+
+        $("longitude").value =
+          position.coords.longitude.toFixed(7);
+
+        if(!$("mapsUrl").value){
+          $("mapsUrl").value =
+            `https://www.google.com/maps/search/?api=1&query=${position.coords.latitude},${position.coords.longitude}`;
+        }
+
+        button.textContent =
+          "✓ Ubicación guardada";
+
+        updateMapPreview(false);
+        saveDraft();
+
+        setTimeout(() => {
+          button.textContent =
+            "📍 Usar mi ubicación";
+        },1800);
+      },
+      error => {
+        console.warn(error);
+
+        button.textContent =
+          "📍 Usar mi ubicación";
+
+        alert(
+          "No pude obtener la ubicación. Puedes pegar las coordenadas manualmente."
+        );
+      },
+      {
+        enableHighAccuracy:true,
+        timeout:12000,
+        maximumAge:0
+      }
+    );
+  }
+);
+
+["latitude","longitude"].forEach(id => {
+  $(id).addEventListener(
+    "change",
+    () => {
+      if(validCoordinates()){
+        updateMapPreview(false);
+      }
+
+      scheduleSave();
+    }
+  );
+});
+
+$("saveDraft").addEventListener(
+  "click",
+  () => {
+    saveDraft({showToast:true});
+  }
+);
+
+$("prepare").addEventListener(
+  "click",
+  preparePublication
+);
+
+$("downloadMd").addEventListener(
+  "click",
+  () => {
+    if(!preparedMarkdown){
+      preparePublication();
+    }
+
+    if(preparedMarkdown){
+      downloadTextFile(
+        "recuerdo.md",
+        preparedMarkdown
+      );
+
+      toast(
+        "↓ recuerdo.md descargado"
+      );
+    }
+  }
+);
+
+$("copyMd").addEventListener(
+  "click",
+  async () => {
+    if(!preparedMarkdown){
+      preparePublication();
+    }
+
+    if(preparedMarkdown){
+      await navigator.clipboard.writeText(
+        preparedMarkdown
+      );
+
+      toast(
+        "✓ Contenido copiado"
+      );
+    }
+  }
+);
+
+$("copyFolder").addEventListener(
+  "click",
+  async () => {
+    if(!preparedFolder){
+      preparePublication();
+    }
+
+    if(preparedFolder){
+      await navigator.clipboard.writeText(
+        preparedFolder
+      );
+
+      toast(
+        "✓ Ruta copiada"
+      );
+    }
+  }
+);
+
+function confirmNewMemory(){
+  const draft =
+    collectDraft();
+
+  if(
+    draftHasMeaningfulContent(draft) &&
+    !confirm(
+      "Este borrador está guardado en este dispositivo. ¿Quieres borrarlo y empezar uno nuevo?"
+    )
+  ){
+    return;
+  }
+
+  clearDraft();
+  toast(
+    "Nuevo recuerdo listo"
+  );
+
+  scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+}
+
+$("newMemory").addEventListener(
+  "click",
+  confirmNewMemory
+);
+
+$("discardDraftTop").addEventListener(
+  "click",
+  confirmNewMemory
+);
+
+/* -------------------------------
+   Inicio
+-------------------------------- */
+
+const restored =
+  restoreDraft();
+
+if(!restored){
+  const now =
+    new Date();
+
+  $("date").value = [
+    now.getFullYear(),
+    String(now.getMonth()+1).padStart(2,"0"),
+    String(now.getDate()).padStart(2,"0")
+  ].join("-");
+
+  $("category").value =
+    "momento";
+
+  saveDraft();
+}
+
+/* Guardar al salir si hubo cambios */
+window.addEventListener(
+  "pagehide",
+  () => {
+    saveDraft();
+  }
+);
 </script>
+
 </body>
 </html>

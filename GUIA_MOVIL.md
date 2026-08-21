@@ -37,3 +37,44 @@ En `Guardar algo` ahora puedes:
 5. Al publicar el recuerdo, el lugar aparecerá en **Nuestros lugares**.
 
 No es obligatorio guardar coordenadas. Un recuerdo puede tener solo el nombre del lugar.
+
+
+## v2.4 — Borradores y publicación
+
+El editor ahora guarda automáticamente el texto del recuerdo en el mismo navegador.
+
+### Qué significa "guardado"
+El borrador está guardado localmente en ese iPhone/PC. Puedes salir y volver al editor sin perder el texto.
+
+### Qué significa "publicado"
+El recuerdo ya fue subido a GitHub y aparece en Nuestro lugar.
+
+### Flujo recomendado
+1. Abre **Guardar**.
+2. Escribe fecha, título e historia.
+3. Agrega lugar si quieres.
+4. Selecciona tus fotos para comprobar los nombres.
+5. Toca **Preparar para publicar**.
+6. Descarga `recuerdo.md`.
+7. Abre GitHub.
+8. Crea la carpeta indicada.
+9. Sube las fotos.
+10. Sube o crea `recuerdo.md`.
+11. Commit.
+
+Las fotos seleccionadas en el editor son solo una previsualización. Por seguridad del navegador, si recargas la página tendrás que volver a seleccionarlas; el texto sí permanece guardado.
+
+
+## Acceso al editor sin mostrarlo en la web pública
+
+Desde esta versión, la navegación pública ya no muestra botones de administración ni de carga.
+
+Guarda como favorito en tu iPhone esta dirección:
+
+`https://fernandozl.github.io/404-Ideas/herramientas/editor.html`
+
+También puedes añadir esa página a la pantalla de inicio de iOS para entrar directamente a **Guardar algo**.
+
+Esto evita que la experiencia normal de Nuestro lugar muestre instrucciones de construcción o publicación.
+
+Importante: la URL no es una autenticación real. El editor sigue siendo una página estática del sitio; simplemente no está enlazado desde la experiencia pública.

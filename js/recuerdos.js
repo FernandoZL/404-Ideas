@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
     meta.textContent = `${filtered.length} ${filtered.length === 1 ? "recuerdo encontrado" : "recuerdos encontrados"}`;
     if (!filtered.length) {
-      grid.innerHTML = `<article class="empty-card"><span>Sin resultados</span><h3>No encontré ese recuerdo.</h3><p>Prueba con otra palabra, año o categoría.</p>${memories.length ? "" : '<a href="herramientas/editor.html">Guardar el primero →</a>'}</article>`;
+      grid.innerHTML = `<article class="empty-card"><span>Sin resultados</span><h3>No encontré ese recuerdo.</h3><p>Prueba con otra palabra, año o categoría.</p></article>`;
       return;
     }
     grid.innerHTML = filtered.map(m => {

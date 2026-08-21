@@ -99,3 +99,27 @@ Es deliberado: primero congelamos y estabilizamos la base actual.
 - CSS y JavaScript llevan versión en la URL.
 - Los JSON generados se solicitan con cache-busting.
 - Evita que el navegador muestre 0 recuerdos después de un deploy nuevo.
+
+
+## v2.4 — Editor que sí guarda
+
+- Autoguardado del borrador en `localStorage`.
+- Recuperación automática al volver al editor.
+- Estado visible: guardando / guardado.
+- Selección y previsualización de fotos.
+- Descarga real de `recuerdo.md`.
+- Copia del Markdown.
+- Copia de la ruta de publicación.
+- Botón directo para abrir GitHub.
+- Separación clara entre **borrador guardado** y **recuerdo publicado**.
+- El formulario no se limpia hasta pulsar **Empezar un recuerdo nuevo**.
+
+
+## v2.5 — Experiencia pública limpia
+
+- Se eliminan de la navegación pública los enlaces al editor.
+- Se eliminan mensajes de roadmap, desarrollo y “próximamente”.
+- Las secciones vacías usan texto editorial, no instrucciones de administración.
+- `archivo.html` muestra únicamente secciones públicas reales.
+- El editor sigue disponible por URL directa y lleva `noindex,nofollow,noarchive`.
+- El acceso de edición recomendado es mediante un favorito directo en el teléfono.

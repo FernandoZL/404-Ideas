@@ -20,6 +20,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       const photo = NL.mediaUrl(memory, memory.portada);
       return `<a href="${NL.memoryUrl(memory)}" class="memory-card ${photo ? "photo" : ""}" ${photo ? `style="background-image:url('${NL.escapeHtml(photo)}')"` : ""}><time>${NL.escapeHtml(NL.shortDate(memory.fecha))}</time><h3>${NL.escapeHtml(memory.titulo)}</h3><p>${NL.escapeHtml(NL.excerpt(memory.texto))}</p></a>`;
     }).join("");
+  } else if ($("recentSection")) {
+    $("recentSection").hidden = true;
   }
 
   const now = new Date(), month = now.getMonth() + 1, day = now.getDate();
@@ -34,10 +36,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   $("randomBtn").addEventListener("click", () => {
     const memory = memories.length ? memories[Math.floor(Math.random() * memories.length)] : null;
     $("randomDate").textContent = memory ? NL.shortDate(memory.fecha) : "Nuestro archivo";
-    $("randomTitle").textContent = memory ? memory.titulo : "Todavía estamos empezando.";
-    $("randomText").textContent = memory ? NL.excerpt(memory.texto, 300) : "Cuando guardemos el primer recuerdo nuevo, este botón podrá traerlo de vuelta cuando menos lo esperes.";
-    $("randomOpen").href = memory ? NL.memoryUrl(memory) : "herramientas/editor.html";
-    $("randomOpen").textContent = memory ? "Abrir recuerdo" : "Guardar el primero";
+    $("randomTitle").textContent = memory ? memory.titulo : "Volvamos al comienzo.";
+    $("randomText").textContent = memory ? NL.excerpt(memory.texto, 300) : "A veces el mejor lugar para volver es donde empezó todo.";
+    $("randomOpen").href = memory ? NL.memoryUrl(memory) : "historia.html";
+    $("randomOpen").textContent = memory ? "Abrir recuerdo" : "Ir a nuestra historia";
     modal.hidden = false; requestAnimationFrame(() => modal.classList.add("open")); document.body.classList.add("menu-open");
   });
   document.querySelectorAll("[data-random-close]").forEach(el => el.addEventListener("click", () => { modal.classList.remove("open"); modal.hidden = true; document.body.classList.remove("menu-open"); }));

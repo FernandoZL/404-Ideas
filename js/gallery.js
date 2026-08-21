@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const photos = await NL.readJson("data/generated/galeria.json", []), gallery=NL.$("gallery"), box=NL.$("lightbox");
   NL.$("photoMeta").textContent = `${photos.length} ${photos.length===1?"fotografía":"fotografías"}`;
-  if(!photos.length){gallery.innerHTML='<article class="empty-card"><span>La galería está preparada</span><h3>Las primeras fotos aparecerán aquí.</h3><p>Sube fotografías dentro de un recuerdo y el sistema las reunirá automáticamente.</p><a href="herramientas/editor.html">Guardar un recuerdo →</a></article>';return}
+  if(!photos.length){gallery.innerHTML='<article class="empty-card"><span>Nuestro archivo</span><h3>Todavía no hay fotos en esta parte de la historia.</h3><p>Cuando haya algo que volver a mirar, estará aquí.</p></article>';return}
   gallery.innerHTML=photos.map((p,i)=>`<button class="gallery-item" data-photo="${i}"><img src="${NL.escapeHtml(p.src)}" loading="lazy" alt="${NL.escapeHtml(p.titulo)}"><span>${NL.escapeHtml(p.titulo)}</span></button>`).join("");
   let current=0,touchStartX=null;
   function show(i){current=(i+photos.length)%photos.length;const p=photos[current];NL.$("lightboxImage").src=p.src;NL.$("lightboxImage").alt=p.titulo;NL.$("lightboxTitle").textContent=p.titulo;NL.$("lightboxDate").textContent=NL.shortDate(p.fecha);NL.$("lightboxCount").textContent=`${current+1} / ${photos.length}`;box.hidden=false;document.body.style.overflow="hidden"}

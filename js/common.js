@@ -122,7 +122,6 @@
           <a class="brand" href="index.html">Nuestro lugar <span>🤍</span></a>
         </div>
         <div class="chrome-actions">
-          <a class="quick-add desktop-only" href="herramientas/editor.html">＋ Guardar</a>
           <button class="circle-btn" type="button" data-theme aria-label="Cambiar tema"><span data-theme-icon>◐</span></button>
           <button class="circle-btn menu-btn" type="button" data-menu-open aria-label="Abrir menú">☰</button>
         </div>`;
@@ -132,7 +131,7 @@
       nav.innerHTML = `
         <a href="index.html" class="${page === 'home' ? 'active' : ''}"><span>⌂</span>Inicio</a>
         <a href="historia.html" class="${page === 'history' ? 'active' : ''}"><span>⌁</span>Historia</a>
-        <a href="herramientas/editor.html" class="nav-add"><span>＋</span>Guardar</a>
+        <a href="recuerdos.html" class="${page === 'memories' ? 'active' : ''}"><span>◇</span>Recuerdos</a>
         <a href="archivo.html" class="${page === 'archive' ? 'active' : ''}"><span>◫</span>Archivo</a>`;
     }
 
@@ -156,7 +155,6 @@
           <a href="archivo.html"><span>06</span><strong>Todo el archivo</strong><small>Cartas, frases, canciones y más</small></a>
           <a href="expediente-0606.html"><span>07</span><strong>Expediente #0606</strong><small>La página con la que empezó todo</small></a>
         </nav>
-        <a class="menu-add" href="herramientas/editor.html">＋ Guardar algo nuevo</a>
       </div>`;
     document.body.appendChild(overlay);
 
