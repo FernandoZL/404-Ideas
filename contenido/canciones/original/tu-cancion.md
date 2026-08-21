@@ -2,15 +2,15 @@
 tipo: cancion
 publicado: true
 fecha:
-titulo: "Tu canción"
-artista:
+titulo: "Dembow"
+artista:"Danny Ocean"
 archivo: "dembow.mp3"
 archivo_raiz: true
 spotify:
-youtube:
+youtube:"https://youtu.be/kQKGI24aydk?si=YNlt2BVrAf-VyGAy"
 apple_music:
 portada:
 favorito: true
 ---
 
-Una canción que ya formaba parte de este lugar desde el principio.
+Una canción que ya nos identificaba y es parte de nosotros desde el principio.
