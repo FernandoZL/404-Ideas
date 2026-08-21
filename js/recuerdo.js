@@ -1,4 +1,12 @@
 document.addEventListener("DOMContentLoaded", async () => {
+  const normalizePlaceText = value =>
+    String(value || "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, " ")
+      .trim();
+
   const id = new URLSearchParams(location.search).get("id");
   const memories = await NL.readJson("data/generated/recuerdos.json", []);
   const memory = memories.find(item => item.id === id);
@@ -48,14 +56,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     ? `https://www.google.com/maps?q=${encodeURIComponent(placeQuery)}&z=16&output=embed`
     : "";
 
-  const locationBlock = (memory.lugar || memory.direccion || embedUrl)
+  const placeName = String(memory.lugar || "").trim();
+  const address = String(memory.direccion || "").trim();
+
+  const showAddress =
+    address &&
+    normalizePlaceText(address) !== normalizePlaceText(placeName);
+
+  const locationBlock = (placeName || address || embedUrl)
     ? `
       <section class="place-detail">
         <div class="place-detail-copy">
-          <span class="kicker">Este lugar también es parte del recuerdo</span>
-          <h2>${NL.escapeHtml(memory.lugar || "Ubicación guardada")}</h2>
-          ${memory.direccion ? `<p>${NL.escapeHtml(memory.direccion)}</p>` : ""}
-          ${mapsUrl ? `<a href="${NL.escapeHtml(mapsUrl)}" target="_blank" rel="noopener">Abrir en el mapa →</a>` : ""}
+          <span class="kicker">Dónde pasó</span>
+          <h2>${NL.escapeHtml(placeName || "Ubicación guardada")}</h2>
+          ${showAddress ? `<p>${NL.escapeHtml(address)}</p>` : ""}
+          ${mapsUrl ? `<a href="${NL.escapeHtml(mapsUrl)}" target="_blank" rel="noopener">Ver ubicación →</a>` : ""}
         </div>
         ${embedUrl ? `
           <div class="place-map">
@@ -63,7 +78,7 @@ document.addEventListener("DOMContentLoaded", async () => {
               loading="lazy"
               referrerpolicy="no-referrer-when-downgrade"
               src="${NL.escapeHtml(embedUrl)}"
-              title="Mapa de ${NL.escapeHtml(memory.lugar || "este recuerdo")}">
+              title="Mapa de este recuerdo">
             </iframe>
           </div>` : ""}
       </section>`
@@ -76,7 +91,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       <div class="detail-meta">
         ${memory.categoria ? `<span class="meta-pill">${NL.escapeHtml(memory.categoria)}</span>` : ""}
-        ${memory.lugar ? `<span class="meta-pill">⌖ ${NL.escapeHtml(memory.lugar)}</span>` : ""}
         ${memory.favorito ? '<span class="meta-pill">♡ favorito</span>' : ""}
       </div>
     </header>
