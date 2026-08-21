@@ -655,3 +655,135 @@ button,
     transition:none;
   }
 }
+
+
+/* ==========================================================
+   v2.10.4 · Modal "Recuérdame algo bonito"
+   Stable viewport positioning for iPhone / Android / tablets
+========================================================== */
+
+/*
+  The previous mobile version intentionally behaved like a bottom sheet.
+  That could make the blurred background look correct while the content
+  appeared too low on some phones. From this version onward the dialog is
+  centered inside the *visible* viewport.
+*/
+@media(max-width:800px){
+  .random-modal{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:100dvh;
+    padding:
+      max(14px,env(safe-area-inset-top))
+      max(12px,env(safe-area-inset-right))
+      max(14px,env(safe-area-inset-bottom))
+      max(12px,env(safe-area-inset-left));
+    overflow:hidden;
+  }
+
+  .random-scrim{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100dvh;
+    -webkit-backdrop-filter:blur(5px);
+    backdrop-filter:blur(5px);
+  }
+
+  .random-dialog{
+    position:relative;
+    inset:auto;
+    width:min(100%,560px);
+    max-width:100%;
+    max-height:calc(
+      100dvh
+      - max(28px,env(safe-area-inset-top))
+      - max(28px,env(safe-area-inset-bottom))
+    );
+    margin:auto;
+    overflow-x:hidden;
+    overflow-y:auto;
+    overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;
+    transform:translateY(10px) scale(.985);
+  }
+
+  .random-modal.open .random-dialog{
+    transform:none;
+  }
+
+  .random-content{
+    padding:
+      24px
+      max(19px,env(safe-area-inset-right))
+      max(21px,env(safe-area-inset-bottom))
+      max(19px,env(safe-area-inset-left));
+  }
+
+  .random-close{
+    position:absolute;
+    top:12px;
+    right:12px;
+  }
+
+  .random-meta{
+    padding-right:48px;
+  }
+
+  .random-actions{
+    position:relative;
+  }
+}
+
+/* Smaller iPhones */
+@media(max-width:430px){
+  .random-dialog{
+    border-radius:24px;
+    max-height:calc(
+      100dvh
+      - max(22px,env(safe-area-inset-top))
+      - max(22px,env(safe-area-inset-bottom))
+    );
+  }
+
+  .random-media img{
+    height:min(220px,27dvh);
+  }
+
+  .random-content{
+    padding-top:21px;
+  }
+
+  .random-dialog h2{
+    font-size:clamp(32px,9.5vw,43px);
+    line-height:1;
+  }
+}
+
+/* Short landscape phone: keep it centered and scroll inside the card */
+@media(max-height:520px) and (orientation:landscape){
+  .random-modal{
+    align-items:center;
+    overflow:hidden;
+  }
+
+  .random-dialog{
+    display:block;
+    width:min(760px,100%);
+    max-height:calc(
+      100dvh
+      - max(16px,env(safe-area-inset-top))
+      - max(16px,env(safe-area-inset-bottom))
+    );
+  }
+
+  .random-dialog:has(.random-media:not([hidden])){
+    display:grid;
+    grid-template-columns:minmax(180px,.8fr) minmax(300px,1.2fr);
+  }
+
+  .random-content{
+    align-self:center;
+  }
+}

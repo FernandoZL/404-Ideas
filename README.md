@@ -240,3 +240,14 @@ Es deliberado: primero congelamos y estabilizamos la base actual.
   tipografía fluida y rejillas adaptativas.
 - El panel de gestión recibió una segunda pasada responsive.
 - El panel avisa en móvil antes de intentar archivos superiores a 28 MiB.
+
+
+## v2.10.4 — frase de navegación + modal móvil
+
+- Home: `Nuestra historia también vive en los detalles.`
+- El modal `Recuérdame algo bonito` vuelve a centrarse en el viewport visible.
+- Safe areas para iPhone.
+- Altura basada en `100dvh`.
+- Scroll interno del modal cuando el contenido supera la pantalla.
+- Blur de fondo conservado.
+- Ajuste adicional para iPhone pequeño y landscape.
