@@ -251,3 +251,14 @@ Es deliberado: primero congelamos y estabilizamos la base actual.
 - Scroll interno del modal cuando el contenido supera la pantalla.
 - Blur de fondo conservado.
 - Ajuste adicional para iPhone pequeño y landscape.
+
+
+## v2.10.5 — Gestor de archivos adjuntos
+
+- Lista de archivos existentes dentro de cada contenido.
+- Vista previa de imágenes.
+- Abrir archivo en GitHub.
+- Eliminar archivos individuales con Commit automático.
+- Protección del Markdown descriptor.
+- Protección del `index.html` principal de sorpresas publicadas.
+- Interfaz responsive para celular.

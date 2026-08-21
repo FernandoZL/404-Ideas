@@ -9,7 +9,7 @@
 <meta http-equiv="Content-Security-Policy"
       content="default-src 'self'; connect-src https://api.github.com; img-src 'self' data: blob:; media-src 'self' blob:; script-src 'self'; style-src 'self'; base-uri 'none'; object-src 'none'">
 <title>Gestión · Nuestro lugar</title>
-<link rel="stylesheet" href="admin.css?v=20260821-0715">
+<link rel="stylesheet" href="admin.css?v=20260821-0900">
 </head>
 
 <body>
@@ -519,8 +519,24 @@
     <label for="rawEditor">Archivo Markdown</label>
     <textarea id="rawEditor" class="raw-editor" spellcheck="false"></textarea>
 
+    <section class="file-section compact current-files-section">
+      <div class="current-files-heading">
+        <div>
+          <span class="eyebrow">Archivos actuales</span>
+          <strong>Lo que ya vive en esta carpeta</strong>
+          <p>Puedes abrir o quitar fotos, audio, video y otros adjuntos sin entrar a GitHub manualmente.</p>
+        </div>
+        <button id="refreshFolderFilesBtn" class="mini-button" type="button">Actualizar</button>
+      </div>
+
+      <div id="currentFilesList" class="current-files-list">
+        <div class="files-loading">Cargando archivos…</div>
+      </div>
+    </section>
+
     <section class="file-section compact">
       <div>
+        <span class="eyebrow">Agregar</span>
         <strong>Agregar archivos a esta carpeta</strong>
         <p>Útil para añadir fotos después.</p>
       </div>
@@ -543,6 +559,6 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="admin.js?v=20260821-0715"></script>
+<script src="admin.js?v=20260821-0900"></script>
 </body>
 </html>

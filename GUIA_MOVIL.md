@@ -260,3 +260,18 @@ La web pública y el panel están preparados para:
 
 `Recuérdame algo bonito` ahora puede traer cualquier contenido público del
 archivo, no únicamente un recuerdo.
+
+
+## Quitar una foto desde el celular
+
+1. Abre el panel.
+2. Ve a `Archivo`.
+3. Busca el recuerdo.
+4. Pulsa `Editar`.
+5. Baja a `Archivos actuales`.
+6. Busca la fotografía.
+7. Pulsa `Eliminar`.
+8. Confirma.
+
+El panel crea el Commit automáticamente. Cuando GitHub Actions termine,
+la foto desaparece del recuerdo y de la galería.

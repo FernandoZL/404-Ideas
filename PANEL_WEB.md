@@ -287,3 +287,36 @@ Guía dedicada:
 ```text
 GUIA_TOKEN_GITHUB.md
 ```
+
+
+## v2.10.5 — Eliminar archivos individuales desde el gestor
+
+En:
+
+```text
+Archivo → Editar
+```
+
+ahora aparece:
+
+```text
+Archivos actuales
+```
+
+Ahí puedes:
+
+- ver los archivos que ya existen en la carpeta;
+- abrirlos;
+- eliminar una foto, audio, video u otro adjunto individual;
+- agregar archivos nuevos como antes.
+
+Al eliminar un archivo, el panel crea automáticamente un Commit parecido a:
+
+```text
+Quitar archivo IMG_0001.jpeg: Nombre del recuerdo
+```
+
+El Markdown principal del contenido no puede eliminarse desde esa lista.
+
+En una Sorpresa ya publicada, el archivo principal declarado en `archivo:`
+también queda protegido.

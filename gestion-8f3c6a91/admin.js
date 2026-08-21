@@ -21,6 +21,7 @@
   let inboxFiles = [];
   let editFiles = [];
   let editingItem = null;
+  let currentFolderFiles = [];
 
   const typeNames = {
     recuerdo: "Recuerdo",
@@ -1213,6 +1214,184 @@ ${fields.texto || "Una experiencia especial que quiero preparar."}
     }
   }
 
+
+  function fileExtension(path){
+    const name = String(path || "").split("/").pop() || "";
+    const dot = name.lastIndexOf(".");
+    return dot >= 0 ? name.slice(dot + 1).toLowerCase() : "";
+  }
+
+  function isImagePath(path){
+    return /\.(jpe?g|png|webp|gif|heic|heif)$/i.test(path);
+  }
+
+  function isMediaPath(path){
+    return /\.(jpe?g|png|webp|gif|heic|heif|mp3|m4a|aac|wav|mp4|mov|m4v)$/i.test(path);
+  }
+
+  function protectedDescriptorPath(item, path){
+    if(!item) return true;
+
+    // Never delete the descriptor from the file list.
+    if(path === item.path) return true;
+
+    // For published specials, the declared main HTML must remain present.
+    if(item.type === "especial" && item.published){
+      const folder = itemFolder(item);
+      const mainFile = item.meta.archivo || "index.html";
+      if(path === `${folder}/${mainFile}`) return true;
+    }
+
+    return false;
+  }
+
+  function githubBlobUrl(path){
+    return `https://github.com/${OWNER}/${REPO}/blob/${BRANCH}/${path}`;
+  }
+
+  function githubRawUrl(path){
+    return `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${path}`;
+  }
+
+  async function loadCurrentFolderFiles(){
+    const target = $("currentFilesList");
+
+    if(!editingItem || !target) return;
+
+    target.innerHTML = `<div class="files-loading">Cargando archivos…</div>`;
+
+    try{
+      if(!treeCache.length){
+        await getTree();
+      }
+
+      const folder = itemFolder(editingItem);
+
+      // Files at this item's folder only. Do not recursively mix nested folders.
+      currentFolderFiles = treeCache
+        .filter(node => {
+          if(!node.path.startsWith(folder + "/")) return false;
+          const relative = node.path.slice(folder.length + 1);
+          return relative && !relative.includes("/");
+        })
+        .sort((a,b) => a.path.localeCompare(b.path));
+
+      renderCurrentFolderFiles();
+    }catch(error){
+      console.error(error);
+      target.innerHTML =
+        `<div class="files-empty">${escapeHtml(error.message)}</div>`;
+    }
+  }
+
+  function renderCurrentFolderFiles(){
+    const target = $("currentFilesList");
+    if(!target) return;
+
+    const visible = currentFolderFiles.filter(file => file.path !== editingItem?.path);
+
+    if(!visible.length){
+      target.innerHTML =
+        `<div class="files-empty">Esta carpeta todavía no tiene archivos adjuntos.</div>`;
+      return;
+    }
+
+    target.innerHTML = visible.map((file,index) => {
+      const name = file.path.split("/").pop();
+      const ext = fileExtension(file.path).toUpperCase() || "FILE";
+      const protectedFile = protectedDescriptorPath(editingItem,file.path);
+
+      const preview = isImagePath(file.path)
+        ? `<div class="current-file-preview">
+             <img loading="lazy"
+                  src="${escapeHtml(githubRawUrl(file.path))}"
+                  alt="">
+           </div>`
+        : `<div class="current-file-preview">${escapeHtml(ext.slice(0,4))}</div>`;
+
+      return `
+        <div class="current-file-row">
+          ${preview}
+
+          <div class="current-file-info">
+            <strong title="${escapeHtml(name)}">${escapeHtml(name)}</strong>
+            <small>${escapeHtml(ext)}${file.size ? ` · ${formatBytes(file.size)}` : ""}</small>
+          </div>
+
+          <div class="current-file-actions">
+            <a href="${escapeHtml(githubBlobUrl(file.path))}"
+               target="_blank"
+               rel="noopener">Abrir</a>
+
+            ${protectedFile
+              ? `<span class="current-file-protected">Archivo principal</span>`
+              : `<button class="file-delete"
+                         type="button"
+                         data-delete-file-index="${index}">
+                   Eliminar
+                 </button>`}
+          </div>
+        </div>`;
+    }).join("");
+
+    target.querySelectorAll("[data-delete-file-index]").forEach(button => {
+      button.onclick = async () => {
+        const visibleFiles =
+          currentFolderFiles.filter(file => file.path !== editingItem?.path);
+
+        const file = visibleFiles[Number(button.dataset.deleteFileIndex)];
+        if(file){
+          await deleteExistingFile(file,button);
+        }
+      };
+    });
+  }
+
+  async function deleteExistingFile(file,button){
+    if(!editingItem || !file) return;
+
+    const filename = file.path.split("/").pop();
+
+    if(protectedDescriptorPath(editingItem,file.path)){
+      alert("Ese archivo es necesario para que este contenido funcione.");
+      return;
+    }
+
+    const accepted = confirm(
+      `¿Eliminar ${filename}?\\n\\n` +
+      "La eliminación quedará registrada como un Commit en GitHub."
+    );
+
+    if(!accepted) return;
+
+    try{
+      setBusy(button,true,"Eliminando…");
+
+      await commitChanges(
+        [{path:file.path,delete:true}],
+        `Quitar archivo ${filename}: ${editingItem.title}`
+      );
+
+      // Keep the item itself open and refresh the repository tree.
+      await getTree();
+
+      currentFolderFiles =
+        currentFolderFiles.filter(item => item.path !== file.path);
+
+      renderCurrentFolderFiles();
+
+      toast(`✓ ${filename} eliminado.`);
+
+      // Refresh content cache later; the descriptor itself did not change.
+      contentItems = [];
+    }catch(error){
+      console.error(error);
+      alert(error.message);
+    }finally{
+      setBusy(button,false);
+    }
+  }
+
   function openEditor(item){
     editingItem = item;
     editFiles = [];
@@ -1228,11 +1407,14 @@ ${fields.texto || "Una experiencia especial que quiero preparar."}
     $("drawerBackdrop").hidden = false;
     $("editDrawer").hidden = false;
     document.body.style.overflow = "hidden";
+
+    loadCurrentFolderFiles();
   }
 
   function closeEditor(){
     editingItem = null;
     editFiles = [];
+    currentFolderFiles = [];
     $("drawerBackdrop").hidden = true;
     $("editDrawer").hidden = true;
     document.body.style.overflow = "";
@@ -1543,6 +1725,7 @@ ${fields.texto || "Una experiencia especial que quiero preparar."}
     }
   });
 
+  $("refreshFolderFilesBtn").onclick = loadCurrentFolderFiles;
   $("saveEditBtn").onclick = saveEdit;
   $("togglePublishBtn").onclick = togglePublish;
   $("deleteItemBtn").onclick = deleteItem;
