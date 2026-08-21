@@ -25,6 +25,40 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   document.title = `${memory.titulo} · Nuestro lugar`;
 
+  function cleanStoryTitle(markdown, title){
+    const source = String(markdown || "").trimStart();
+    const lines = source.split(/\r?\n/);
+
+    if(!lines.length) return source;
+
+    const firstLine = lines[0].trim();
+    const match = firstLine.match(/^#\s+(.+)$/);
+
+    if(!match) return source;
+
+    const normalize = value =>
+      String(value || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, " ")
+        .trim();
+
+    if(normalize(match[1]) !== normalize(title)){
+      return source;
+    }
+
+    lines.shift();
+
+    while(lines.length && !lines[0].trim()){
+      lines.shift();
+    }
+
+    return lines.join("\n");
+  }
+
+  const storyText = cleanStoryTitle(memory.texto, memory.titulo);
+
   const cover = NL.mediaUrl(memory, memory.portada);
   const other = (memory.imagenes || []).filter(file => file !== memory.portada);
   const tags = memory.tags || [];
@@ -101,7 +135,7 @@ document.addEventListener("DOMContentLoaded", async () => {
            alt="${NL.escapeHtml(memory.titulo)}">` : ""}
 
     <article class="detail-story">
-      ${NL.renderMarkdown(memory.texto)}
+      ${NL.renderMarkdown(storyText)}
     </article>
 
     ${locationBlock}
